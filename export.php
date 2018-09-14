@@ -1,4 +1,4 @@
-<?php
+a<?php
 	include('inc/functions.php');
 	require('config/dbconnect.php');
 	session();
