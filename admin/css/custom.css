@@ -1,0 +1,111 @@
+.datepicker{z-index:1151 !important;}
+
+.modal-dialog{
+	margin-top: 20vh;
+}
+
+.notice {
+    padding: 15px;
+    background-color: #fafafa;
+    border-left: 6px solid #7f7f84;
+    margin-bottom: 10px;
+    -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+       -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+            box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+	cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.podcast-info-menu {
+    background-color: #007d71;
+    border-left: 3px solid;
+	color: white;
+	  display: block;
+	  padding: 15px;
+	  color: #fff;
+}
+
+.notice:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+}
+
+.notice:hover::after {
+  opacity: 1;
+}
+
+.notice-sm {
+    padding: 10px;
+    font-size: 80%;
+}
+.notice-lg {
+    padding: 35px;
+    font-size: large;
+}
+
+.episode-menu {
+	width:230px; 
+	list-style-type: none;  
+	-webkit-padding-start: 0px; 
+	-webkit-margin-before: 0em; 
+	-webkit-margin-after:0em;
+}
+.episode-menu__item {
+	padding: 0px 20px 20px 20px;
+}
+
+.outer  {
+ width:200px;
+ height:200px;
+ overflow:hidden;
+ margin:0 auto;
+ border: 0.5px solid #fff;
+ border-radius: 0.25rem;
+}
+ 
+.inner {
+ width:200px;
+ height:200px;
+ position:relative;
+}
+
+
+.inner div {
+ margin:-100% ;
+ position:absolute;
+ top:0;
+ bottom:0;
+ left:0;
+ right:0; 
+}
+
+.inner img {
+ position:absolute;
+ top:0;
+ bottom:0;
+ left:0;
+ right:0;
+ margin:auto;
+ max-height: 100%;
+ max-width: 100%;
+}
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.example li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.example li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
