@@ -65,7 +65,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Schließen</button>
-        <button type="button" class="btn btn-outline-primary" disabled id="cat_add_send" data-dismiss="modal">Anlegen</button>
+        <button type="button" class="btn btn-outline-primary" disabled id="cat_add_send" data-dismiss="modal" podcast="<?php echo $_SESSION['podcast'] ?>">Anlegen</button>
       </div>
     </div>
   </div>

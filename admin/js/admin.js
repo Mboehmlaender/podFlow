@@ -658,6 +658,7 @@ $(document).ready(function(){
 
 	$("#cat_add_send").click(function(){
 		var cat_name_new = $("#cat_name_new").val();
+		var podcast = $(this).attr("podcast");
 		if($("#cat_visible_new").is(":checked"))
 			{
 				var cat_visible_new = "1";
@@ -702,7 +703,8 @@ $(document).ready(function(){
 				"cat_visible":cat_visible_new,
 				"cat_topics":cat_topics_new,
 				"cat_coll":cat_coll_new,
-				"cat_entries":cat_entries_new										
+				"cat_entries":cat_entries_new,									
+				"podcast":podcast										
 				},
 			type: "POST",
 			success:function(data)
