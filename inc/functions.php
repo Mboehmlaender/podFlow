@@ -525,7 +525,7 @@ function category_list(){
 		}
 
 		global $con;
-		$sql_categories_list = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE = ".$_SESSION['cur_episode']." ORDER BY REIHENF, DESCR";
+		$sql_categories_list = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE CATEGORIES_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode']." ORDER BY REIHENF, DESCR";
 		$sql_categories_list_result = mysqli_query($con, $sql_categories_list);
 
 	if(mysqli_num_rows($sql_categories_list_result) == 0)
