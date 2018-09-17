@@ -809,7 +809,7 @@ function category_add(){
 function categories_edit_list(){
 	global $con;
 	echo "<div class='row' id='cat_list'>";
-	$sql_get_categories = "SELECT * FROM ".DB_PREFIX."categories ORDER BY REIHENF, DESCR";
+	$sql_get_categories = "SELECT * FROM ".DB_PREFIX."categories WHERE ID_PODCAST = ".$_SESSION['podcast']." ORDER BY REIHENF, DESCR";
 	$sql_get_categories_result = mysqli_query($con, $sql_get_categories);
 	while ($sql_get_categories_rows = mysqli_fetch_assoc($sql_get_categories_result))
 		{
@@ -926,8 +926,9 @@ function categories_edit_list(){
 									echo "Reihenfolge ändern";
 								echo "</div>";
 								echo "<div class='col-sm-1 col-2' style='text-align: right'>";
-									echo "<i style='cursor:pointer' class='fas fa-2x fa-arrow-down movedownlink'></i>";									echo "</div>";
-								echo "</div>";
+									echo "<i style='cursor:pointer' class='fas fa-2x fa-arrow-down movedownlink'></i>";									
+									echo "</div>";
+							echo "</div>";
 
 								echo "<hr>";
 								echo "<button type='button' class='btn btn-danger btn-block' onclick='delete_category(\"".$sql_get_categories_rows['ID']."\")'><i class='far fa-times-circle fa-fw'></i> Löschen</button>";

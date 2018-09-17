@@ -21,7 +21,7 @@
      <div class="app-title">
        <div>
          <h1>Kategorien</h1>
-         <p>Kategorien bearbeiten</p>
+         <p>Kategorien des gewählten Podcasts bearbeiten</p>
        </div>
        <ul class="app-breadcrumb breadcrumb">
          <li class="breadcrumb-item"><i class="fas fa-tags fa-lg"></i></li>

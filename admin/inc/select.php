@@ -645,60 +645,73 @@ if(isset($_GET['edit_episode'])){
 							echo "<label>Kategorien</label>";
 							echo "<button type='button' data-toggle='collapse' data-target='#cat_toggle' aria-expaned='false' style='margin-top: 10px; white-space: normal;' class='btn btn-outline-success btn-block btn-lg'><i class='fas fa-plus-square fa-fw'></i> Kategorien wählen</button>";
 							echo "<div class='collapse' id='cat_toggle'>";
-								echo "<ul class='list-group' id='cat_episodes'>";
-									$sql_select_topics = "SELECT * FROM ".DB_PREFIX."categories ORDER BY REIHENF, DESCR";
+									$sql_select_topics = "SELECT * FROM ".DB_PREFIX."categories WHERE ID_PODCAST = ".$_SESSION['podcast']." ORDER BY REIHENF, DESCR";
 									$sql_select_topics_result = mysqli_query($con, $sql_select_topics);
 									$sql_select_topics_result2 = mysqli_query($con, $sql_select_topics);
-									while($sql_select_topics_rows = mysqli_fetch_assoc($sql_select_topics_result))	
+									$cat_edit_num_rows = mysqli_num_rows($sql_select_topics_result);
+									if($cat_edit_num_rows == 0)
 										{
-											if ($sql_select_topics_rows['MAX_ENTRIES'] >= 1)
+											echo "<ul class='list-group' id='cat_episodes'>";
+												echo "<li class='list-group-item'>";
+													echo "Dem Podcast wurden noch keine Kategorien hinzugefügt!";
+												echo "</li>";
+											echo "</ul>";
+											echo "</div>";
+										}
+									else
+										{
+											while($sql_select_topics_rows = mysqli_fetch_assoc($sql_select_topics_result))	
 												{
-													if ($sql_select_topics_rows['MAX_ENTRIES'] == 1)
-													{
-														$entries = "Eintrag";
-													}
-												else
-													{
-														$entries = "Einträge";
-													}
-													$max_entries = "<i data-toggle='tooltip' data-placement='top' title='Max. ".$sql_select_topics_rows['MAX_ENTRIES']." ".$entries."' class='fa-fw ".getSetting('MAX_ENTRIES',0)."'></i>";
-												}
-											else 
-												{
-													$max_entries = "";
-												}
-											echo "<li class='list-group-item check_if".$sql_select_topics_rows['ID']."' id='category".$sql_select_topics_rows['ID']."'>";
-												echo "<div class='row'>";
-													echo "<div class='col-2'>";
-													$sql_select_cats = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_CATEGORY = ".$sql_select_topics_rows['ID']." AND ID_EPISODE = ".$id;
-													$sql_select_cats_result = mysqli_query($con, $sql_select_cats);
-													if(mysqli_num_rows($sql_select_cats_result) > 0)
+													if ($sql_select_topics_rows['MAX_ENTRIES'] >= 1)
 														{
-															$checked = "checked";
+															if ($sql_select_topics_rows['MAX_ENTRIES'] == 1)
+															{
+																$entries = "Eintrag";
+															}
+														else
+															{
+																$entries = "Einträge";
+															}
+															$max_entries = "<i data-toggle='tooltip' data-placement='top' title='Max. ".$sql_select_topics_rows['MAX_ENTRIES']." ".$entries."' class='fa-fw ".getSetting('MAX_ENTRIES',0)."'></i>";
 														}
-													else
+													else 
 														{
-															$checked = "";
+															$max_entries = "";
 														}
-														echo "<div class='toggle lg'>";
-															echo "<label class='switch'>";
-																echo "<input ".$checked." type='checkbox' onclick='edit_episode_cat(\"".$sql_select_topics_rows['ID']."\")' episode='".$id."' id='cat".$sql_select_topics_rows['ID']."'>";
-																echo "<span class='button-indecator'></span>";
-															echo "</label>";
+													echo "<ul class='list-group' id='cat_episodes'>";
+													echo "<li class='list-group-item check_if".$sql_select_topics_rows['ID']."' id='category".$sql_select_topics_rows['ID']."'>";
+														echo "<div class='row'>";
+															echo "<div class='col-2'>";
+															$sql_select_cats = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_CATEGORY = ".$sql_select_topics_rows['ID']." AND ID_EPISODE = ".$id;
+															$sql_select_cats_result = mysqli_query($con, $sql_select_cats);
+															if(mysqli_num_rows($sql_select_cats_result) > 0)
+																{
+																	$checked = "checked";
+																}
+															else
+																{
+																	$checked = "";
+																}
+																echo "<div class='toggle lg'>";
+																	echo "<label class='switch'>";
+																		echo "<input ".$checked." type='checkbox' onclick='edit_episode_cat(\"".$sql_select_topics_rows['ID']."\")' episode='".$id."' id='cat".$sql_select_topics_rows['ID']."'>";
+																		echo "<span class='button-indecator'></span>";
+																	echo "</label>";
+																echo "</div>";
+															echo "</div>";							
+															echo "<div class='col-8'>";
+																echo "<p class='lead'>".$sql_select_topics_rows['DESCR']."</p>";
+															echo "</div>";
+															echo "<div class='col-2' style='padding-right: 0px; padding-left: 0px; text-align:right'>";
+																echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_select_topics_rows['COLL'])."'></i>";
+																echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_select_topics_rows['VISIBLE'])."'></i>";
+																echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_select_topics_rows['ALLOW_TOPICS'])."'></i>";
+																echo $max_entries;
+															echo "</div>";
 														echo "</div>";
-													echo "</div>";							
-													echo "<div class='col-8'>";
-														echo "<p class='lead'>".$sql_select_topics_rows['DESCR']."</p>";
-													echo "</div>";
-													echo "<div class='col-2' style='padding-right: 0px; padding-left: 0px; text-align:right'>";
-														echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_select_topics_rows['COLL'])."'></i>";
-														echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_select_topics_rows['VISIBLE'])."'></i>";
-														echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_select_topics_rows['ALLOW_TOPICS'])."'></i>";
-														echo $max_entries;
-													echo "</div>";
-												echo "</div>";
-											echo "</li>";
-										} 
+													echo "</li>";
+												} 
+										}
 								echo "</ul>";
 							echo "</div>";  			  
 						echo "</div>";  			  
