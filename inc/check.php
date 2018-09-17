@@ -53,10 +53,11 @@ if(isset($_POST)){
 		$cat_id =  mysqli_real_escape_string($con,$_POST['cat_id']);
 		$max_entries =  mysqli_real_escape_string($con,$_POST['max_entries']);
 
-		if($allow_topics == 1)
-			{
+/*  		if($allow_topics == 1)
+			{ */
 				echo "<select id='select_depend_menu' class='form-control'>";
-					echo "<option id='option2' selected disabled>Thema wählen</option>";
+					echo "<option id='option2' selected disabled>Bitte wählen</option>";
+					echo "<option id='option2' sel_cat_id ='".$cat_id."' value_option='new_link'>Neuer Beitrag</option>";
 					echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries_topics= '".$max_entries."' value_option='new_topic'>Neues Thema</option>";
 					echo "<option id='option2' disabled>Bestehende Themen</option>";
 					$sql_modal_cat_topic = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID_CATEGORY =".$cat_id;
@@ -99,7 +100,7 @@ if(isset($_POST)){
 						});								   
 				</script>"; 
 
-			}
+		/* 	}
 		else
 			{
 				$cur_entries_links = linksincat('links', $_SESSION['cur_episode'], $cat_id); 
@@ -156,24 +157,24 @@ if(isset($_POST)){
 						});
 					});								   
 				</script>"; 
-			}
+			}  */
 			exit;
 	} 
 
 	//Neuer Beitrag --> Kategorie wählen --> Thema wählen
 	if(isset($_GET['select_topic'])){
 		$value_dep =  mysqli_real_escape_string($con,$_POST['select_depend_value']);
-		$max_entries_topics =  mysqli_real_escape_string($con,$_POST['max_entries_topics']);
-		$sel_cat_id =  mysqli_real_escape_string($con,$_POST['sel_cat_id']);
+/* 		$max_entries_topics =  mysqli_real_escape_string($con,$_POST['max_entries_topics']);
+ */		$sel_cat_id =  mysqli_real_escape_string($con,$_POST['sel_cat_id']);
 
 		if($value_dep == 'new_topic')
 			{
-				$cur_entries_topics = linksincat('topics', $_SESSION['cur_episode'], $sel_cat_id); 
+/* 				$cur_entries_topics = linksincat('topics', $_SESSION['cur_episode'], $sel_cat_id); 
 				if($cur_entries_topics >= $max_entries_topics && $max_entries_topics > 0)
 					{
 						echo "Die maximale Anzahl an Themen in dieser Kategorie ist bereits erreicht!";
 						return;
-					}
+					} */
 				echo "<hr>";								
 				echo "<div class='form-group'>";
 					echo "<label for='topic_new_title'>Titel des Themas</label>";
@@ -232,7 +233,64 @@ if(isset($_POST)){
 				</script>"; 
 
 			}
-		else
+		else if($value_dep == 'new_link')
+			{
+/* 				$cur_entries_links = linksincat('links', $_SESSION['cur_episode'], $cat_id); 
+				if($cur_entries_links >= $max_entries && $max_entries > 0)
+					{
+						echo "Die maximale Anzahl an Beiträgen in dieser Kategorie ist bereits erreicht!";
+						return;
+					} */
+				echo "<hr>";								
+				echo "<div class='form-group'>";
+					echo "<label for='link_topics_title'>Titel des Beitrags</label>";
+					echo "<input type='text' class='form-control' id='link_title'>";	 
+				echo "</div>";
+				echo "<div class='form-group'>";
+					echo "<label for='link_url'>URL</label>";
+					echo "<input type='text' class='form-control' id='link_url'>";
+				echo "</div>";
+				echo "<script>
+					var button = \"<button type='button' id='absenden_link_new' name='absenden_link_new' class='btn btn-outline-secondary savebtn'>Speichern</button>\";
+
+					$(\"#button_footer\").html(button);
+					$(\".savebtn\").removeAttr('disabled');
+					$(\"#absenden_link_new\").on('click', function(){
+				
+					var descr = $(\"#link_title\").val();
+					var url = $(\"#link_url\").val();
+					var category = $('option:selected', \"#modal1\").attr('cat_id');
+					if(descr == '' && url == '')
+						{
+							$.gritter.add({
+								title: 'Unvollständige Angaben!',
+								text: 'Bitte gib entweder einen Beitragstitel oder eine URL ein!',
+								image: 'images/delete.png',
+								time: '1000'
+							});		
+							return;
+						}
+						
+					jQuery.ajax({
+						url: \"../inc/insert.php?add_link=1\",
+						data: { \"descr\":descr,
+								\"category\":category,
+								\"url\":url
+								},
+						type: \"POST\",
+						success:function(data)
+							{
+								location.reload();
+								console.log(data);
+							},
+						error:function ()
+							{
+							}
+						});
+					});								   
+				</script>"; 				
+			}
+			else
 			{
 				echo "<hr>";								
 				echo "<div class='form-group'>";
@@ -275,8 +333,8 @@ if(isset($_POST)){
 						success:function(data)
 							{
 								$(\"#newentry\").modal('hide');
-								location.reload();
 								console.log(data);
+								location.reload();
 							},
 						error:function ()
 							{

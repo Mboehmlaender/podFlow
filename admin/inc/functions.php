@@ -768,7 +768,7 @@ function category_add(){
 			echo "</div>";
 		echo "</div>";
 	echo "</div>";
-	echo "<div class='row'>";
+	/* echo "<div class='row'>";
 		echo "<div class='col-9 lead'>";
 			echo "Kategorie mit Themen";
 		echo "</div>";
@@ -780,7 +780,7 @@ function category_add(){
 				echo "</label>";
 			echo "</div>";
 		echo "</div>";
-	echo "</div>";
+	echo "</div>"; */
 	echo "<div class='row'>";
 		echo "<div class='col-9 lead'>";
 			echo "Kollaborative Kategorie";
@@ -839,8 +839,8 @@ function categories_edit_list(){
 							echo "<div class='col-2' style='padding-right:15px; padding-left: 0px; text-align:right'>";
 								echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_get_categories_rows['COLL'])."'></i>";
 								echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_get_categories_rows['VISIBLE'])."'></i>";
-								echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_get_categories_rows['ALLOW_TOPICS'])."'></i>";
-								echo $max_entries;
+/* 								echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_get_categories_rows['ALLOW_TOPICS'])."'></i>";
+ */								echo $max_entries;
 							echo "</div>";
 						echo "</div>";
 					echo "</div>";
@@ -864,14 +864,14 @@ function categories_edit_list(){
 								{
 									$check_coll = '';
 								}	
-							if($sql_get_categories_rows['ALLOW_TOPICS'] == 1)
+/* 							if($sql_get_categories_rows['ALLOW_TOPICS'] == 1)
 								{
 									$check_topics = 'checked';
 								}
 							else
 								{
 									$check_topics = '';
-								}
+								} */
 								echo "<div class='row'>";
 									echo "<div class='col-9 lead'>";
 										echo "Sichtbar für andere Benutzer";
