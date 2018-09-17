@@ -664,7 +664,7 @@ global $con;
 					echo "</button>";
 					echo "<div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>";
 						echo "<div class='form-group form-check' style='margin-bottom: 0px'>";
-						$sql_get_cat = "SELECT * FROM ".DB_PREFIX."categories WHERE ALLOW_TOPICS = 0";
+						$sql_get_cat = "SELECT * FROM ".DB_PREFIX."categories WHERE ALLOW_TOPICS = 0 AND ID_PODCAST =".$_SESSION['podcast'];
 						$sql_get_cat_result = mysqli_query($con, $sql_get_cat);
 						while($sql_get_cat_row = mysqli_fetch_assoc($sql_get_cat_result))
 							{
