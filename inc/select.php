@@ -168,7 +168,7 @@ if(isset($_GET['move_links'])){
 //Modal: Themen/Beiträge hinzufügen	
 if(isset($_GET['add_entry'])){
 	$episode = $_POST['change_value'];
-	$sql_add_entry = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE = ".$episode;	
+	$sql_add_entry = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE CATEGORIES_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$episode;	
 	$sql_add_entry_result = mysqli_query($con, $sql_add_entry);
 	$number_of_rows_entry = mysqli_num_rows($sql_add_entry_result);
 

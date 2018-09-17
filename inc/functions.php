@@ -689,7 +689,7 @@ global $con;
 			echo "</div>";
 
 			echo "<div class='row' id='links_user'>";
-			$sql_get_links = "SELECT ".DB_PREFIX."links.* FROM ".DB_PREFIX."links join ".DB_PREFIX."categories on ".DB_PREFIX."categories.ID = ".DB_PREFIX."links.ID_CATEGORY WHERE ID_USER = ".$id_user." AND ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE=".$_SESSION['cur_episode']." ORDER BY ".DB_PREFIX."categories.REIHENF";
+			$sql_get_links = "SELECT ".DB_PREFIX."links.* FROM ".DB_PREFIX."links join ".DB_PREFIX."categories on ".DB_PREFIX."categories.ID = ".DB_PREFIX."links.ID_CATEGORY WHERE ID_USER = ".$id_user." AND ".DB_PREFIX."links.ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE=".$_SESSION['cur_episode']." ORDER BY ".DB_PREFIX."categories.REIHENF";
 			$sql_get_links_result = mysqli_query($con, $sql_get_links);
 			while ($sql_get_links_rows = mysqli_fetch_assoc($sql_get_links_result))
 				{
@@ -861,7 +861,7 @@ global $con;
 					echo "</button>";
 					echo "<div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>";
 						echo "<div class='form-group form-check' style='margin-bottom: 0px'>";
-						$sql_get_cat = "SELECT * FROM ".DB_PREFIX."categories WHERE ALLOW_TOPICS = 1";
+						$sql_get_cat = "SELECT * FROM ".DB_PREFIX."categories WHERE ALLOW_TOPICS = 1 AND ID_PODCAST =".$_SESSION['podcast'];
 						$sql_get_cat_result = mysqli_query($con, $sql_get_cat);
 						while($sql_get_cat_row = mysqli_fetch_assoc($sql_get_cat_result))
 							{
@@ -1057,7 +1057,7 @@ global $con;
 									echo "<div class='col-md-4 col-sm-12' style='padding: 1px'>";
 										echo "<div class='form-group'>";
 											echo "<select data-url='inc/update.php' data-name='ID_CATEGORY' class='form-control update_cat' style='padding: 0px;' table='topics' data-pk='".$sql_get_topics_rows['ID']."' id='category'>";
-												$sql_get_cat = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ALLOW_TOPICS = 1 AND EPISODE_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode'];
+												$sql_get_cat = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ALLOW_TOPICS = 1 AND CATEGORIES_ID_PODCAST = ".$_SESSION['podcast']." AND EPISODE_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode'];
 												$sql_get_cat_result = mysqli_query($con, $sql_get_cat);
 												while($sql_get_cat_rows = mysqli_fetch_assoc($sql_get_cat_result))
 													{
