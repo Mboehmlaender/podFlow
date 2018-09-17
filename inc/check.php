@@ -57,8 +57,8 @@ if(isset($_POST)){
 			{ */
 				echo "<select id='select_depend_menu' class='form-control'>";
 					echo "<option id='option2' selected disabled>Bitte wählen</option>";
-					echo "<option id='option2' sel_cat_id ='".$cat_id."' value_option='new_link'>Neuer Beitrag</option>";
-					echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries_topics= '".$max_entries."' value_option='new_topic'>Neues Thema</option>";
+					echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='new_link'>Neuer Beitrag</option>";
+					echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='new_topic'>Neues Thema</option>";
 					echo "<option id='option2' disabled>Bestehende Themen</option>";
 					$sql_modal_cat_topic = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID_CATEGORY =".$cat_id;
 					$sql_modal_cat_topic_result = mysqli_query($con, $sql_modal_cat_topic);
@@ -68,7 +68,7 @@ if(isset($_POST)){
 								{}
 							else
 								{
-									echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries_topics= '".$max_entries."' value_option='".$sql_modal_cat_topic_row['TOPICS_ID']."'>".$sql_modal_cat_topic_row['TOPICS_DESCR']."</option>";					
+									echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='".$sql_modal_cat_topic_row['TOPICS_ID']."'>".$sql_modal_cat_topic_row['TOPICS_DESCR']."</option>";					
 								}
 						}
 				echo "</select>";
@@ -79,12 +79,12 @@ if(isset($_POST)){
 						}
 					$(\"#select_depend_menu\").on('change', function(){
 						var select_depend_value = $('option:selected', this).attr('value_option');
-						var max_entries_topics = $('option:selected', this).attr('max_entries_topics');
+						var max_entries = $('option:selected', this).attr('max_entries');
 						var sel_cat_id = $('option:selected', this).attr('sel_cat_id');
 						jQuery.ajax({
 							url: \"../inc/check.php?select_topic=1\",
 							data: {	\"select_depend_value\":select_depend_value,
-									\"max_entries_topics\":max_entries_topics,
+									\"max_entries\":max_entries,
 									\"sel_cat_id\":sel_cat_id
 									},
 							type: \"POST\",
@@ -164,17 +164,17 @@ if(isset($_POST)){
 	//Neuer Beitrag --> Kategorie wählen --> Thema wählen
 	if(isset($_GET['select_topic'])){
 		$value_dep =  mysqli_real_escape_string($con,$_POST['select_depend_value']);
-/* 		$max_entries_topics =  mysqli_real_escape_string($con,$_POST['max_entries_topics']);
+/* 		$max_entries =  mysqli_real_escape_string($con,$_POST['max_entries']);
+		$cur_entries = linksincat('topics', $_SESSION['cur_episode'], $sel_cat_id); 
  */		$sel_cat_id =  mysqli_real_escape_string($con,$_POST['sel_cat_id']);
 
 		if($value_dep == 'new_topic')
 			{
-/* 				$cur_entries_topics = linksincat('topics', $_SESSION['cur_episode'], $sel_cat_id); 
-				if($cur_entries_topics >= $max_entries_topics && $max_entries_topics > 0)
+/* 				if($cur_entries >= $max_entries && $max_entries > 0)
 					{
 						echo "Die maximale Anzahl an Themen in dieser Kategorie ist bereits erreicht!";
 						return;
-					} */
+					}  */
 				echo "<hr>";								
 				echo "<div class='form-group'>";
 					echo "<label for='topic_new_title'>Titel des Themas</label>";
@@ -235,8 +235,7 @@ if(isset($_POST)){
 			}
 		else if($value_dep == 'new_link')
 			{
-/* 				$cur_entries_links = linksincat('links', $_SESSION['cur_episode'], $cat_id); 
-				if($cur_entries_links >= $max_entries && $max_entries > 0)
+/* 				if($cur_entries >= $max_entries && $max_entries > 0)
 					{
 						echo "Die maximale Anzahl an Beiträgen in dieser Kategorie ist bereits erreicht!";
 						return;
