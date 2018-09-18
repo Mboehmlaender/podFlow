@@ -592,7 +592,7 @@ function category_list(){
 //Kanban-View
 
 function kanban(){
-	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div>";
+	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer' class='fa-stack fa-1x'><i class='fas fa-sort-up fa-stack-2x collapse_me'></i><i class='fas fa-sort-down fa-stack-2x expand_me'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
 		{
@@ -636,7 +636,7 @@ function kanban(){
 				echo $sql_categories_list_rows['DESCR']."<br>";
 			echo "</a>"; */
 		
-		echo "<div class='collapse' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
+		echo "<div class='collapse collapse-outer' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
 		
 		echo "<ul class='timeline kanban_sortable' style='margin-bottom: 10px'>";
  		    echo "<li>";
@@ -732,6 +732,25 @@ echo "</div>";
 		  $( function() {
 			$( \".sortable_topic_links\" ).sortable({ handle: '.link_icon',   connectWith: '.sortable_topic_links' });
 		  } );		
+	</script>";	
+	echo "<script>
+			$( \"#collapse_icon\" ).on('click', function(){
+					if($(this).hasClass('expanded'))
+					{
+						$(\".collapse-outer\").collapse('hide');
+						$(this).removeClass('expanded');
+						$(\".collapse_me\").hide('slow');
+						$(\".expand_me\").show('slow');
+					}
+					else
+					{
+						$(\".collapse-outer\").collapse('show');
+						$(this).addClass('expanded');
+						$(\".expand_me\").hide('slow');
+						$(\".collapse_me\").show('slow');
+					}
+				});			
+			
 	</script>";
 }
 //Episode abschließen
