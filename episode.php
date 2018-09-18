@@ -35,7 +35,7 @@
          <li class="breadcrumb-item"><a href="#">Alle Beiträge</a></li>
        </ul>
      </div>
-      <div class="row">
+<!--       <div class="row">
 		<div class="col-md-12">
 		<div class="tile">
 		<?php
@@ -43,6 +43,17 @@
 		?>
 	  </div>
 	  </div>
+      </div> !-->
+		<div class="row">
+		<div class="col-md-12">
+		<div class="tile">
+      <div class="container">
+		<?php
+			kanban();
+		?>
+      </div>
+      </div>
+      </div>
       </div>
 	  
 		<?php

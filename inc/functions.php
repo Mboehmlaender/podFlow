@@ -34,7 +34,7 @@ function head(){
 		echo "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>";
 		echo "<link rel='stylesheet' href='css/main.css'>";
 		echo "<link rel='stylesheet' href='css/simplebar.css'>";
-		echo "<link rel='stylesheet' href='css/custom.min.css'>";
+		echo "<link rel='stylesheet' href='css/custom.css'>";
 		echo "<link rel='stylesheet' href='css/jquery.gritter.css'>";
 		echo "<link rel='stylesheet' href='css/jquery-confirm.min.css'>";
 		echo "<script src='//cdn.ckeditor.com/4.9.2/basic/ckeditor.js'></script>";
@@ -589,6 +589,151 @@ function category_list(){
 	</script>";
 }
 
+//Kanban-View
+
+function kanban(){
+	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div>";
+	echo "<hr>";
+	if(empty($_SESSION['podcast']))
+		{
+			echo "<p class='lead'><button class='btn btn-outline-success btn-block change' change_value='podcast' style='cursor: pointer'>Podcast wählen</button>";
+			echo "</div";
+			return;
+		}
+
+	if(empty($_SESSION['cur_episode']))
+		{
+			echo "<p class='lead'><button class='btn btn-outline-success btn-block change' change_value='episode' style='cursor: pointer'>Episode wählen</button>";
+			echo "</div";
+			return;
+		}
+		global $con;
+		$sql_categories_list = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE CATEGORIES_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode']." ORDER BY REIHENF, DESCR";
+		$sql_categories_list_result = mysqli_query($con, $sql_categories_list);
+
+		if(mysqli_num_rows($sql_categories_list_result) == 0)
+			{
+				echo "<p class='lead'>Es wurden noch keine Kategorien angelegt!</p>";
+				echo "</div";
+				return;
+			}
+		while($sql_categories_list_rows = mysqli_fetch_assoc($sql_categories_list_result))
+		{
+			echo "<div data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'class='row load_content' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
+				echo "<div class='col-9 col-sm-10'>";
+					echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'></span>".$sql_categories_list_rows['DESCR']."</h5></div>";
+				echo "</div>";
+				echo "<div class='col-3 col-sm-2'>";
+/* 					echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_categories_list_row['COLL'])."'></i>";
+					echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_categories_list_row['ALLOW_TOPICS'])."'></i>";
+					echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_row['VISIBLE'])."'></i>";	 */		
+				echo "</div>";
+			echo "</div>";
+			echo "<hr>";
+			
+			
+/* 			echo "<a data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'>";
+				echo $sql_categories_list_rows['DESCR']."<br>";
+			echo "</a>"; */
+		
+		echo "<div class='collapse' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
+		
+		echo "<ul class='timeline kanban_sortable' style='margin-bottom: 10px'>";
+ 		    echo "<li>";
+				    echo "<div class='timeline-badge success' style='margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
+			echo "</li>"; 
+			echo "</ul>"; 
+			
+		echo "<ul class='timeline kanban_sortable'>";
+		global $con;
+		$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID , ID_EPISODE, ID_CATEGORY, DESCR, NULL AS IS_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, ID_EPISODE, ID_CATEGORY, DESCR, 1 AS IS_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER where ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
+		$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
+ 		while($sql_kanban_entries_row = mysqli_fetch_assoc($sql_kanban_entries_result))
+ 		{
+			if(empty($sql_kanban_entries_row['USERNAME']))
+			{
+				$user = $sql_kanban_entries_row['USERNAME'];
+			}
+			else
+			{
+				$user = $sql_kanban_entries_row['NAME_SHOW'];
+			}
+			if($sql_kanban_entries_row['IS_TOPIC'] == 1)
+				{
+					$class = "class='timeline-inverted'";
+					$icon = "<i class='fas fa-bars fa-fw'></i>";
+					$icon_color = " info";
+				}
+			else
+				{
+					$class = "class=''";
+					$icon = "<i class='fas fa-link fa-fw'></i>";
+					$icon_color = " warning";
+				}
+/* 		echo "<div class='col-12'>";
+			echo "<div class='kanbancard'>";
+				echo "<div class='kanbancard-heading'>";
+				echo "</div>";
+				echo "<div class='kanbancard-body'>";
+					echo $entry_text.$sql_kanban_entries_row['DESCR'];
+				echo "</div>";
+			echo "</div>";
+		echo "</div>"; */
+		  
+      echo "<li ".$class.">";
+        echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
+        echo "<div class='timeline-panel'>";
+				echo " <small class='text-muted'>".$user."</small></h4>";
+          echo "<div class='timeline-heading' >";
+				echo "<h4 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR'];
+          echo "</div>";
+          echo "<div class='timeline-body'>";
+		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
+		  {
+			echo "<a data-toggle='collapse' href='#collapse_topic_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='collapse_topic_".$sql_kanban_entries_row['ID']."'>";
+				echo "Beiträge anzeigen";
+			echo "</a>";
+				echo "<div class='collapse' id='collapse_topic_".$sql_kanban_entries_row['ID']."' style='margin-top: 15px;'>";
+				echo "<ul class='topic_links sortable_topic_links'>";
+			$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
+			$select_topic_links_result = mysqli_query($con, $select_topic_links);
+			while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
+			{
+				echo "<li class='topic_links_item'>";
+				echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</p>";
+				echo "</li>";
+			}
+				echo "</ol>";
+				echo "</div>";
+		  }
+		  else
+		  {
+            echo "<p>Content</p>";  
+		  }
+          echo "</div>";
+        echo "</div>";
+      echo "</li>";
+		}  
+		
+    
+echo "</ul>";
+echo "</div>";
+		}
+	echo "<script>
+		  $( function() {
+			$( \".kanban_sortable\" ).sortable({ 
+				handle: '.timeline-handle',
+				connectWith: '.kanban_sortable'
+				
+});
+		  } );		
+	</script>";	
+	echo "<script>
+		  $( function() {
+			$( \".sortable_topic_links\" ).sortable({ handle: '.link_icon',   connectWith: '.sortable_topic_links' });
+		  } );		
+	</script>";
+}
 //Episode abschließen
 function close_episode(){
 	global $today;
