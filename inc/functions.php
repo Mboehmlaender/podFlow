@@ -592,7 +592,8 @@ function category_list(){
 //Kanban-View
 
 function kanban(){
-	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer' class='fa-stack fa-1x'><i class='fas fa-sort-up fa-stack-2x collapse_me'></i><i class='fas fa-sort-down fa-stack-2x expand_me'></i></span>";
+	echo "<div class='container'>";
+	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
 		{
@@ -619,17 +620,35 @@ function kanban(){
 			}
 		while($sql_categories_list_rows = mysqli_fetch_assoc($sql_categories_list_result))
 		{
+			
+			if ($sql_categories_list_rows['MAX_ENTRIES'] >= 1)
+				{
+					if ($sql_categories_list_rows['MAX_ENTRIES'] == 1)
+						{
+							$entries = "Eintrag";
+						}
+					else
+						{
+							$entries = "Einträge";
+						}
+					$max_entries = "<i data-toggle='tooltip' data-placement='top' title='Max. ".$sql_categories_list_rows['MAX_ENTRIES']." ".$entries."' class='fa-fw ".getSetting('MAX_ENTRIES',0)."'></i>";
+				}
+			else 
+				{
+					$max_entries = "";
+				}
+				
 			echo "<div data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'class='row load_content' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
-				echo "<div class='col-9 col-sm-10'>";
+				echo "<div class='col-9 col-sm-10 col-xl-11'>";
 					echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'></span>".$sql_categories_list_rows['DESCR']."</h5></div>";
 				echo "</div>";
-				echo "<div class='col-3 col-sm-2'>";
-/* 					echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_categories_list_row['COLL'])."'></i>";
-					echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_categories_list_row['ALLOW_TOPICS'])."'></i>";
-					echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_row['VISIBLE'])."'></i>";	 */		
+				echo "<div class='col-3 col-sm-2 col-xl-1'>";
+ 					echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_categories_list_rows['COLL'])."'></i>";
+					echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";
+					echo $max_entries;
 				echo "</div>";
 			echo "</div>";
-			echo "<hr>";
+			echo "<hr class='seperator'>";
 			
 			
 /* 			echo "<a data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'>";
@@ -719,6 +738,7 @@ function kanban(){
 echo "</ul>";
 echo "</div>";
 		}
+echo "</div>";
 	echo "<script>
 		  $( function() {
 			$( \".kanban_sortable\" ).sortable({ 
@@ -733,7 +753,28 @@ echo "</div>";
 			$( \".sortable_topic_links\" ).sortable({ handle: '.link_icon',   connectWith: '.sortable_topic_links' });
 		  } );		
 	</script>";	
+
 	echo "<script>
+			$( \".collapse-outer\" ).on('show.bs.collapse', function(){
+			});
+			
+			$( \".collapse-outer\" ).on('hide.bs.collapse', function(){
+			});
+	</script>";	
+	
+	echo "<script>
+			$( \".collapse_me\" ).on('click', function(){
+						$(\".collapse-outer\").collapse('hide');
+						$(\".load_content\").show('fast');
+						$(\".seperator\").show('fast');
+			});
+			$( \".expand_me\" ).on('click', function(){
+						$(\".collapse-outer\").collapse('show');
+						$(\".load_content\").hide('fast');
+						$(\".seperator\").hide('fast');
+			});
+	</script>";	
+/* 	echo "<script>
 			$( \"#collapse_icon\" ).on('click', function(){
 					if($(this).hasClass('expanded'))
 					{
@@ -751,7 +792,7 @@ echo "</div>";
 					}
 				});			
 			
-	</script>";
+	</script>"; */
 }
 //Episode abschließen
 function close_episode(){

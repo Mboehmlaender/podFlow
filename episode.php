@@ -47,11 +47,9 @@
 		<div class="row">
 		<div class="col-md-12">
 		<div class="tile">
-      <div class="container">
 		<?php
 			kanban();
 		?>
-      </div>
       </div>
       </div>
       </div>
