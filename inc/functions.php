@@ -592,7 +592,7 @@ function category_list(){
 //Kanban-View
 
 function kanban(){
-	echo "<div class='container'>";
+	echo "<div class='container' style='padding: 0px;'>";
 	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
@@ -681,12 +681,14 @@ function kanban(){
 					$class = "class='timeline-inverted'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
+					$title = "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
 				}
 			else
 				{
 					$class = "class=''";
 					$icon = "<i class='fas fa-link fa-fw'></i>";
 					$icon_color = " warning";
+					$title = "";
 				}
 /* 		echo "<div class='col-12'>";
 			echo "<div class='kanbancard'>";
@@ -703,7 +705,7 @@ function kanban(){
         echo "<div class='timeline-panel'>";
 				echo " <small class='text-muted'>".$user."</small>";
           echo "<div class='timeline-heading' >";
-				echo "<h4 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h4>";
+				echo $title;
           echo "</div>";
           echo "<div class='timeline-body'>";
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
@@ -723,21 +725,27 @@ function kanban(){
 						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</p>";
 					echo "</div>";
 					echo "<div class='col-12 col-xl-2' style='padding:1px'>";
-						echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm'><i class='fas fa-external-link-alt fa-fw'></i></button>";
+						echo "<button type='button' class='btn btn-outline-warning btn-block '><i class='fas fa-external-link-alt fa-fw'></i></button>";
 					echo "</div>";
 					echo "<div class='col-12 col-xl-2' style='padding:1px'>";
-						echo "<button type='button' class='btn btn-outline-info btn-block btn-sm'><i class='far fa-copy fa-fw fa-fw'></i></button>";
+						echo "<button type='button' class='btn btn-outline-info btn-block '><i class='far fa-copy fa-fw fa-fw'></i></button>";
 					echo "</div>";
 				echo "</div>";
 				echo "</li>";
 			}
 				echo "</ul>";
-			echo "<hr style='margin-bottom: 0px'>";
+			echo "<hr style='margin-bottom: 0px;margin-top: 10px'>";
 
 				echo "</div>";
-			echo "<div class='row' style='padding: 0px 14px 5px 14px; margin-top: 16px'>";
+			echo "<div class='row' style='padding: 0px 14px 5px 14px; margin-top: 10px'>";
 				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
 					echo "<button type='button' class='btn btn-outline-success btn-block'><i class='far fa-check-circle fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-secondary btn-block'><i class='fas fa-edit fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
 				echo "</div>";
 				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
 					echo "<button type='button' class='btn btn-outline-danger btn-block'><i class='far fa-times-circle fa-fw'></i></button>";
@@ -746,15 +754,32 @@ function kanban(){
 		  }
 		  else
 		  {
-			echo "<div class='row' style='padding: 0px 14px 5px 14px'>";
-				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
-					echo "<button type='button' class='btn btn-outline-warning btn-block'><i class='fas fa-external-link-alt fa-fw'></i></button>";
+			echo "<div class='row' style='padding: 0px 14px 0px 14px; margin-top: 15px'>";
+				echo "<ul class='topic_links'>";
+				echo "<li class='topic_links_item'>";
+				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
+					echo "<div class='col-12 col-xl-8 topic_link_title' style='padding:1px;'>";
+						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</p>";
+					echo "</div>";
+					echo "<div class='col-12 col-xl-2' style='padding:1px'>";
+						echo "<button type='button' class='btn btn-outline-warning btn-block'><i class='fas fa-external-link-alt fa-fw'></i></button>";
+					echo "</div>";
+					echo "<div class='col-12 col-xl-2' style='padding:1px'>";
+						echo "<button type='button' class='btn btn-outline-info btn-block'><i class='far fa-copy fa-fw fa-fw'></i></button>";
+					echo "</div>";
 				echo "</div>";
-				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
-					echo "<button type='button' class='btn btn-outline-info btn-block'><i class='far fa-copy fa-fw fa-fw'></i></button>";
-				echo "</div>";
+				echo "</li>";
+				echo "</ul>";
+			echo "</div>";
+			echo "<div class='row' style='padding: 0px 14px 5px 14px; margin-top: 10px'>";
 				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
 					echo "<button type='button' class='btn btn-outline-success btn-block'><i class='far fa-check-circle fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-secondary btn-block'><i class='fas fa-edit fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
 				echo "</div>";
 				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
 					echo "<button type='button' class='btn btn-outline-danger btn-block'><i class='far fa-times-circle fa-fw'></i></button>";
