@@ -719,7 +719,7 @@ function kanban(){
 			{
 				echo "<li class='topic_links_item'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
-					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
+					echo "<div class='col-12 col-xl-8 topic_link_title' style='padding:1px;'>";
 						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</p>";
 					echo "</div>";
 					echo "<div class='col-12 col-xl-2' style='padding:1px'>";

@@ -1,3 +1,10 @@
+@media (max-width: 1199px) {
+    .topic_link_title {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		margin-bottom: 5px;
+    }
+}
+
 .centered-items{
     display: -ms-flexbox;
     display: -webkit-flex;
