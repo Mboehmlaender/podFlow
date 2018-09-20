@@ -656,7 +656,6 @@ function kanban(){
 			echo "</a>"; */
 		
 		echo "<div class='collapse collapse-outer' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
-		
 		echo "<ul class='timeline kanban_sortable' style='margin-bottom: 10px'>";
  		    echo "<li>";
 				    echo "<div class='timeline-badge success' style='margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
@@ -702,9 +701,9 @@ function kanban(){
       echo "<li ".$class.">";
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";
-				echo " <small class='text-muted'>".$user."</small></h4>";
+				echo " <small class='text-muted'>".$user."</small>";
           echo "<div class='timeline-heading' >";
-				echo "<h4 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR'];
+				echo "<h4 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h4>";
           echo "</div>";
           echo "<div class='timeline-body'>";
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
@@ -719,15 +718,48 @@ function kanban(){
 			while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
 			{
 				echo "<li class='topic_links_item'>";
-				echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</p>";
+				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
+					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
+						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</p>";
+					echo "</div>";
+					echo "<div class='col-12 col-xl-2' style='padding:1px'>";
+						echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm'><i class='fas fa-external-link-alt fa-fw'></i></button>";
+					echo "</div>";
+					echo "<div class='col-12 col-xl-2' style='padding:1px'>";
+						echo "<button type='button' class='btn btn-outline-info btn-block btn-sm'><i class='far fa-copy fa-fw fa-fw'></i></button>";
+					echo "</div>";
+				echo "</div>";
 				echo "</li>";
 			}
-				echo "</ol>";
+				echo "</ul>";
+			echo "<hr style='margin-bottom: 0px'>";
+
 				echo "</div>";
+			echo "<div class='row' style='padding: 0px 14px 5px 14px; margin-top: 16px'>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-success btn-block'><i class='far fa-check-circle fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-danger btn-block'><i class='far fa-times-circle fa-fw'></i></button>";
+				echo "</div>";
+			echo "</div>";
 		  }
 		  else
 		  {
-            echo "<p>Content</p>";  
+			echo "<div class='row' style='padding: 0px 14px 5px 14px'>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-warning btn-block'><i class='fas fa-external-link-alt fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-info btn-block'><i class='far fa-copy fa-fw fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-success btn-block'><i class='far fa-check-circle fa-fw'></i></button>";
+				echo "</div>";
+				echo "<div class='col-12 col-xl-3' style='padding:1px'>";
+					echo "<button type='button' class='btn btn-outline-danger btn-block'><i class='far fa-times-circle fa-fw'></i></button>";
+				echo "</div>";
+			echo "</div>";
 		  }
           echo "</div>";
         echo "</div>";
@@ -765,13 +797,9 @@ echo "</div>";
 	echo "<script>
 			$( \".collapse_me\" ).on('click', function(){
 						$(\".collapse-outer\").collapse('hide');
-						$(\".load_content\").show('fast');
-						$(\".seperator\").show('fast');
 			});
 			$( \".expand_me\" ).on('click', function(){
 						$(\".collapse-outer\").collapse('show');
-						$(\".load_content\").hide('fast');
-						$(\".seperator\").hide('fast');
 			});
 	</script>";	
 /* 	echo "<script>
