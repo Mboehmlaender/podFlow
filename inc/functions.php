@@ -682,6 +682,7 @@ function kanban(){
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
 					$title = "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
+					$type="topic";
 				}
 			else
 				{
@@ -689,6 +690,7 @@ function kanban(){
 					$icon = "<i class='fas fa-link fa-fw'></i>";
 					$icon_color = " warning";
 					$title = "";
+					$type="link";
 				}
 /* 		echo "<div class='col-12'>";
 			echo "<div class='kanbancard'>";
@@ -704,6 +706,9 @@ function kanban(){
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";
 				echo " <small class='text-muted'>".$user."</small>";
+				echo "<a style='float:right' data-toggle='collapse' href='#fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
+					echo "Actions";
+				echo "</a>";
           echo "<div class='timeline-heading' >";
 				echo $title;
           echo "</div>";
@@ -737,7 +742,7 @@ function kanban(){
 			echo "<hr style='margin-bottom: 0px;margin-top: 10px'>";
 
 				echo "</div>";
-			echo "<div class='row' style='padding: 0px 14px 5px 14px; margin-top: 10px'>";
+			echo "<div class='row collapse' style='padding: 0px 14px 5px 14px; margin-top: 10px' class='collapse' id='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
 				echo "<div class='col-6 col-xl-3' style='padding:1px'>";
 					echo "<button type='button' class='btn btn-outline-tertiary btn-block btn-sm'><i class='fas fa-edit fa-fw'></i></button>";
 				echo "</div>";
@@ -771,7 +776,7 @@ function kanban(){
 				echo "</li>";
 				echo "</ul>";
 			echo "</div>";
-			echo "<div class='row' style='padding: 0px 14px 5px 14px; margin-top: 10px'>";
+			echo "<div class='row collapse' style='padding: 0px 14px 5px 14px; margin-top: 10px' class='collapse' id='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
 				echo "<div class='col-6 col-xl-3' style='padding:1px'>";
 					echo "<button type='button' class='btn btn-outline-tertiary btn-block btn-sm'><i class='fas fa-edit fa-fw'></i></button>";
 				echo "</div>";
