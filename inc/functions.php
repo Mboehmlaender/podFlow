@@ -681,7 +681,9 @@ function kanban(){
 					$class = "class='timeline-inverted'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
-					$title = "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
+					$title = "<div class='timeline-heading' >";
+					$title .= "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
+					$title .= "</div>";
 					$type="topic";
 				}
 			else
@@ -709,9 +711,7 @@ function kanban(){
 				echo "<a style='float:right' data-toggle='collapse' href='#fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
 					echo "Actions";
 				echo "</a>";
-          echo "<div class='timeline-heading' >";
 				echo $title;
-          echo "</div>";
           echo "<div class='timeline-body'>";
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 		  {
