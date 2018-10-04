@@ -120,6 +120,22 @@ function load_cat(cat_id){
 
 $(document).ready(function(){
 
+var all_cookies=Cookies.get();
+console.log(all_cookies);
+	
+$(".collapse-outer").on("show.bs.collapse", function(){
+	var cat_id = $(this).attr("id");
+	alert(cat_id);
+/* 	Cookies.set("category", cat_id);	
+ */});
+ 
+$(".collapse-outer").on("hide.bs.collapse", function(){
+	var cat_id_remove = $(this).attr("id");
+	alert(cat_id_remove);
+/* 	Cookies.set("category", cat_id);	
+ */});
+
+
 	//Kategorien per Cookie automatisch öffnen
 	var categories=Cookies.get('category'); //get all cookies
 	if ($("#"+categories).hasClass("cat-content")) // check if this is a panel
