@@ -34,6 +34,8 @@ function head(){
 		echo "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>";
 		echo "<link rel='stylesheet' href='css/main.css'>";
 		echo "<link rel='stylesheet' href='css/simplebar.css'>";
+		echo "<link rel='stylesheet' href='css/tooltipster.bundle.min.css'>";
+		echo "<link rel='stylesheet' href='css/tooltipster-sideTip-shadow.min.css'>";
 		echo "<link rel='stylesheet' href='css/custom.css'>";
 		echo "<link rel='stylesheet' href='css/jquery.gritter.css'>";
 		echo "<link rel='stylesheet' href='css/jquery-confirm.min.css'>";
@@ -49,6 +51,7 @@ function head(){
 		echo "<script src='js/jquery.ui.touch-punch.min.js'></script>";
 		echo "<script src='js/bootstrap-editable.min.js'></script>";
 		echo "<script src='js/simplebar.js'></script>";
+		echo "<script src='js/tooltipster.bundle.min.js'></script>";
 		echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js'></script>";
 		echo "<link rel='stylesheet' href='css/all.min.css'>";	
 		echo "<noscript>
@@ -60,10 +63,23 @@ function head(){
 		</noscript>";
 		echo "<script>
 		
-			$(function (){
-					$('[data-toggle=\"tooltip\"]').tooltip()
-					$('#tool').tooltip('disable')
-				})
+			$(document).ready(function() {
+				$('.tooltipster').tooltipster({
+					theme: 'tooltipster-shadow',
+					side: 'top',
+					interactive: 'true',
+					trigger: 'custom',
+					triggerOpen: {
+						mouseenter: true,
+						touchstart: true
+					},
+					triggerClose: {
+						click: true,
+						mouseleave: true,
+						scroll: true
+					}			
+	});
+			});
 		
 			$(function () {
 				$('[data-toggle=\"popover\"]').popover({
@@ -681,7 +697,7 @@ function kanban(){
 					$class = "class='timeline-inverted'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
-					$title = "<div class='timeline-heading' >";
+					$title = "<div class='timeline-heading'>";
 					$title .= "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
 					$title .= "</div>";
 					$type="topic";
@@ -708,7 +724,7 @@ function kanban(){
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";
 				echo " <small class='text-muted'>".$user."</small>";
-				echo "<a style='float:right' data-toggle='collapse' href='#fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
+				echo "<a class='tooltipster' title='test' style='float:right' data-toggle='collapse' href='#fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
 					echo "Actions";
 				echo "</a>";
 				echo $title;
