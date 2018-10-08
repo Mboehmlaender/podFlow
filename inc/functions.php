@@ -66,17 +66,19 @@ function head(){
 			$(document).ready(function() {
 				$('.tooltipster').tooltipster({
 					theme: 'tooltipster-shadow',
-					side: 'top',
+					side: 'left',
+					minWidth: 200,
 					interactive: 'true',
 					trigger: 'custom',
 					triggerOpen: {
 						mouseenter: true,
-						touchstart: true
+						touchstart: true,
+						scroll: false
 					},
 					triggerClose: {
 						click: true,
 						mouseleave: true,
-						scroll: true
+						scroll: false
 					}			
 	});
 			});
@@ -724,17 +726,40 @@ function kanban(){
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";
 				echo " <small class='text-muted'>".$user."</small>";
-				echo "<a class='tooltipster' title='test' style='float:right' data-toggle='collapse' href='#fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
+/* 				echo "<a class='tooltipster' title='test' style='float:right' data-toggle='collapse' href='#fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='fields_collapse_".$type."_".$sql_kanban_entries_row['ID']."'>";
+					echo "Actions";
+				echo "</a>";	 */			
+				echo "<a class='tooltipster' style='float:right' data-tooltip-content='#tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
 					echo "Actions";
 				echo "</a>";
+				
+				echo "<div class='tooltip_templates' style='display:none'>";
+					echo "<span id='tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
+								echo "<div class='row' style='margin: 0px;'>";
+ 									echo "<div class='col-6' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-tertiary btn-block'><i class='fas fa-edit fa-fw'></i></button>";
+									echo "</div>";
+									echo "<div class='col-6' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
+									echo "</div>";
+									echo "<div class='col-6' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-success btn-block'><i class='far fa-check-circle fa-fw'></i></button>";
+									echo "</div>";
+									echo "<div class='col-6' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-danger btn-block'><i class='far fa-times-circle fa-fw'></i></button>";
+									echo "</div>"; 
+								echo "</div>";
+			echo "</span>"; 
+				echo "</div>";
+		
 				echo $title;
           echo "<div class='timeline-body'>";
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 		  {
-			echo "<a data-toggle='collapse' href='#collapse_topic_".$sql_kanban_entries_row['ID']."' role='button' aria-expanded='false' aria-controls='collapse_topic_".$sql_kanban_entries_row['ID']."'>";
+			echo "<span class='collapse-inner' style='cursor:pointer; color:#009688' id_topic='".$sql_kanban_entries_row['ID']."'>";
 				echo "Beiträge anzeigen";
-			echo "</a>";
-				echo "<div class='collapse' id='collapse_topic_".$sql_kanban_entries_row['ID']."' style='margin-top: 15px;'>";
+			echo "</span>";
+				echo "<div id='collapse_topic_".$sql_kanban_entries_row['ID']."' style='margin-top: 15px; display:none'>";
 				echo "<ul class='topic_links sortable_topic_links'>";
 			$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
 			$select_topic_links_result = mysqli_query($con, $select_topic_links);
@@ -832,14 +857,7 @@ echo "</div>";
 		  } );		
 	</script>";	
 
-	echo "<script>
-			$( \".collapse-outer\" ).on('show.bs.collapse', function(){
-			});
-			
-			$( \".collapse-outer\" ).on('hide.bs.collapse', function(){
-			});
-	</script>";	
-	
+
 	echo "<script>
 			$( \".collapse_me\" ).on('click', function(){
 						$(\".collapse-outer\").collapse('hide');
