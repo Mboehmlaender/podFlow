@@ -66,7 +66,7 @@ function head(){
 			$(document).ready(function() {
 				$('.tooltipster').tooltipster({
 					theme: 'tooltipster-shadow',
-					side: 'left',
+					side: 'top',
 					minWidth: 200,
 					interactive: 'true',
 					trigger: 'custom',
@@ -730,7 +730,7 @@ function kanban(){
 					echo "Actions";
 				echo "</a>";	 */			
 				echo "<a class='tooltipster' style='float:right' data-tooltip-content='#tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
-					echo "Actions";
+					echo "<i class='fas fa-angle-double-up'></i>";
 				echo "</a>";
 				
 				echo "<div class='tooltip_templates' style='display:none'>";
@@ -757,9 +757,9 @@ function kanban(){
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 		  {
 			echo "<span class='collapse-inner' style='cursor:pointer; color:#009688' id_topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "Beiträge anzeigen";
+				echo "<i class='rotate-arrow fas fa-angle-double-down fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
 			echo "</span>";
-				echo "<div id='collapse_topic_".$sql_kanban_entries_row['ID']."' style='margin-top: 15px; display:none'>";
+				echo "<div class='collapse collapse-inner-content' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
 				echo "<ul class='topic_links sortable_topic_links'>";
 			$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
 			$select_topic_links_result = mysqli_query($con, $select_topic_links);
@@ -768,7 +768,7 @@ function kanban(){
 				echo "<li class='topic_links_item'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
 					echo "<div class='col-12 col-xl-8 topic_link_title' style='padding:1px;'>";
-						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</p>";
+						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><div class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
 					echo "</div>";
 					echo "<div class='col-6 col-xl-2' style='padding:1px'>";
 						echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm'><i class='fas fa-external-link-alt fa-fw'></i></button>";
@@ -859,12 +859,7 @@ echo "</div>";
 
 
 	echo "<script>
-			$( \".collapse_me\" ).on('click', function(){
-						$(\".collapse-outer\").collapse('hide');
-			});
-			$( \".expand_me\" ).on('click', function(){
-						$(\".collapse-outer\").collapse('show');
-			});
+
 	</script>";	
 /* 	echo "<script>
 			$( \"#collapse_icon\" ).on('click', function(){

@@ -119,54 +119,78 @@ function load_cat(cat_id){
 }
 
 $(document).ready(function(){
+	//Kategorien per Cookie automatisch öffnen
+	var content=Cookies.get(); //get all cookies
+	
+	for (var panel in content){ //<-- panel is the name of the cookie
+	if ($("#"+panel).hasClass("collapse-outer")) // check if this is a panel
+		{
+			$("#"+panel).collapse();
+		}  
+	else if ($("#"+panel).hasClass("collapse-inner-content")) // check if this is a panel
+		{
+			$("#"+panel).show();
+			$("#"+panel).addClass("show");	
+			var test = $("#"+panel).attr("topic");	
+			var angle = -90;
+			$(".expand_icon_" + test).attr('angle', angle);	
+			$(".expand_icon_" + test).css({'transform': 'rotate(' + angle + 'deg)'});	
+		}  
+	}	
 
-var all_cookies=Cookies.get();
-console.log(all_cookies);
+console.log(content);
 
+$( ".collapse_me" ).on('click', function(){
+			$(".collapse-outer").collapse("hide");
+			$(".collapse-inner-content").hide("slow");
+			for (var de_panel in content){
+				if(de_panel.substr(0,8) == "collapse")
+				{
+					Cookies.remove(de_panel);
+				}
+				
+			$(".rotate-arrow").removeAttr('angle');	
+			$(".rotate-arrow").css({'transform': ''});
+		
+			}
+			
+});
+$( ".expand_me" ).on('click', function(){
+			$(".collapse-outer").collapse('show');
+});
+			
 $(".collapse-inner").on("click", function(){
 	var topic_id = $(this).attr("id_topic");
-	$("#collapse_topic_" + topic_id).toggle("slow");
-/* 	Cookies.set("topic", topic_id);	
- */});
+	$("#collapse_topic_" + topic_id).toggle("fast");
+	if ($("#collapse_topic_" + topic_id).hasClass("show"))
+	{
+		Cookies.remove("collapse_topic_" + topic_id);	
+		var angle = 0;
+		$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
+		$(".expand_icon_" + topic_id).removeAttr('angle');	
+		$("#collapse_topic_" + topic_id).removeClass("show");
+	}
+	else
+	{
+		Cookies.set("collapse_topic_" + topic_id, "topic");	
+		$("#collapse_topic_" + topic_id).addClass("show");
+		var angle = -90;
+		$(".expand_icon_" + topic_id).attr('angle', angle);	
+		$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
+	}
+		
+ });
  
 $(".collapse-outer").on("show.bs.collapse", function(){
 	var cat_id = $(this).attr("id");
-	alert("Open" + cat_id);
  	Cookies.set(cat_id, "category");	
  });
  
 $(".collapse-outer").on("hide.bs.collapse", function(){
 	var cat_id_remove = $(this).attr("id");
-	alert("Close" + cat_id_remove);
  	Cookies.remove(cat_id_remove);	
  });
 
-
-	//Kategorien per Cookie automatisch öffnen
-		var content=Cookies.get(); //get all cookies
-		for (var panel in content){ //<-- panel is the name of the cookie
-			if ($("#"+panel).hasClass("collapse-outer")) // check if this is a panel
-				{
-					$("#"+panel).show();
-				}  
-		}	
-/* 	var categories=Cookies.get('category'); //get all cookies
-	if ($("#"+categories).hasClass("cat-content")) // check if this is a panel
-		{
-			jQuery.ajax({
-				url: "inc/select.php?cat_list=1",
-				data: {"cat_id":categories.substring(4)},
-				type: "POST",
-				success:function(data)
-					{
-						$("#category_list").hide("fast");
-						$("#"+categories).html(data).show("fast");
-					},
-				error:function ()
-					{
-					}
-			});	
-	} */
 
 	//Themen/Beiträge ordnen für den Export
 	if ($("#list_check").has("li").length === 0)
