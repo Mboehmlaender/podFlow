@@ -187,7 +187,7 @@ if(isset($_GET['add_entry'])){
 					echo "<option selected disabled>Kategorie wählen</option>";
 					while($add_entry_row = mysqli_fetch_assoc($sql_add_entry_result))
 						{
-							echo "<option id='option' allow_topics='".$add_entry_row['ALLOW_TOPICS']."' max_entries='".$add_entry_row['MAX_ENTRIES']."' cat_id=".$add_entry_row['ID_CATEGORY'].">";
+							echo "<option id='option' max_entries='".$add_entry_row['MAX_ENTRIES']."' cat_id=".$add_entry_row['ID_CATEGORY'].">";
 								echo $add_entry_row['DESCR'];
 							echo "</option>";
 						}
@@ -197,13 +197,11 @@ if(isset($_GET['add_entry'])){
 					$(\"#modal1\").on('change', function(){
 						$(\"#select_depend_2\").load(\" #select_depend_2 > *\");
 						var pocast = $(this).attr('podcast');
-						var allow_topics = $('option:selected', this).attr('allow_topics');
-						var max_entries = $('option:selected', this).attr('max_entries');
-						var value = $('option:selected', this).attr('cat_id');
+						var max_entries = $('#option:selected', this).attr('max_entries');
+						var value = $('#option:selected', this).attr('cat_id');
 						jQuery.ajax({
 							url: \"inc/check.php?select_category=1\",
 							data: {	\"cat_id\":value,
-									\"allow_topics\":allow_topics,
 									\"max_entries\":max_entries
 								},
 							type: \"POST\",

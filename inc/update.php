@@ -56,7 +56,7 @@ if(isset($_POST)){
 				{
 					$ts = "'".$now."'";
 				}
-			$sql = "UPDATE ".DB_PREFIX.$table." SET DONE_TS = ".$ts.", ".$name."='".$value."' WHERE ID=".$pk;
+			$sql = "UPDATE ".DB_PREFIX.$table." SET DONE_TS = ".$ts.", DONE='".$value."' WHERE ID=".$pk;
 			$sql_result = mysqli_query($con, $sql);
 			if($table === 'topics')
 				{

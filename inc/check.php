@@ -49,19 +49,18 @@ if(isset($_POST)){
 
 	//Neuer Beitrag --> Kategorie wählen
 	if(isset($_GET['select_category'])){
-		$allow_topics =  mysqli_real_escape_string($con,$_POST['allow_topics']);
 		$cat_id =  mysqli_real_escape_string($con,$_POST['cat_id']);
 		$max_entries =  mysqli_real_escape_string($con,$_POST['max_entries']);
 
 /*  		if($allow_topics == 1)
 			{ */
+				$sql_modal_cat_topic = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID_CATEGORY =".$cat_id;
+				$sql_modal_cat_topic_result = mysqli_query($con, $sql_modal_cat_topic);
 				echo "<select id='select_depend_menu' class='form-control'>";
 					echo "<option id='option2' selected disabled>Bitte wählen</option>";
 					echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='new_link'>Neuer Beitrag</option>";
 					echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='new_topic'>Neues Thema</option>";
 					echo "<option id='option2' disabled>Bestehende Themen</option>";
-					$sql_modal_cat_topic = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID_CATEGORY =".$cat_id;
-					$sql_modal_cat_topic_result = mysqli_query($con, $sql_modal_cat_topic);
 					while($sql_modal_cat_topic_row = mysqli_fetch_assoc($sql_modal_cat_topic_result))
 						{
 							if($sql_modal_cat_topic_row['CATEGORIES_VISIBLE'] == 0 && $sql_modal_cat_topic_row['TOPICS_ID_USER'] != $_SESSION['userid'] && $sql_modal_cat_topic_row['TOPICS_DONE'] == 0)
@@ -82,7 +81,7 @@ if(isset($_POST)){
 						var max_entries = $('option:selected', this).attr('max_entries');
 						var sel_cat_id = $('option:selected', this).attr('sel_cat_id');
 						jQuery.ajax({
-							url: \"../inc/check.php?select_topic=1\",
+							url: \"inc/check.php?select_topic=1\",
 							data: {	\"select_depend_value\":select_depend_value,
 									\"max_entries\":max_entries,
 									\"sel_cat_id\":sel_cat_id
@@ -158,7 +157,7 @@ if(isset($_POST)){
 					});								   
 				</script>"; 
 			}  */
-			exit;
+			return;
 	} 
 
 	//Neuer Beitrag --> Kategorie wählen --> Thema wählen

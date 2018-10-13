@@ -119,6 +119,57 @@ function load_cat(cat_id){
 }
 
 $(document).ready(function(){
+	
+	//Link/Beitrag löschen
+
+	$(".delete_entry").on('click', function(){
+		var pk = $(this).attr("data-pk");
+		var table = $(this).attr("table");
+		var option = $(this).attr("option");
+
+		if(table == 'topics')
+			{
+				var content = 'Das Thema und alle enthaltenen Beiträge werden gelöscht!';
+			}
+		else
+			{
+				var content = 'Der Beitrag wird gelöscht!';
+			}
+		$.confirm({
+			title: 'Wirklich löschen?',
+			content: content,
+			type: 'red',
+			buttons: {   
+			ok: {
+				text: "ok!",
+				btnClass: 'btn-primary',
+				keys: ['enter'],
+				action: function(){
+					jQuery.ajax({
+						url: "inc/delete.php?del_"+option+"=1",
+						data: {	"pk":pk,
+								"table":table
+							},
+						type: "POST",
+						success:function(data){
+							console.log(data);
+							location.reload();
+							},
+						error:function ()
+							{
+							}
+						});
+					}
+				},
+			cancel:	
+				{
+					text: "abbrechen!",
+					action: function(){}
+				}
+			}
+		});	
+	});
+							
 	//Kategorien per Cookie automatisch öffnen
 	var content=Cookies.get(); //get all cookies
 	
@@ -143,6 +194,7 @@ console.log(content);
 $( ".collapse_me" ).on('click', function(){
 			$(".collapse-outer").collapse("hide");
 			$(".collapse-inner-content").hide("slow");
+			$(".collapse-inner-content").removeClass("show");
 			for (var de_panel in content){
 				if(de_panel.substr(0,8) == "collapse")
 				{
@@ -442,7 +494,7 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 		$.gritter.add({
 			title: "Link kopiert",
 			text: "Der Link wurde in die Zwischenablage kopiert!",
-			image: "../images/confirm.png",
+			image: "images/confirm.png",
 			time: "1000"
 		});		
 	});		
