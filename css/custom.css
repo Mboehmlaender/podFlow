@@ -1,3 +1,29 @@
+.update{
+	border: none; 
+	color:black
+}
+
+.update::before{
+  font-family: "Font Awesome\ 5 Free";
+	content: "\f303";
+    font-style: normal;
+    font-weight: 700;
+    text-decoration: inherit;
+	margin-right: 5px;
+}
+
+.edit{
+	margin-left: 20%;
+	cursor:pointer;
+}
+
+.edit_test{
+	    cursor: default;
+}
+
+.active_edit{
+	color: green;
+}
 
 .rotate-arrow{
 	transition: all 0.5s ease;

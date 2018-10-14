@@ -611,7 +611,7 @@ function category_list(){
 
 function kanban(){
 	echo "<div class='container' style='padding: 0px;'>";
-	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
+	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><i class='edit fas fa-pencil-alt fa-2x'></i><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
 		{
@@ -732,13 +732,21 @@ function kanban(){
 			{
 				$user = $sql_kanban_entries_row['NAME_SHOW'];
 			}
+			if($sql_kanban_entries_row['ID_USER'] == $_SESSION['userid'])
+			{
+				$editable = "own_entry";
+			}
+			else
+			{
+				$editable = "own_entry";
+			}
 			if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 				{
 					$class = "class='timeline-inverted'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
 					$title = "<div class='timeline-heading'>";
-					$title .= "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
+					$title .= "<h6 class='".$editable." edit_test timeline-title' beschr='Beschreibung' table='topics' data-name='DESCR' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
 					$title .= "</div>";
 					$type="topics";
 				}
@@ -750,7 +758,7 @@ function kanban(){
 					$title = "";
 					$type="links";
 				}
-		  
+			
       echo "<li ".$class.">";
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";

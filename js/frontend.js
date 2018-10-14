@@ -123,6 +123,39 @@ function load_cat(cat_id){
 
 $(document).ready(function(){
 	
+	$(".edit").on("click", function(){
+ 		if($(this).hasClass("active_edit"))
+		{			
+		$(".own_entry").editable("destroy")
+		$(".own_entry").removeClass("update");
+		$(".edit").removeClass("active_edit");
+
+		}
+		else
+		{
+		$(".edit").addClass("active_edit");
+		$(".own_entry").addClass("update");
+		$(".own_entry").editable({
+			url: "inc/update.php",
+		type: "POST",
+		params: function(params)
+			{ 
+				var data = {};
+ 				data["pk"] = params.pk;
+				data["name"] = params.name;
+				data["value"] = params.value;
+				data["table"] = $(this).attr("table"); 
+				return data;
+			},
+		emptytext: "Nichts hinterlegt",			
+		success: function(data)
+			{
+				console.log(data);
+			}			
+		});
+		}
+	});
+	
 	//Link/Beitrag löschen
 
 	$(".delete_entry").on('click', function(){
