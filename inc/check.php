@@ -52,10 +52,30 @@ if(isset($_POST)){
 		$cat_id =  mysqli_real_escape_string($con,$_POST['cat_id']);
 		$max_entries =  mysqli_real_escape_string($con,$_POST['max_entries']);
 
-/*  		if($allow_topics == 1)
-			{ */
 				$sql_modal_cat_topic = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID_CATEGORY =".$cat_id;
 				$sql_modal_cat_topic_result = mysqli_query($con, $sql_modal_cat_topic);
+				
+				$cur_entries_links = linksincat($_SESSION['cur_episode'], $cat_id); 
+				if($cur_entries_links >= $max_entries && $max_entries > 0)
+					{
+						if(mysqli_num_rows($sql_modal_cat_topic_result))
+						{
+							echo "<select id='select_depend_menu' class='form-control'>";
+								echo "<option id='option2' disabled selected>Bestehende Themen</option>";
+								while($sql_modal_cat_topic_row = mysqli_fetch_assoc($sql_modal_cat_topic_result))
+									{
+										if($sql_modal_cat_topic_row['CATEGORIES_VISIBLE'] == 0 && $sql_modal_cat_topic_row['TOPICS_ID_USER'] != $_SESSION['userid'] && $sql_modal_cat_topic_row['TOPICS_DONE'] == 0)
+											{}
+										else
+											{
+												echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='".$sql_modal_cat_topic_row['TOPICS_ID']."'>".$sql_modal_cat_topic_row['TOPICS_DESCR']."</option>";					
+											}
+									}
+							echo "</select>";							
+						}
+						echo "Die maximale Anzahl an neuen Beiträgen in dieser Kategorie ist bereits erreicht!";
+					}
+					else{
 				echo "<select id='select_depend_menu' class='form-control'>";
 					echo "<option id='option2' selected disabled>Bitte wählen</option>";
 					echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='new_link'>Neuer Beitrag</option>";
@@ -71,6 +91,7 @@ if(isset($_POST)){
 								}
 						}
 				echo "</select>";
+					}
 				echo "<script>
 					if($(\".savebtn\")[0])
 						{
@@ -98,25 +119,6 @@ if(isset($_POST)){
 							});
 						});								   
 				</script>"; 
-
-		/* 	}
-		else
-			{
-				$cur_entries_links = linksincat('links', $_SESSION['cur_episode'], $cat_id); 
-				if($cur_entries_links >= $max_entries && $max_entries > 0)
-					{
-						echo "Die maximale Anzahl an Beiträgen in dieser Kategorie ist bereits erreicht!";
-						return;
-					}
-				echo "<hr>";								
-				echo "<div class='form-group'>";
-					echo "<label for='link_topics_title'>Titel des Beitrags</label>";
-					echo "<input type='text' class='form-control' id='link_title'>";	 
-				echo "</div>";
-				echo "<div class='form-group'>";
-					echo "<label for='link_url'>URL</label>";
-					echo "<input type='text' class='form-control' id='link_url'>";
-				echo "</div>";
 				echo "<script>
 					var button = \"<button type='button' id='absenden_link_new' name='absenden_link_new' class='btn btn-outline-secondary savebtn'>Speichern</button>\";
 
@@ -156,7 +158,7 @@ if(isset($_POST)){
 						});
 					});								   
 				</script>"; 
-			}  */
+			
 			return;
 	} 
 

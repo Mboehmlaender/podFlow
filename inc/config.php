@@ -72,9 +72,9 @@ function userInEpisode($user_id, $id_episode){
 }
 
 //Anzahl der Links/Beuträge einer Kategorie prüfen
-function linksincat($table, $id_episode, $id_cat){
+function linksincat($id_episode, $id_cat){
 	global $con;
-	$sql_links_in_cat = "SELECT * FROM ".DB_PREFIX.$table." WHERE ID_CATEGORY = ".$id_cat." AND ID_EPISODE = ".$id_episode;
+	$sql_links_in_cat = "SELECT ID FROM ".DB_PREFIX."links WHERE ID_CATEGORY = ".$id_cat." AND ID_EPISODE = ".$id_episode." AND ID_TOPIC IS NULL UNION ALL SELECT ID FROM ".DB_PREFIX."topics WHERE ID_CATEGORY = ".$id_cat." AND ID_EPISODE = ".$id_episode;
 	$sql_links_in_result = mysqli_query($con, $sql_links_in_cat);
 	return mysqli_num_rows($sql_links_in_result);
 }

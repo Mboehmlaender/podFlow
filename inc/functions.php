@@ -691,21 +691,21 @@ function kanban(){
 							{
 								$btn = "btn-success";
 								$done = "";
-								$entry_done = "<i style='margin-left: 10px; color: green' class='far fa-check-circle'></i>";
+								$entry_done = "<i class='far fa-check-circle'></i>";
 								$entry_done2 = "<style='background-color: rgba(0, 209, 0, 0.3)'>";
 							}
 						else if ($sql_kanban_entries_row['EPISODE_DONE'] == 1 && $sql_kanban_entries_row['DONE'] == 1)
 							{
 								$btn = "btn-success";
 								$done ="disabled";		
-								$entry_done = "<i style='margin-left: 10px; color: green' class='far fa-check-circle'></i>";
+								$entry_done = "<i class='far fa-check-circle'></i>";
 								$entry_done2 = "<style='background-color: rgba(0, 209, 0, 0.3)'>";
 							}																
 						else if ($sql_kanban_entries_row['EPISODE_DONE'] == 1 && $sql_kanban_entries_row['DONE'] == 0)
 							{
 								$btn = "btn-outline-success";
 								$done ="disabled";		
-								$entry_done = "<i style='margin-left: 10px; color: green' class='far fa-check-circle'></i>";
+								$entry_done = "<i class='far fa-check-circle'></i>";
 								$entry_done2 = "<style='background-color: rgba(0, 209, 0, 0.3)'>";
 							}
 						else
@@ -740,7 +740,7 @@ function kanban(){
 					$title = "<div class='timeline-heading'>";
 					$title .= "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
 					$title .= "</div>";
-					$type="topic";
+					$type="topics";
 				}
 			else
 				{
@@ -748,13 +748,13 @@ function kanban(){
 					$icon = "<i class='fas fa-link fa-fw'></i>";
 					$icon_color = " warning";
 					$title = "";
-					$type="link";
+					$type="links";
 				}
 		  
       echo "<li ".$class.">";
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";
-				echo " <small class='text-muted'>".$user."</small>".$entry_done;
+				echo " <small class='text-muted'>".$user."</small><span style='margin-left: 10px; color: green' class='check_icon_".$type."_".$sql_kanban_entries_row['ID']."'>".$entry_done."</span>";;
 				if($sql_kanban_entries_row['ID_USER'] != $_SESSION['userid'])
 				{
 					$actions = "";

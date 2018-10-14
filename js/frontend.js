@@ -37,6 +37,7 @@ function save_order(){
 //Links/Themen checken
 function check_link(id, table){
 	$("#check_"+id).blur();
+	var check_icon = "<i class='far fa-check-circle'></i>";
 	if ($("#check_"+table+id).attr("data-checked") == "1")
 		{
 			var value = "0";
@@ -45,6 +46,7 @@ function check_link(id, table){
 			$("#check_"+table+id).css("background-color", "transparent");
 			$("#check_"+table+id).css("color", "#28a745");
 			$("#check_"+table+id).css("border-color", "#28a745");
+			$(".check_icon_"+table+"_"+id).html("");
 			$.gritter.add({
 				title: "OK",
 				text: "Link/Thema entcheckt!",
@@ -60,6 +62,7 @@ function check_link(id, table){
 			$("#check_"+table+id).css("background-color", "#28a745");
 			$("#check_"+table+id).css("color", "white");
 			$("#check_"+table+id).css("border-color", "#28a745");
+			$(".check_icon_"+table+"_"+id).html(check_icon);
 			$.gritter.add({
 				title: "OK",
 				text: "Link/Thema gecheckt!",
