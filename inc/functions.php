@@ -67,7 +67,7 @@ function head(){
 				$('.tooltipster').tooltipster({
 					theme: 'tooltipster-shadow',
 					side: 'top',
-					minWidth: 200,
+					minWidth: 300,
 					interactive: 'true',
 					trigger: 'custom',
 					triggerOpen: {
@@ -781,18 +781,18 @@ function kanban(){
 				echo "<div class='tooltip_templates' style='display:none'>";
 					echo "<span id='tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
 								echo "<div class='row' style='margin: 0px;'>";
- 									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-tertiary btn-block'><i class='fas fa-edit fa-fw'></i></button>";
-									echo "</div>";
-									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
-									echo "</div>";
-									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button'  ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_topics".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"topics\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
+									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_topics".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"topics\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
 											echo "<i class='far fa-check-circle'></i>";
 										echo "</button>";									
 									echo "</div>";
-									echo "<div class='col-6' style='padding:1px'>";
+ 									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' edit_type='topics' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry'><i class='fas fa-edit fa-fw'></i></button>";
+									echo "</div>";
+/* 									echo "<div class='col-6' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
+									echo "</div>"; */
+									echo "<div class='col-4' style='padding:1px'>";
 										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry' id='delete_topic".$sql_kanban_entries_row['ID']."' table='topics' option='topics' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
 									echo "</div>"; 
 								echo "</div>";
@@ -810,7 +810,7 @@ function kanban(){
 				echo "<li class='topic_links_item'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
 					echo "<div class='col-12 col-xl-8 topic_link_title' style='padding:1px;'>";
-						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><div class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
+						echo "<div class='link_icon' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div><div class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
 					echo "</div>";
 					
 					
@@ -865,18 +865,18 @@ function kanban(){
 				echo "<div class='tooltip_templates' style='display:none'>";
 					echo "<span id='tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
 								echo "<div class='row' style='margin: 0px;'>";
- 									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-tertiary btn-block'><i class='fas fa-edit fa-fw'></i></button>";
-									echo "</div>";
-									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
-									echo "</div>";
-									echo "<div class='col-6' style='padding:1px'>";
+									echo "<div class='col-4' style='padding:1px'>";
 										echo "<button type='button'  ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_links".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"links\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
 											echo "<i class='far fa-check-circle'></i>";
 										echo "</button>";									
 									echo "</div>";
-									echo "<div class='col-6' style='padding:1px'>";
+ 									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' edit_type='links' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry'><i class='fas fa-edit fa-fw'></i></button>";
+									echo "</div>";
+/* 									echo "<div class='col-6' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
+									echo "</div>"; */
+									echo "<div class='col-4' style='padding:1px'>";
 										echo "<button type='button' id='delete_link".$sql_kanban_entries_row['ID']."' table='links' option='link' data-pk='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-danger btn-block delete_entry'><i class='far fa-times-circle fa-fw'></i></button>";
 									echo "</div>"; 
 								echo "</div>";
@@ -888,7 +888,7 @@ function kanban(){
 				echo "<li class='topic_links_item'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
 					echo "<div class='col-12 col-xl-8 topic_link_title' style='padding:1px;'>";
-						echo "<div class='link_icon'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</p>";
+						echo "<div class='link_icon' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div><p class='lead' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</p>";
 					echo "</div>";
 								if($sql_kanban_entries_row['URL'] == NULL || $sql_kanban_entries_row['URL'] == '')
 									{

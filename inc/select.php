@@ -7,6 +7,120 @@ if(!isset($_SESSION['userid']))
 		header('Location: ../login.php');
 	}		
 
+//Modal: Eintrag bearbeiten
+
+if(isset($_GET['edit_entry'])){
+	
+	$edit_id = $_POST['edit_id'];
+	$type = $_POST['type'];
+	if($type === 'links')
+	{
+			$sql_get_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID = ".$edit_id ;
+			$sql_get_links_result = mysqli_query($con, $sql_get_links);
+			while ($sql_get_links_rows = mysqli_fetch_assoc($sql_get_links_result))
+				{
+								if ($sql_get_links_rows['DONE'] == 1)
+									{
+										$btn = "btn-success";
+										$done = "";
+									}
+								else
+									{
+										$btn = "btn-outline-success";
+										$done = "";								
+									}
+									echo "<div class='tile-body'>";
+										echo "<div class='row'>";
+											echo "<div class='col-12' >";
+												echo "<div style='overflow: hidden; text-overflow: ellipsis; -o-text-overflow: ellipsis; white-space: nowrap; margin-bottom: 10px;'>";
+													echo "<div class='form-group'>";
+													echo "<label>Titel</label>";
+													echo "<span style='display:block; margin-left: 5px'>";
+													echo "<i class='fas fa-pencil-alt fa-xs'></i> ";
+													echo "<a style='border: none; color:black; ' class='update lead' href='#' id='descr".$sql_get_links_rows['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung'>".$sql_get_links_rows['DESCR']."</a>";
+													echo "</span>";
+													echo "</div>";
+													echo "<div class='form-group'>";
+													echo "<label>URL</label>";
+													echo "<span style='display:block; margin-left: 5px'>";
+													echo "<i class='fas fa-pencil-alt fa-xs'></i> ";
+													echo "<a style='border: none; color:black; ' class='lead update' href='#' id='url".$sql_get_links_rows['ID']."' table='links' data-name='URL' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='URL'>".$sql_get_links_rows['URL']."</a>";
+													echo "</span>";
+													echo "</div>";
+												echo "</div>";
+											echo "</div>";
+											echo "<div class='col-12' style='margin-bottom: 10px;'>";
+												if($sql_get_links_rows['INFO'] == NULL || $sql_get_links_rows['INFO'] == '')
+													{
+														$has_info = "-outline-";
+													}
+													else
+													{
+														$has_info = "-";											
+													}
+
+												echo "<button class='btn btn".$has_info."notice btn-block' type='button'>";
+													echo "Notizen:";
+												echo "</button>";
+												echo "<div id='collapseExample".$sql_get_links_rows['ID']."'>";
+													echo "<div style='margin-top:10px'>";
+														echo "<textarea data-name='INFO' id='textarea_links".$sql_get_links_rows['ID']."' class='update_notizen' table='links' data-pk='".$sql_get_links_rows['ID']."' name='textarea_links".$sql_get_links_rows['ID']."'>";
+															echo $sql_get_links_rows['INFO'];
+														echo "</textarea>";
+													echo "</div>";
+													echo "<div style='margin-top:10px'>";	
+														echo "<button class='btn btn-outline-success btn-block' id='update_notizen_links".$sql_get_links_rows['ID']."' type='button' ><i class='fas fa-save'></i> Notizen Speichern</button>";
+														echo "<script>
+		$.fn.editable.defaults.mode = \"inline\";
+	$(\".update\").editable({
+		params: function(params)
+			{ 
+				var data = {};
+				data[\"pk\"] = params.pk;
+				data[\"name\"] = params.name;
+				data[\"value\"] = params.value;
+				data[\"table\"] = $(this).attr(\"table\");
+				return data;
+			},
+		type: \"POST\",
+		emptytext: \"Nichts hinterlegt\",			
+		success: function(data)
+			{
+				console.log(data);
+			}
+	});
+															CKEDITOR.replace( 'textarea_links".$sql_get_links_rows['ID']."');
+															$('#update_notizen_links".$sql_get_links_rows['ID']."').on('click', function(e) {
+																var pk = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-pk\")
+																var name = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-name\")
+																var table = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"table\")
+																var value= CKEDITOR.instances['textarea_links".$sql_get_links_rows['ID']."'].getData();	
+																$.ajax({
+																		url: 'inc/update.php',
+																		type: 'POST',
+																		data: {name:name, pk:pk, value:value, table:table},
+																		success: function(data){
+																		console.log(data);
+																		$.gritter.add({
+																			title: 'Bearbeiten ok!',
+																			text: 'Die Änderungen wurden gespeichert!',
+																			image: 'images/confirm.png',
+																			time: '1000'
+																		});		
+																	console.log(data);
+																	}
+																});
+															});
+														</script>";					
+													echo "</div>";
+												echo "</div>";
+											echo "</div>";
+										echo "</div>";
+									echo "</div>";
+				}
+	}
+return;
+}
 //Modal: Episode bereinigen
 if(isset($_GET['clean_episode'])){
 	echo "<div class='row' id='select_unchecked' episode_id_current='".$_SESSION['cur_episode']."'>";

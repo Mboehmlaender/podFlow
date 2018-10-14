@@ -247,6 +247,32 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
  });
 
 
+	//Change-Modal für Bearbeiten öffnen
+	$(".edit_entry").on("click", function(){
+		var type = $(this).attr("edit_type");
+		var edit_id = $(this).attr("edit_id");
+		
+		$("#change").modal("show");
+		$("#change").attr("edit", type+"_"+edit_id);
+		
+		$.ajax({
+			url: "inc/select.php?edit_entry=1",
+			type: "POST",
+			data: {
+					"type":type,
+					"edit_id":edit_id
+				},
+			success: function(data)
+				{
+					console.log(data),
+					$("#change_content").html(data);
+					$("#exampleModalLabel").html("Thema/Beitrag bearbeiten");
+				},
+		});
+	});			
+
+
+
 	//Themen/Beiträge ordnen für den Export
 	if ($("#list_check").has("li").length === 0)
 		{
