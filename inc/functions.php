@@ -849,9 +849,9 @@ function kanban(){
 											echo "</button>";
 										echo "</div>";
 										echo "<div class='col-6 col-xl-2' style='padding:1px'>";
-											echo "<div data-clipboard-text='".$select_topic_links_rows['URL']."' class='btn".$select_topic_links_rows['ID']." btn btn-info btn-block clipboard btn-sm'>";
+											echo "<button data-clipboard-text='".$select_topic_links_rows['URL']."' onclick='copy_link()' class='btn".$select_topic_links_rows['ID']." btn btn-info btn-block clipboard btn-sm'>";
 												echo "<i class='far fa-copy fa-fw'></i>";
-											echo "</div>";
+											echo "</button>";
 										echo "</div>";
 										
 										echo "<script>
@@ -928,7 +928,7 @@ function kanban(){
 											echo "</button>";
 										echo "</div>";
 										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$sql_kanban_entries_row['ID']."'>";
-											echo "<div data-clipboard-text='".$sql_kanban_entries_row['URL']."' class='btn".$sql_kanban_entries_row['ID']." btn btn-info btn-block clipboard btn-sm'>";
+											echo "<div data-clipboard-text='".$sql_kanban_entries_row['URL']."' onclick='copy_link()' class='btn".$sql_kanban_entries_row['ID']." btn btn-info btn-block clipboard btn-sm'>";
 												echo "<i class='far fa-copy fa-fw'></i>";
 											echo "</div>";
 										echo "</div>";

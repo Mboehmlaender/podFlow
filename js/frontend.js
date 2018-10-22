@@ -90,6 +90,16 @@ function check_link(id, table){
 		}); 						
 }	
 
+	//Link kopieren Meldung
+	function copy_link(){
+		$.gritter.add({
+			title: "Link kopiert",
+			text: "Der Link wurde in die Zwischenablage kopiert!",
+			image: "images/confirm.png",
+			time: "1000"
+		});		
+	}
+	
 //Kategorie öffnen
 function load_cat(cat_id){
 	var cat_id = cat_id;
@@ -618,16 +628,6 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 		});
 	});	
 	
-	//Link kopieren Meldung
-	$(".clipboard").on("click", function(){
-		$.gritter.add({
-			title: "Link kopiert",
-			text: "Der Link wurde in die Zwischenablage kopiert!",
-			image: "images/confirm.png",
-			time: "1000"
-		});		
-	});		
-
 	//Episode schließen
 	$("#closeepisode").on("click", function(){
 
