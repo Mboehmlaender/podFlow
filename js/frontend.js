@@ -123,37 +123,130 @@ function load_cat(cat_id){
 
 $(document).ready(function(){
 	
-	$(".edit").on("click", function(){
- 		if($(this).hasClass("active_edit"))
-		{			
-		$(".own_entry").editable("destroy")
-		$(".own_entry").removeClass("update");
-		$(".edit").removeClass("active_edit");
+	$(".edit_entry").on("click", function(){
+		var edit_id = $(this).attr("edit_id");
+		var edit_type = $(this).attr("edit_type");
+		if(edit_type == "topics")
+		{
+			if($("#topic_edit_button_"+edit_id).hasClass("active_edit"))
+			{
+			$(this).removeClass("btn-tertiary"),			
+			$(this).addClass("btn-outline-tertiary"),
+			$(".edit_topic_"+edit_id).editable("destroy")
+			$(".link_topic_"+edit_id).editable("destroy")
+			
+			$("#delete_topic"+edit_id).attr("disabled", true),
 
+			$(".edit_topic_"+edit_id).removeClass("update");
+			$(".link_topic_"+edit_id).removeClass("update");
+			
+			$("#topic_edit_button_"+edit_id).removeClass("active_edit");
+
+			}
+			else
+			{
+			$(this).removeClass("btn-outline-tertiary"),
+			
+			$(this).addClass("btn-tertiary"),
+			$("#delete_topic"+edit_id).removeAttr("disabled"),
+			
+			$("#topic_edit_button_"+edit_id).addClass("active_edit");
+			$(".edit_topic_"+edit_id).addClass("update");
+			$(".link_topic_"+edit_id).addClass("update");
+			
+			
+			$(".edit_topic_"+edit_id).editable({
+				url: "inc/update.php",
+			type: "POST",
+			params: function(params)
+				{ 
+					var data = {};
+					data["pk"] = params.pk;
+					data["name"] = params.name;
+					data["value"] = params.value;
+					data["table"] = $(this).attr("table"); 
+					return data;
+				},
+			emptytext: "Nichts hinterlegt",			
+			success: function(data)
+				{
+					console.log(data);
+				}			
+			});
+			
+			$(".link_topic_"+edit_id).editable({
+				url: "inc/update.php",
+			type: "POST",
+			params: function(params)
+				{ 
+					var data = {};
+					data["pk"] = params.pk;
+					data["name"] = params.name;
+					data["value"] = params.value;
+					data["table"] = $(this).attr("table"); 
+					return data;
+				},
+			emptytext: "Nichts hinterlegt",			
+			success: function(data)
+				{
+					console.log(data);
+				}			
+			});
+			
+			}
 		}
 		else
 		{
-		$(".edit").addClass("active_edit");
-		$(".own_entry").addClass("update");
-		$(".own_entry").editable({
-			url: "inc/update.php",
-		type: "POST",
-		params: function(params)
-			{ 
-				var data = {};
- 				data["pk"] = params.pk;
-				data["name"] = params.name;
-				data["value"] = params.value;
-				data["table"] = $(this).attr("table"); 
-				return data;
-			},
-		emptytext: "Nichts hinterlegt",			
-		success: function(data)
+			if($("#link_edit_button_"+edit_id).hasClass("active_edit"))
 			{
-				console.log(data);
-			}			
-		});
-		}
+				$(this).removeClass("btn-tertiary"),			
+				$(this).addClass("btn-outline-tertiary"),
+				$(".edit_link_"+edit_id).editable("destroy")
+				
+				$("#delete_link"+edit_id).attr("disabled", true),
+
+				$(".edit_link_"+edit_id).removeClass("update");
+				$(".link_icon_"+edit_id).toggle("show");
+				$("#links_url_"+edit_id).toggle("hide");
+				
+				$("#link_edit_button_"+edit_id).removeClass("active_edit");
+
+			}
+			else
+			{
+				$(this).removeClass("btn-outline-tertiary"),
+				
+				$(this).addClass("btn-tertiary"),
+				$("#delete_link"+edit_id).removeAttr("disabled"),
+				
+				$("#link_edit_button_"+edit_id).addClass("active_edit");
+				$(".edit_link_"+edit_id).addClass("update");
+				
+				$(".link_icon_"+edit_id).toggle("hide");
+				$("#links_url_"+edit_id).toggle("show");
+				$(".edit_link_"+edit_id).editable({
+					url: "inc/update.php",
+				type: "POST",
+				params: function(params)
+					{ 
+						var data = {};
+						data["pk"] = params.pk;
+						data["name"] = params.name;
+						data["value"] = params.value;
+						data["table"] = $(this).attr("table"); 
+						return data;
+					},
+				emptytext: "Nichts hinterlegt",			
+				success: function(data)
+					{
+						$("#buttons_link_open_"+edit_id).load(" #buttons_link_open_"+edit_id+" > *");
+						$("#buttons_link_copy_"+edit_id).load(" #buttons_link_copy_"+edit_id+" > *");
+						console.log(data);
+					}			
+				});
+			
+			}		}
+		
 	});
 	
 	//Link/Beitrag löschen
@@ -278,32 +371,6 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 	var cat_id_remove = $(this).attr("id");
  	Cookies.remove(cat_id_remove);	
  });
-
-
-	//Change-Modal für Bearbeiten öffnen
-	$(".edit_entry").on("click", function(){
-		var type = $(this).attr("edit_type");
-		var edit_id = $(this).attr("edit_id");
-		
-		$("#change").modal("show");
-		$("#change").attr("edit", type+"_"+edit_id);
-		
-		$.ajax({
-			url: "inc/select.php?edit_entry=1",
-			type: "POST",
-			data: {
-					"type":type,
-					"edit_id":edit_id
-				},
-			success: function(data)
-				{
-					console.log(data),
-					$("#change_content").html(data);
-					$("#exampleModalLabel").html("Thema/Beitrag bearbeiten");
-				},
-		});
-	});			
-
 
 
 	//Themen/Beiträge ordnen für den Export
@@ -436,7 +503,7 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 
 	//Editable
 		$.fn.editable.defaults.mode = "inline";
-		$.fn.editableform.buttons = "<button type=\"submit\" class=\"btn btn-success editable-submit\"><i class=\"fas fa-fw fa-check\"></i></button>" + "<button type=\"button\" class=\"btn btn-danger editable-cancel\"><i class=\"fas fa-fw fa-ban\"></i></button>" ;
+		$.fn.editableform.buttons = "<div class=\"row\"><div class=\"col-6\" style=\"padding-right: 1px\"><button type=\"submit\" class=\"btn btn-success editable-submit btn-block btn-sm\"><i class=\"fas fa-fw fa-check\"></i></button>" + "</div><div class=\"col-6\" style=\"padding-left: 1px\"><button type=\"button\" class=\"btn btn-danger editable-cancel btn-block btn-sm\"><i class=\"fas fa-fw fa-ban\"></i></button></div></div>" ;
 	$(".update").editable({
 		params: function(params)
 			{ 
