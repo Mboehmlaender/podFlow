@@ -835,8 +835,7 @@ function kanban(){
 									{
 										echo "<div class='col-6 col-xl-2' style='padding:1px'>";
 											$fund_url = $select_topic_links_rows['URL'];
-											$pos = "http";
-											if (strpos($fund_url, $pos) === false)
+											if (substr($fund_url, 0,4) !== "http")
 												{
 													$base = "http://".$fund_url;
 												}
@@ -849,7 +848,7 @@ function kanban(){
 											echo "</button>";
 										echo "</div>";
 										echo "<div class='col-6 col-xl-2' style='padding:1px'>";
-											echo "<button data-clipboard-text='".$select_topic_links_rows['URL']."' onclick='copy_link()' class='btn".$select_topic_links_rows['ID']." btn btn-info btn-block clipboard btn-sm'>";
+											echo "<button data-clipboard-text='".$base."' onclick='copy_link()' class='btn".$select_topic_links_rows['ID']." btn btn-info btn-block clipboard btn-sm'>";
 												echo "<i class='far fa-copy fa-fw'></i>";
 											echo "</button>";
 										echo "</div>";
@@ -914,8 +913,7 @@ function kanban(){
 									{
 										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$sql_kanban_entries_row['ID']."'>";
 											$fund_url = $sql_kanban_entries_row['URL'];
-											$pos = "http";
-											if (strpos($fund_url, $pos) === false)
+											if (substr($fund_url, 0,4) !== "http")
 												{
 													$base = "http://".$fund_url;
 												}
@@ -928,7 +926,7 @@ function kanban(){
 											echo "</button>";
 										echo "</div>";
 										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$sql_kanban_entries_row['ID']."'>";
-											echo "<div data-clipboard-text='".$sql_kanban_entries_row['URL']."' onclick='copy_link()' class='btn".$sql_kanban_entries_row['ID']." btn btn-info btn-block clipboard btn-sm'>";
+											echo "<div data-clipboard-text='".$base."' onclick='copy_link()' class='btn".$sql_kanban_entries_row['ID']." btn btn-info btn-block clipboard btn-sm'>";
 												echo "<i class='far fa-copy fa-fw'></i>";
 											echo "</div>";
 										echo "</div>";
