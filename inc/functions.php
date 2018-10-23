@@ -674,7 +674,7 @@ function kanban(){
 			echo "</a>"; */
 		
 		echo "<div class='collapse collapse-outer' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
-		echo "<ul class='timeline kanban_sortable' style='margin-bottom: 10px'>";
+		echo "<ul class='timeline' style='margin-bottom: 10px'>";
  		    echo "<li>";
 				    echo "<div class='timeline-badge success' style='margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
 			echo "</li>"; 
