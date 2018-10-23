@@ -898,7 +898,7 @@ function kanban(){
 						echo "<div class='link_icon link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div><p class='lead edit_link_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</p>";
 					echo "</div>";
 					echo "<div class='col-12 col-xl-8' id='".$type."_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display:none'>";
-						echo "<p class='lead edit_link_".$sql_kanban_entries_row['ID']."' table='links' data-name='URL' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['URL']."</p>";
+						echo "<p class='lead edit_link_".$sql_kanban_entries_row['ID']."' beschr='URL' table='links' data-name='URL' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['URL']."</p>";
 					echo "</div>";
 								if($sql_kanban_entries_row['URL'] == NULL || $sql_kanban_entries_row['URL'] == '')
 									{
