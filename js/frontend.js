@@ -140,68 +140,88 @@ $(document).ready(function(){
 		{
 			if($("#topic_edit_button_"+edit_id).hasClass("active_edit"))
 			{
-			$(this).removeClass("btn-tertiary"),			
-			$(this).addClass("btn-outline-tertiary"),
-			$(".edit_topic_"+edit_id).editable("destroy")
-			$(".link_topic_"+edit_id).editable("destroy")
-			
-			$("#delete_topic"+edit_id).attr("disabled", true),
+				$(this).removeClass("btn-tertiary"),			
+				$(this).addClass("btn-outline-tertiary"),
+				
+				$(".edit_topic_"+edit_id).editable("destroy")
+				$(".link_topic_"+edit_id).editable("destroy")
+				
+				$(".link_icon_"+edit_id).toggle("show");
+				$(".links_url_"+edit_id).toggle("hide");
+				
+				$("#delete_topic"+edit_id).attr("disabled", true),
 
-			$(".edit_topic_"+edit_id).removeClass("update");
-			$(".link_topic_"+edit_id).removeClass("update");
-			
-			$("#topic_edit_button_"+edit_id).removeClass("active_edit");
+				$(".edit_topic_"+edit_id).removeClass("update");
+				$(".link_topic_"+edit_id).removeClass("update");
+				
+				$("#topic_edit_button_"+edit_id).removeClass("active_edit");
 
 			}
 			else
 			{
-			$(this).removeClass("btn-outline-tertiary"),
+				$(this).removeClass("btn-outline-tertiary"),
+				
+				$(this).addClass("btn-tertiary"),
+				$("#delete_topic"+edit_id).removeAttr("disabled"),
 			
-			$(this).addClass("btn-tertiary"),
-			$("#delete_topic"+edit_id).removeAttr("disabled"),
-			
-			$("#topic_edit_button_"+edit_id).addClass("active_edit");
-			$(".edit_topic_"+edit_id).addClass("update");
-			$(".link_topic_"+edit_id).addClass("update");
-			
-			
-			$(".edit_topic_"+edit_id).editable({
+				$(".link_icon_"+edit_id).toggle("hide");
+				$(".links_url_"+edit_id).toggle("show");
+				
+				$("#topic_edit_button_"+edit_id).addClass("active_edit");
+				
+				$(".edit_topic_"+edit_id).addClass("update");
+				$(".link_topic_"+edit_id).addClass("update");
+				
+				$(".edit_topic_"+edit_id).editable({
 				url: "inc/update.php",
-			type: "POST",
-			params: function(params)
-				{ 
-					var data = {};
-					data["pk"] = params.pk;
-					data["name"] = params.name;
-					data["value"] = params.value;
-					data["table"] = $(this).attr("table"); 
-					return data;
-				},
-			emptytext: "Nichts hinterlegt",			
-			success: function(data)
-				{
-					console.log(data);
-				}			
-			});
-			
-			$(".link_topic_"+edit_id).editable({
-				url: "inc/update.php",
-			type: "POST",
-			params: function(params)
-				{ 
-					var data = {};
-					data["pk"] = params.pk;
-					data["name"] = params.name;
-					data["value"] = params.value;
-					data["table"] = $(this).attr("table"); 
-					return data;
-				},
-			emptytext: "Nichts hinterlegt",			
-			success: function(data)
-				{
-					console.log(data);
-				}			
-			});
+				type: "POST",
+				params: function(params)
+					{ 
+						var data = {};
+						data["pk"] = params.pk;
+						data["name"] = params.name;
+						data["value"] = params.value;
+						data["table"] = $(this).attr("table"); 
+						return data;
+					},
+				emptytext: "Nichts hinterlegt",			
+				success: function(data)
+					{
+						console.log(data);
+					}			
+				});
+				
+				$(".link_topic_"+edit_id).editable({
+					display: function(value) {
+						if($(this).attr("beschr")=="URL")
+							{
+								$(this).text($(this).attr("beschr"));
+							}
+						else
+							{
+								$(this).text(value);
+							}
+						} ,	
+					url: "inc/update.php",
+				type: "POST",
+				params: function(params)
+					{ 
+						var data = {};
+						data["pk"] = params.pk;
+						data["name"] = params.name;
+						data["value"] = params.value;
+						data["table"] = $(this).attr("table"); 
+						return data;
+					},
+				emptytext: "Nichts hinterlegt",			
+				success: function(data)
+					{
+						var link_id = $(this).attr("data-pk");
+						$("#buttons_link_open_"+link_id).load(" #buttons_link_open_"+link_id+" > *");
+						$("#buttons_link_copy_"+link_id).load(" #buttons_link_copy_"+link_id+" > *");
+						console.log(data);
+					}			
+				});
 			
 			}
 		}
@@ -211,14 +231,16 @@ $(document).ready(function(){
 			{
 				$(this).removeClass("btn-tertiary"),			
 				$(this).addClass("btn-outline-tertiary"),
+				
 				$(".edit_link_"+edit_id).editable("destroy")
 				
 				$("#delete_link"+edit_id).attr("disabled", true),
 
-				$(".edit_link_"+edit_id).removeClass("update");
+				
 				$(".link_icon_"+edit_id).toggle("show");
 				$("#links_url_"+edit_id).toggle("hide");
 				
+				$(".edit_link_"+edit_id).removeClass("update");
 				$("#link_edit_button_"+edit_id).removeClass("active_edit");
 
 			}
@@ -234,6 +256,7 @@ $(document).ready(function(){
 				
 				$(".link_icon_"+edit_id).toggle("hide");
 				$("#links_url_"+edit_id).toggle("show");
+				
 				$(".edit_link_"+edit_id).editable({
 				display: function(value) {
 					if($(this).attr("beschr")=="URL")

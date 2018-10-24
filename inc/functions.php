@@ -817,23 +817,27 @@ function kanban(){
 			{
 				echo "<li class='topic_links_item'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
-					echo "<div class='col-12 col-xl-8 topic_link_title' style='padding:1px;'>";
-						echo "<div class='link_icon' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div><div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
+					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
+						echo "<div class='link_icon link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
+							echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
+					echo "</div>";
+					echo "<div class='col-12 col-xl-8 links_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display: none'>";
+						echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' beschr='URL' table='links' data-name='URL' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['URL']."</div>";
 					echo "</div>";
 					
 					
 								if($select_topic_links_rows['URL'] == NULL || $select_topic_links_rows['URL'] == '')
 									{
-										echo "<div class='col-6 col-xl-2' style='padding:1px'>";
+										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$select_topic_links_rows['ID']."'>";
 											echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm' disabled><i class='fas fa-external-link-alt fa-fw'></i></button>";
 										echo "</div>";
-										echo "<div class='col-6 col-xl-2' style='padding:1px'>";
+										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$select_topic_links_rows['ID']."'>";
 											echo "<button type='button' class='btn btn-outline-info btn-block btn-sm' disabled><i class='far fa-copy fa-fw fa-fw'></i></button>";
 										echo "</div>";
 									}
 								else
 									{
-										echo "<div class='col-6 col-xl-2' style='padding:1px'>";
+										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$select_topic_links_rows['ID']."'>";
 											$fund_url = $select_topic_links_rows['URL'];
 											if (substr($fund_url, 0,4) !== "http")
 												{
@@ -847,7 +851,7 @@ function kanban(){
 												echo "<i class='fas fa-external-link-alt fa-fw'></i>";
 											echo "</button>";
 										echo "</div>";
-										echo "<div class='col-6 col-xl-2' style='padding:1px'>";
+										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$select_topic_links_rows['ID']."'>";
 											echo "<button data-clipboard-text='".$base."' onclick='copy_link()' class='btn".$select_topic_links_rows['ID']." btn btn-info btn-block clipboard btn-sm'>";
 												echo "<i class='far fa-copy fa-fw'></i>";
 											echo "</button>";
