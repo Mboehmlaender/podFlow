@@ -676,7 +676,7 @@ function kanban(){
 		echo "<div class='collapse collapse-outer' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
 		echo "<ul class='timeline' style='margin-bottom: 10px'>";
  		    echo "<li>";
-				    echo "<div class='timeline-badge success' style='margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
+				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
 			echo "</li>"; 
 			echo "</ul>"; 
 			
@@ -801,7 +801,7 @@ function kanban(){
 										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
 									echo "</div>"; */
 									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry' disabled id='delete_topic".$sql_kanban_entries_row['ID']."' table='topics' option='topics' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
+										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry' disabled id='delete_topic".$sql_kanban_entries_row['ID']."' table='topics' option='topic' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
 									echo "</div>"; 
 								echo "</div>";
 			echo "</span>"; 

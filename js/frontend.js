@@ -643,6 +643,26 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 		});
 	});	
 	
+	//Change-Modal für neue Einträge in der Kategorie aufrufen
+	$(".add_entry_category").on("click", function(){
+		$("#change").modal("show");
+		$("#exampleModalLabel").html("Erfassen");
+		var change_value = $(this).attr("change_value");
+		var cat_id = $(this).attr("id_cat");
+		var max_entries = $(this).attr("max_entries");
+
+		$.ajax({
+			url: "inc/check.php?select_category=1",
+			type: "POST",
+			data: {"cat_id":cat_id, "change_value":change_value, "max_entries":max_entries},
+			success: function(data)
+				{
+					console.log(data),
+					$("#change_content").html(data);
+				},
+		});
+	});	
+	
 	//Change-Model für Episode bereinigen aufrufen
 	$(".clean_episode").on("click", function(){
 		$("#change").modal("show");

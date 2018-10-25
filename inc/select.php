@@ -333,8 +333,6 @@ if(isset($_GET['add_entry'])){
 			echo "</div>";								  
 			echo "<div class='form-group' id='select_depend'>";
 			echo "</div>";
-			echo "<div class='form-group' id='select_depend_2'>";
-			echo "</div>";
 		echo "</div>";
 	echo "</div>";
 }

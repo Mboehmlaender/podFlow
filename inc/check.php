@@ -91,6 +91,8 @@ if(isset($_POST)){
 								}
 						}
 				echo "</select>";
+							echo "<div class='form-group' id='select_depend_2'>";
+			echo "</div>";
 					}
 				echo "<script>
 					if($(\".savebtn\")[0])
@@ -125,10 +127,9 @@ if(isset($_POST)){
 					$(\"#button_footer\").html(button);
 					$(\".savebtn\").removeAttr('disabled');
 					$(\"#absenden_link_new\").on('click', function(){
-				
 					var descr = $(\"#link_title\").val();
 					var url = $(\"#link_url\").val();
-					var category = $('option:selected', \"#modal1\").attr('cat_id');
+					var category = $('option:selected', \"#select_depend_menu\").attr('sel_cat_id');
 					if(descr == '' && url == '')
 						{
 							$.gritter.add({
@@ -149,8 +150,8 @@ if(isset($_POST)){
 						type: \"POST\",
 						success:function(data)
 							{
-								location.reload();
 								console.log(data);
+								location.reload();
 							},
 						error:function ()
 							{
@@ -195,7 +196,7 @@ if(isset($_POST)){
 
 					$(\"#button_footer\").html(button);
 					$(\"#topic_new_send\").on('click', function(){
-					var category = $('option:selected', \"#modal1\").attr('cat_id');
+					var category = $('option:selected', \"#select_depend_menu\").attr('sel_cat_id');
 					var descr = $(\"#topic_new_title\").val();
 					var link_descr = $(\"#topic_new_link_title\").val();
 					var link_url = $(\"#topic_new_link_url\").val();
@@ -221,8 +222,8 @@ if(isset($_POST)){
 						type: \"POST\",
 						success:function(data)
 							{
-								location.reload();
 								console.log(data);
+								location.reload();
 
 							},
 						error:function ()
@@ -259,7 +260,7 @@ if(isset($_POST)){
 				
 					var descr = $(\"#link_title\").val();
 					var url = $(\"#link_url\").val();
-					var category = $('option:selected', \"#modal1\").attr('cat_id');
+					var category = $('option:selected', \"#select_depend_menu\").attr('sel_cat_id');
 					if(descr == '' && url == '')
 						{
 							$.gritter.add({
@@ -280,9 +281,10 @@ if(isset($_POST)){
 						type: \"POST\",
 						success:function(data)
 							{
-								location.reload();
 								console.log(data);
-							},
+								location.reload();
+						
+						},
 						error:function ()
 							{
 							}
@@ -306,8 +308,8 @@ if(isset($_POST)){
 					
 					$(\"#button_footer\").html(button);
 					$(\"#topic_new_link_send\").on('click', function(){
-					var category = $('option:selected', \"#modal1\").attr('cat_id');
-					var topic = $('option:selected', \"#select_depend\").attr('value_option');
+					var category = $('option:selected', \"#select_depend_menu\").attr('sel_cat_id');
+					var topic = $('option:selected', \"#select_depend_menu\").attr('value_option');
 					var descr = $(\"#link_topics_title\").val();
 					var url = $(\"#link_topics_url\").val();
 					
