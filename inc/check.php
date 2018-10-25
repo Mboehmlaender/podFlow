@@ -90,10 +90,10 @@ if(isset($_POST)){
 									echo "<option id='option2' sel_cat_id ='".$cat_id."' max_entries= '".$max_entries."' value_option='".$sql_modal_cat_topic_row['TOPICS_ID']."'>".$sql_modal_cat_topic_row['TOPICS_DESCR']."</option>";					
 								}
 						}
-				echo "</select>";
-							echo "<div class='form-group' id='select_depend_2'>";
-			echo "</div>";
 					}
+					echo "</select>";
+								echo "<div class='form-group' id='select_depend_2'>";
+				echo "</div>";
 				echo "<script>
 					if($(\".savebtn\")[0])
 						{
