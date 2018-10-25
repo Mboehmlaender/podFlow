@@ -676,7 +676,7 @@ function kanban(){
 		echo "<div class='collapse collapse-outer' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
 		echo "<ul class='timeline' style='margin-bottom: 10px'>";
  		    echo "<li>";
-				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
+				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
 			echo "</li>"; 
 			echo "</ul>"; 
 			
@@ -752,7 +752,7 @@ function kanban(){
 				}
 			else
 				{
-					$class = "class=''";
+					$class = "class='' id='link_".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-link fa-fw'></i>";
 					$icon_color = " warning";
 					$title = "";
@@ -810,16 +810,19 @@ function kanban(){
 				echo "<i class='rotate-arrow fas fa-angle-double-down fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
 			echo "</span>";
 				echo "<div class='collapse collapse-inner-content' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "<ul class='topic_links sortable_topic_links'>";
+				echo "<ul class='topic_links sortable_topic_links' >";
 			$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
 			$select_topic_links_result = mysqli_query($con, $select_topic_links);
 			while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
 			{
-				echo "<li class='topic_links_item'>";
+				echo "<li class='topic_links_item' id='link_".$select_topic_links_rows['ID']."'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
 					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
 						echo "<div class='link_icon link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
 							echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
+					echo "</div>";
+					echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='link' data-pk='".$select_topic_links_rows['ID']."'>";
+					
 					echo "</div>";
 					echo "<div class='col-12 col-xl-8 links_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display: none'>";
 						echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' beschr='URL' table='links' data-name='URL' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['URL']."</div>";

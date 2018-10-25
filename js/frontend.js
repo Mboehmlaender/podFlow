@@ -140,6 +140,9 @@ $(document).ready(function(){
 		{
 			if($("#topic_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$(".link_topic_delete_"+edit_id).removeClass("col-xl-4 col-12");
+				$(".link_topic_delete_"+edit_id).removeAttr("style");
+				$(".link_topic_delete_"+edit_id).empty();
 				$(this).removeClass("btn-tertiary"),			
 				$(this).addClass("btn-outline-tertiary"),
 				
@@ -154,11 +157,14 @@ $(document).ready(function(){
 				$(".edit_topic_"+edit_id).removeClass("update");
 				$(".link_topic_"+edit_id).removeClass("update");
 				
-				$("#topic_edit_button_"+edit_id).removeClass("active_edit");
 
 			}
 			else
 			{
+				var delete_button = "<button type=\"button\" class=\"btn btn-danger btn-block btn-sm\"><i class=\"far fa-times-circle fa-fw\"></i></button></div>";
+				$(".link_topic_delete_"+edit_id).addClass("col-xl-4 col-12");
+				$(".link_topic_delete_"+edit_id).html(delete_button);
+				$(".link_topic_delete_"+edit_id).css("padding", "1px");
 				$(this).removeClass("btn-outline-tertiary"),
 				
 				$(this).addClass("btn-tertiary"),
@@ -305,7 +311,7 @@ $(document).ready(function(){
 			}
 		else
 			{
-				var content = 'Der Beitrag wird gelöscht!';
+				var content = 'Der Beitrag' +pk+'  wird gelöscht!';
 			}
 		$.confirm({
 			title: 'Wirklich löschen?',
@@ -325,7 +331,8 @@ $(document).ready(function(){
 						type: "POST",
 						success:function(data){
 							console.log(data);
-							location.reload();
+							$("#link_"+pk).remove();
+
 							},
 						error:function ()
 							{
