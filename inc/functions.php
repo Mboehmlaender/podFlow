@@ -742,7 +742,7 @@ function kanban(){
 			}
 			if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 				{
-					$class = "class='timeline-inverted'";
+					$class = "class='timeline-inverted' id='topic_".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
 					$title = "<div class='timeline-heading'>";

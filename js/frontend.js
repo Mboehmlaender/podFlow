@@ -308,10 +308,12 @@ $(document).ready(function(){
 		if(table == 'topics')
 			{
 				var content = 'Das Thema und alle enthaltenen Beiträge werden gelöscht!';
+				function remove(delete_id) {$("#topic_"+pk).remove()};
 			}
 		else
 			{
 				var content = 'Der Beitrag' +pk+'  wird gelöscht!';
+				function remove(delete_id) {$("#link_"+pk).remove()};
 			}
 		$.confirm({
 			title: 'Wirklich löschen?',
@@ -331,8 +333,7 @@ $(document).ready(function(){
 						type: "POST",
 						success:function(data){
 							console.log(data);
-							$("#link_"+pk).remove();
-
+							remove(pk);
 							},
 						error:function ()
 							{
