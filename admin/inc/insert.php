@@ -33,7 +33,7 @@ if(isset($_POST)){
 				$cat_entries = '0';
 			}
 
-		$sql_new_cat= "INSERT INTO ".DB_PREFIX."categories (DESCR, VISIBLE, ALLOW_TOPICS, MAX_ENTRIES, COLL, ID_PODCAST) VALUES ('".$cat_name."', '".$cat_visible."','".$cat_topics."','".$cat_entries."','".$cat_coll."', '".$podcast."')";
+		$sql_new_cat= "INSERT INTO ".DB_PREFIX."categories (DESCR, VISIBLE, MAX_ENTRIES, COLL, ID_PODCAST, REIHENF) VALUES ('".$cat_name."', '".$cat_visible."','".$cat_entries."','".$cat_coll."', '".$podcast."', '0')";
 		$sql_result_cat = mysqli_query($con, $sql_new_cat);
 		echo $sql_new_cat;
 		return;

@@ -864,14 +864,47 @@ function categories_edit_list(){
 								{
 									$check_coll = '';
 								}	
-/* 							if($sql_get_categories_rows['ALLOW_TOPICS'] == 1)
+ 							if($sql_get_categories_rows['EXPORT_TITLE_CAT'] == 1)
 								{
-									$check_topics = 'checked';
+									$check_export_title_cat = 'checked';
 								}
 							else
 								{
-									$check_topics = '';
-								} */
+									$check_export_title_cat = '';
+								} 
+ 							if($sql_get_categories_rows['EXPORT_TITLE_TOPICS'] == 1)
+								{
+									$check_export_title_topics = 'checked';
+								}
+							else
+								{
+									$check_export_title_topics = '';
+								} 
+ 							if($sql_get_categories_rows['EXPORT_TITLE_LINKS'] == 1)
+								{
+									$check_export_title_links = 'checked';
+								}
+							else
+								{
+									$check_export_title_links = '';
+								} 
+ 							if($sql_get_categories_rows['EXPORT_URL_LINKS'] == 1)
+								{
+									$check_export_url_links = 'checked';
+								}
+							else
+								{
+									$check_export_url_links = '';
+								} 
+ 							if($sql_get_categories_rows['EXPORT_NOTICE'] == 1)
+								{
+									$check_export_notice = 'checked';
+								}
+							else
+								{
+									$check_export_notice = '';
+								} 
+								
 								echo "<div class='row'>";
 									echo "<div class='col-9 lead'>";
 										echo "Sichtbar für andere Benutzer";
@@ -898,6 +931,81 @@ function categories_edit_list(){
 									echo "</div>";
 								echo "</div>";
 							echo "</div>";
+							echo "<div class='row' style='height: 38px;'>";
+								echo "<div class='col-9 lead'>";
+									echo "Maximale Beiträge";
+								echo "</div>";
+								echo "<div class='col-3'>";
+									echo "<input style='width: 3rem; float:right; padding:2px' min='0' class='form-control cat_up' type='number' id_cat='".$sql_get_categories_rows['ID']."' row='MAX_ENTRIES'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' value='".$sql_get_categories_rows['MAX_ENTRIES']."' >";
+								echo "</div>";
+							echo "</div>";	
+							echo "<hr>";
+							echo "<div class='row'>";
+								echo "<div class='col-9 lead'>";
+									echo "Titel der Kategorie ";
+								echo "</div>";
+								echo "<div class='col-3' style='text-align:right'>";
+									echo "<div class='toggle lg'>";
+										echo "<label class='switch'>";
+											echo "<input ".$check_export_title_cat." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_TITLE_CAT'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<span class='button-indecator'></span>";
+											echo "</label>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+							echo "<div class='row'>";
+								echo "<div class='col-9 lead'>";
+									echo "Titel der Themen ";
+								echo "</div>";
+								echo "<div class='col-3' style='text-align:right'>";
+									echo "<div class='toggle lg'>";
+										echo "<label class='switch'>";
+											echo "<input ".$check_export_title_topics." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_TITLE_TOPICS'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<span class='button-indecator'></span>";
+											echo "</label>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+							echo "<div class='row'>";
+								echo "<div class='col-9 lead'>";
+									echo "Titel der Beiträge ";
+								echo "</div>";
+								echo "<div class='col-3' style='text-align:right'>";
+									echo "<div class='toggle lg'>";
+										echo "<label class='switch'>";
+											echo "<input ".$check_export_title_links." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_TITLE_LINKS'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<span class='button-indecator'></span>";
+											echo "</label>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+							echo "<div class='row'>";
+								echo "<div class='col-9 lead'>";
+									echo "URL der Beiträge";
+								echo "</div>";
+								echo "<div class='col-3' style='text-align:right'>";
+									echo "<div class='toggle lg'>";
+										echo "<label class='switch'>";
+											echo "<input ".$check_export_url_links." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_URL_LINKS'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<span class='button-indecator'></span>";
+											echo "</label>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+							echo "<div class='row'>";
+								echo "<div class='col-9 lead'>";
+									echo "Notizen";
+								echo "</div>";
+								echo "<div class='col-3' style='text-align:right'>";
+									echo "<div class='toggle lg'>";
+										echo "<label class='switch'>";
+											echo "<input ".$check_export_notice." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_NOTICE'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<span class='button-indecator'></span>";
+											echo "</label>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+							echo "<hr>";
 							/* echo "<div class='row'>";
 								echo "<div class='col-9 lead'>";
 									echo "Kategorie mit Themen";
@@ -910,14 +1018,6 @@ function categories_edit_list(){
 									echo "</label>";
 								echo "</div>";
 							echo "</div>"; */
-							echo "<div class='row' style='height: 38px;'>";
-								echo "<div class='col-9 lead'>";
-									echo "Maximale Beiträge";
-								echo "</div>";
-								echo "<div class='col-3'>";
-									echo "<input style='width: 3rem; float:right; padding:2px' min='0' class='form-control cat_up' type='number' id_cat='".$sql_get_categories_rows['ID']."' row='MAX_ENTRIES'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' value='".$sql_get_categories_rows['MAX_ENTRIES']."' >";
-								echo "</div>";
-							echo "</div>";	
 							echo "<div class='row' style='height: 40px; padding: .5rem''>";
 								echo "<div class='col-sm-1 col-2'>";
 									echo "<i style='cursor:pointer' class='fas fa-2x fa-arrow-up moveuplink'></i> ";
