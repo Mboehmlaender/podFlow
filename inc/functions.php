@@ -705,8 +705,8 @@ function kanban(){
 							{
 								$btn = "btn-outline-success";
 								$done ="disabled";		
-								$entry_done = "<i class='far fa-check-circle'></i>";
-								$entry_done2 = "<style='background-color: rgba(0, 209, 0, 0.3)'>";
+								$entry_done = "";
+								$entry_done2 = "";
 							}
 						else
 							{
