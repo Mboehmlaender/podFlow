@@ -39,6 +39,8 @@ function head(){
 	echo "<link rel='stylesheet' href='../css/jquery.gritter.css'>";
 	echo "<link rel='stylesheet' href='../css/jquery-confirm.min.css'>";
 	echo "<link rel='stylesheet' href='../css/simplebar.css'>";
+	echo "<link rel='stylesheet' href='../css/tooltipster.bundle.min.css'>";
+	echo "<link rel='stylesheet' href='../css/tooltipster-sideTip-shadow.min.css'>";
 	echo "<script src='//cdn.ckeditor.com/4.9.2/basic/ckeditor.js'></script>";
 	echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js' integrity='sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49' crossorigin='anonymous'></script>";
 	echo "<script src='https://code.jquery.com/jquery-3.3.1.min.js' integrity='sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=' crossorigin='anonymous'></script>";
@@ -51,6 +53,7 @@ function head(){
 	echo "<script src='../js/jquery.ui.touch-punch.min.js'></script>";
 	echo "<script src='../js/bootstrap-editable.min.js'></script>";
 	echo "<script src='../js/simplebar.js'></script>";
+	echo "<script src='../js/tooltipster.bundle.min.js'></script>";
 	echo "<script src='js/color-picker.js'></script>";
 	echo "<script src='js/bootstrap-datepicker.js'></script>";
 	echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js'></script>";
@@ -63,7 +66,26 @@ function head(){
 	  </style>
 	</noscript>";	
 	echo "<script>
-
+			$(document).ready(function() {
+				$('.tooltipster').tooltipster({
+					theme: 'tooltipster-shadow',
+					side: 'top',
+					minWidth: 300,
+					interactive: 'true',
+					trigger: 'custom',
+					triggerOpen: {
+						mouseenter: true,
+						touchstart: true,
+						scroll: false
+					},
+					triggerClose: {
+						click: true,
+						mouseleave: true,
+						scroll: false
+					}			
+	});
+			});
+			
 	$(function (){
 		$('[data-toggle=\"tooltip\"]').tooltip()
 		$('#tool').tooltip('disable')
@@ -864,6 +886,16 @@ function categories_edit_list(){
 								{
 									$check_coll = '';
 								}	
+ 							if($sql_get_categories_rows['EXPORT_CAT'] == 1)
+								{
+									$check_export_cat = 'checked';
+									$export_options_visibility = "style=''";
+								}
+							else
+								{
+									$check_export_cat = '';
+									$export_options_visibility = "style='display: none'";
+								} 
  							if($sql_get_categories_rows['EXPORT_TITLE_CAT'] == 1)
 								{
 									$check_export_title_cat = 'checked';
@@ -903,8 +935,7 @@ function categories_edit_list(){
 							else
 								{
 									$check_export_notice = '';
-								} 
-								
+								} 								
 								echo "<div class='row'>";
 									echo "<div class='col-9 lead'>";
 										echo "Sichtbar für andere Benutzer";
@@ -939,10 +970,24 @@ function categories_edit_list(){
 									echo "<input style='width: 3rem; float:right; padding:2px' min='0' class='form-control cat_up' type='number' id_cat='".$sql_get_categories_rows['ID']."' row='MAX_ENTRIES'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' value='".$sql_get_categories_rows['MAX_ENTRIES']."' >";
 								echo "</div>";
 							echo "</div>";	
+							echo "<div class='row'>";
+								echo "<div class='col-9 lead'>";
+									echo "Kategorie exportieren";
+								echo "</div>";
+								echo "<div class='col-3' style='text-align:right'>";
+									echo "<div class='toggle lg'>";
+										echo "<label class='switch'>";
+											echo "<input ".$check_export_cat." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_CAT'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<span class='button-indecator'></span>";
+											echo "</label>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+							echo "<div id='export_cat_options_".$sql_get_categories_rows['ID']."' ".$export_options_visibility.">";
 							echo "<hr>";
 							echo "<div class='row'>";
 								echo "<div class='col-9 lead'>";
-									echo "Titel der Kategorie ";
+									echo "Titel der Kategorie";
 								echo "</div>";
 								echo "<div class='col-3' style='text-align:right'>";
 									echo "<div class='toggle lg'>";
@@ -955,7 +1000,7 @@ function categories_edit_list(){
 							echo "</div>";
 							echo "<div class='row'>";
 								echo "<div class='col-9 lead'>";
-									echo "Titel der Themen ";
+									echo "Titel der Themen";
 								echo "</div>";
 								echo "<div class='col-3' style='text-align:right'>";
 									echo "<div class='toggle lg'>";
@@ -968,7 +1013,7 @@ function categories_edit_list(){
 							echo "</div>";
 							echo "<div class='row'>";
 								echo "<div class='col-9 lead'>";
-									echo "Titel der Beiträge ";
+									echo "Titel der Beiträge";
 								echo "</div>";
 								echo "<div class='col-3' style='text-align:right'>";
 									echo "<div class='toggle lg'>";
@@ -1005,7 +1050,38 @@ function categories_edit_list(){
 									echo "</div>";
 								echo "</div>";
 							echo "</div>";
+							echo "<div class='row'>";
+								echo "<div class='col-5 col-md-9 lead'>";
+									echo "Export-Format";
+								echo "</div>";
+								echo "<div class='col-7 col-md-3' style='text-align:right'>";
+									echo "<div class='form-group'>";
+										echo "<select class='form-control cat_up' id_cat='".$sql_get_categories_rows['ID']."' row='ID_EXPORT_OPTION'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' >";
+											$sql_select_cat_export_option = "SELECT * FROM export_options";
+											$sql_select_cat_export_option_result = mysqli_query($con, $sql_select_cat_export_option);
+											while($sql_select_cat_export_option_row = mysqli_fetch_assoc($sql_select_cat_export_option_result))
+												{
+													echo "<option ";
+													
+													if($sql_select_cat_export_option_row['ID'] == $sql_get_categories_rows['ID_EXPORT_OPTION'])
+													{
+														echo "selected";
+													}
+													
+													echo " value='".$sql_select_cat_export_option_row['ID']."'>".$sql_select_cat_export_option_row['DESCR']."</option>";
+												}
+										echo "</select>";
+									echo "</div>";							
+/* 									echo "<div class='toggle lg'>";
+										echo "<label class='switch'>";
+											echo "<input ".$check_export_notice." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_NOTICE'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<span class='button-indecator'></span>";
+											echo "</label>";
+									echo "</div>"; */
+								echo "</div>";
+							echo "</div>";
 							echo "<hr>";
+							echo "</div>";
 							/* echo "<div class='row'>";
 								echo "<div class='col-9 lead'>";
 									echo "Kategorie mit Themen";
@@ -1044,7 +1120,7 @@ function categories_edit_list(){
 
 //Footer mit Change-Modal
 function footer(){
-	echo "<script src='js/admin.min.js'></script>";
+	echo "<script src='js/admin.js'></script>";
 	echo "<div class='modal fade' id='change' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' ";
 	if(empty($_SESSION['podcast']))
 		{

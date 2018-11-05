@@ -596,6 +596,11 @@ $(document).ready(function(){
 		var row = $(this).attr("row")
 		var table = $(this).attr("table")
 		var value = $(this).val()
+		
+		if($(this).attr("row") == "EXPORT_CAT")
+		{
+			$("#export_cat_options_"+pk).toggle("slow");
+		}
 
 		if($(this).attr('type') == 'checkbox')
 			{
