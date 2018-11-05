@@ -51,7 +51,7 @@ function head(){
 	echo "<script src='../js/clipboard.min.js'></script>";
 	echo "<script src='../js/jquery-confirm.min.js'></script>";
 	echo "<script src='../js/jquery.ui.touch-punch.min.js'></script>";
-	echo "<script src='../js/bootstrap-editable.min.js'></script>";
+	echo "<script src='js/bootstrap-editable.min.js'></script>";
 	echo "<script src='../js/simplebar.js'></script>";
 	echo "<script src='../js/tooltipster.bundle.min.js'></script>";
 	echo "<script src='js/color-picker.js'></script>";
