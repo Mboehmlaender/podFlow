@@ -282,7 +282,7 @@ if(isset($_GET['edit_template'])){
 							echo "<button type='button' data-toggle='collapse' data-target='#cat_toggle' aria-expaned='false' style='margin-top: 10px; white-space: normal;' class='btn btn-outline-success btn-block btn-lg'><i class='fas fa-plus-square fa-fw'></i> Kategorien wählen</button>";
 							echo "<div class='collapse' id='cat_toggle'>";
 								echo "<ul class='list-group' id='cat_episodes'>";
-								$sql_select_topics = "SELECT * FROM ".DB_PREFIX."categories ORDER BY REIHENF, DESCR";
+								$sql_select_topics = "SELECT * FROM ".DB_PREFIX."categories WHERE ID_PODCAST = '".$podcast_id."' ORDER BY REIHENF, DESCR";
 								$sql_select_topics_result = mysqli_query($con, $sql_select_topics);
 								while($sql_select_topics_rows = mysqli_fetch_assoc($sql_select_topics_result))	
 									{
@@ -329,9 +329,7 @@ if(isset($_GET['edit_template'])){
 													echo "<p class='lead'>".$sql_select_topics_rows['DESCR']."</p>";
 												echo "</div>";
 												echo "<div class='col-2' style='padding-right: 0px; padding-left: 0px; text-align:right'>";
-													echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_select_topics_rows['COLL'])."'></i>";
 													echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_select_topics_rows['VISIBLE'])."'></i>";
-													echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_select_topics_rows['ALLOW_TOPICS'])."'></i>";
 													echo $max_entries;
 												echo "</div>";
 											echo "</div>";
@@ -345,8 +343,6 @@ if(isset($_GET['edit_template'])){
 							echo "<button type='button' data-toggle='collapse' data-target='#user_toggle' aria-expaned='false' style='margin-top: 10px; white-space: normal;' class='btn btn-outline-success btn-block btn-lg'><i class='fas fa-plus-square fa-fw'></i> Mitwirkende wählen</button>";
 							echo "<div class='collapse' id='user_toggle'>";			
 								echo "<ul class='list-group' id='users_episode'>";
-									echo "<li class='list-group-item'>";
-										echo "<div class='row'>";
 										$sql_select_users_episode = "SELECT * FROM ".DB_PREFIX."view_podcasts_users WHERE PODCASTS_USERS_ID_PODCAST=".$podcast_id;
 										$sql_select_users_episode_result = mysqli_query($con, $sql_select_users_episode);
 										if(mysqli_num_rows($sql_select_users_episode_result) == 0)
@@ -357,6 +353,8 @@ if(isset($_GET['edit_template'])){
 											{
 												while($sql_select_users_episode_rows = mysqli_fetch_assoc($sql_select_users_episode_result))	
 													{
+													echo "<li class='list-group-item'>";
+														echo "<div class='row'>";
 														if(empty(userinfos($sql_select_users_episode_rows['PODCASTS_USERS_ID_USER'], 'NAME_SHOW')))
 															{
 																$user_name = userinfos($sql_select_users_episode_rows['PODCASTS_USERS_ID_USER'], 'USERNAME');
@@ -390,10 +388,10 @@ if(isset($_GET['edit_template'])){
 															echo "<p class='lead'>".$user_name."</p>";												
 														echo "</div>";
 
+														echo "</div>";
+													echo "</li>";
 													} 
 											}
-										echo "</div>";
-									echo "</li>";
 								echo "</ul>";  
 							echo "</div>";
 							echo "<hr>";
@@ -660,6 +658,7 @@ if(isset($_GET['edit_episode'])){
 										}
 									else
 										{
+											echo "<ul class='list-group' id='cat_episodes'>";
 											while($sql_select_topics_rows = mysqli_fetch_assoc($sql_select_topics_result))	
 												{
 													if ($sql_select_topics_rows['MAX_ENTRIES'] >= 1)
@@ -678,7 +677,6 @@ if(isset($_GET['edit_episode'])){
 														{
 															$max_entries = "";
 														}
-													echo "<ul class='list-group' id='cat_episodes'>";
 													echo "<li class='list-group-item check_if".$sql_select_topics_rows['ID']."' id='category".$sql_select_topics_rows['ID']."'>";
 														echo "<div class='row'>";
 															echo "<div class='col-2'>";
@@ -703,9 +701,7 @@ if(isset($_GET['edit_episode'])){
 																echo "<p class='lead'>".$sql_select_topics_rows['DESCR']."</p>";
 															echo "</div>";
 															echo "<div class='col-2' style='padding-right: 0px; padding-left: 0px; text-align:right'>";
-																echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_select_topics_rows['COLL'])."'></i>";
 																echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_select_topics_rows['VISIBLE'])."'></i>";
-																echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_select_topics_rows['ALLOW_TOPICS'])."'></i>";
 																echo $max_entries;
 															echo "</div>";
 														echo "</div>";
@@ -720,8 +716,6 @@ if(isset($_GET['edit_episode'])){
 							echo "<button type='button' data-toggle='collapse' data-target='#user_toggle' aria-expaned='false' style='margin-top: 10px; white-space: normal;' class='btn btn-outline-success btn-block btn-lg'><i class='fas fa-plus-square fa-fw'></i> Mitwirkende wählen</button>";
 							echo "<div class='collapse' id='user_toggle'>";			
 								echo "<ul class='list-group' id='users_episode'>";
-									echo "<li class='list-group-item'>";
-										echo "<div class='row'>";
 											$sql_select_users_episode = "SELECT * FROM ".DB_PREFIX."view_podcasts_users WHERE PODCASTS_USERS_ID_PODCAST=".$_SESSION['podcast'];
 											$sql_select_users_episode_result = mysqli_query($con, $sql_select_users_episode);
 											if(mysqli_num_rows($sql_select_users_episode_result) == 0)
@@ -732,6 +726,8 @@ if(isset($_GET['edit_episode'])){
 												{
 													while($sql_select_users_episode_rows = mysqli_fetch_assoc($sql_select_users_episode_result))	
 														{
+														echo "<li class='list-group-item'>";
+															echo "<div class='row'>";
 															$sql_select_users_1 = "SELECT * FROM ".DB_PREFIX."view_episode_users WHERE EPISODE_USERS_ID_USER = ".$sql_select_users_episode_rows['PODCASTS_USERS_ID_USER']." AND EPISODE_USERS_ID_EPISODE = ".$id;
 															$sql_select_users_result_1 = mysqli_query($con, $sql_select_users_1);
 															if(mysqli_num_rows($sql_select_users_result_1) > 0)
@@ -762,10 +758,10 @@ if(isset($_GET['edit_episode'])){
 																echo "<p class='lead'>".$user_name."</p>";												
 															echo "</div>";
 
+															echo "</div>";
+														echo "</li>";
 														} 
 												}
-										echo "</div>";
-									echo "</li>";
 								echo "</ul>";  
 							echo "</div>";
 							echo "<hr>";

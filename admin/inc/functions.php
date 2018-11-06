@@ -859,7 +859,6 @@ function categories_edit_list(){
 								echo "<a style='border: none; color:black; font-weight: 700' class='update' href='#' id='descr".$sql_get_categories_rows['ID']."' data-name='DESCR'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung'>".$sql_get_categories_rows['DESCR']."</a>";
 							echo "</div>";
 							echo "<div class='col-2' style='padding-right:15px; padding-left: 0px; text-align:right'>";
-								echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_get_categories_rows['COLL'])."'></i>";
 								echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_get_categories_rows['VISIBLE'])."'></i>";
 /* 								echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_get_categories_rows['ALLOW_TOPICS'])."'></i>";
  */								echo $max_entries;
@@ -878,14 +877,6 @@ function categories_edit_list(){
 								{
 									$check_visible = '';
 								}									
-							if($sql_get_categories_rows['COLL'] == 1)
-								{
-									$check_coll = 'checked';
-								}
-							else
-								{
-									$check_coll = '';
-								}	
  							if($sql_get_categories_rows['EXPORT_CAT'] == 1)
 								{
 									$check_export_cat = 'checked';
@@ -948,19 +939,6 @@ function categories_edit_list(){
 											echo "</label>";
 										echo "</div>";
 									echo "</div>";
-							echo "</div>";
-							echo "<div class='row'>";
-								echo "<div class='col-9 lead'>";
-									echo "Kollaborative Kategorie";
-								echo "</div>";
-								echo "<div class='col-3' style='text-align:right'>";
-									echo "<div class='toggle lg'>";
-										echo "<label class='switch'>";
-											echo "<input ".$check_coll." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='COLL'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
-											echo "<span class='button-indecator'></span>";
-											echo "</label>";
-									echo "</div>";
-								echo "</div>";
 							echo "</div>";
 							echo "<div class='row' style='height: 38px;'>";
 								echo "<div class='col-9 lead'>";
