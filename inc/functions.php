@@ -524,7 +524,7 @@ function topics(){
 		} 
 }	
 
-//Kategorienliste mit Themen und Beiträge (Hauptseite)
+/* //Kategorienliste mit Themen und Beiträge (Hauptseite)
 function category_list(){
 	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div>";
 	echo "<hr>";
@@ -605,7 +605,7 @@ function category_list(){
 			$(\"#category_list\").toggle(\"slow\");
 		});
 	</script>";
-}
+} */
 
 //Kanban-View
 

@@ -529,7 +529,7 @@ if(isset($_GET['change'])){
 return;
 }
 
-//Themen/Beiträge der Kategorie laden
+/* //Themen/Beiträge der Kategorie laden
 if(isset($_GET['cat_list'])){
 	if(empty($_SESSION['cur_episode']))
 		{
@@ -913,6 +913,6 @@ if(isset($_GET['cat_list'])){
 	</script>";
 	echo "<hr>";	
 	return;
-}
+} */
 
 ?>

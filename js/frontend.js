@@ -100,7 +100,7 @@ function check_link(id, table){
 		});		
 	}
 	
-//Kategorie öffnen
+/* //Kategorie öffnen
 function load_cat(cat_id){
 	var cat_id = cat_id;
 	var categories_get=Cookies.get("category"); //get all cookies
@@ -129,7 +129,7 @@ function load_cat(cat_id){
 			{
 			}
 		});
-}
+} */
 
 $(document).ready(function(){
 	
