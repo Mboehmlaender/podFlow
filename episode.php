@@ -35,15 +35,7 @@
          <li class="breadcrumb-item"><a href="#">Alle Beiträge</a></li>
        </ul>
      </div>
-<!--       <div class="row">
-		<div class="col-md-12">
-		<div class="tile">
-		<?php
-			category_list();
-		?>
-	  </div>
-	  </div>
-      </div> !-->
+
 		<div class="row">
 		<div class="col-md-12">
 		<div class="tile">

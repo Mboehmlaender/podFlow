@@ -104,8 +104,8 @@ function check_link(id, table){
 function load_cat(cat_id){
 	var cat_id = cat_id;
 	var categories_get=Cookies.get("category"); //get all cookies
-/* 	var open_content=Cookies.get("category"); //get all cookies
- */	if(typeof categories_get != "undefined")
+ 	var open_content=Cookies.get("category"); //get all cookies
+ 	if(typeof categories_get != "undefined")
 		{
 			if(categories_get.substring(4) == cat_id)
 				{
