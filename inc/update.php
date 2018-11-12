@@ -95,7 +95,28 @@ if(isset($_POST)){
 	}
 	
 	//Kategorien der Themen/Beuiträge ändern
-	if(isset($_GET['up_cat'])){
+	if(isset($_GET['set_category_sortable'])){
+		$cat_id = $_POST['cat_id'];
+		$table = $_POST['table'];
+		$id = $_POST['pk'];
+		
+		if($table == 'topics')
+		{
+			$update = "UPDATE ".DB_PREFIX."topics SET ID_CATEGORY = '$cat_id' WHERE ID='$id' ;";
+			$update .= "UPDATE ".DB_PREFIX."links SET ID_CATEGORY = '$cat_id' WHERE ID_TOPIC='$id' ";
+		}
+		else
+		{
+			$update = "UPDATE ".DB_PREFIX."links SET ID_CATEGORY = '$cat_id' WHERE ID='$id' ;";
+		}
+		mysqli_multi_query($con, $update);
+		echo $update;
+ 		}					
+		return;
+	
+	
+/* 	//Kategorien der Themen/Beuiträge ändern
+ 	if(isset($_GET['up_cat'])){
 		$id = mysqli_real_escape_string($con,$_POST['pk']);
 		$row = mysqli_real_escape_string($con,$_POST['row']);
 		$table = mysqli_real_escape_string($con,$_POST['table']);
@@ -105,7 +126,7 @@ if(isset($_POST)){
 		$sql_update_category_result = mysqli_query($con, $sql_update_category);
 		echo $sql_update_category;
 		return;
-	}
+	}  */
 
 	//Episode abschließen
 	if(isset($_GET['close_episode'])){

@@ -679,7 +679,7 @@ function kanban(){
 			echo "</li>"; 
 			echo "</ul>"; 
 			
-		echo "<ul class='timeline kanban_sortable'>";
+		echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."'>";
 		global $con;
 		$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
 		$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
@@ -758,7 +758,7 @@ function kanban(){
 					$type="links";
 				}
 			
-      echo "<li ".$class.">";
+      echo "<li ".$class." table='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'>";
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";
 				echo " <small class='text-muted'>".$user."</small><span style='margin-left: 10px; color: green' class='check_icon_".$type."_".$sql_kanban_entries_row['ID']."'>".$entry_done."</span>";;
@@ -961,7 +961,24 @@ echo "</div>";
 		  $( function() {
 			$( \".kanban_sortable\" ).sortable({ 
 				handle: '.timeline-handle',
-				connectWith: '.kanban_sortable'
+				connectWith: '.kanban_sortable',
+				receive: function( event, ui){
+							var cat_id = event.target.getAttribute('cat_id');
+							var pk = ui.item.attr(\"data-pk\");
+							var table = ui.item.attr(\"table\");
+							$.ajax({
+								url: \"inc/update.php?set_category_sortable=1\",
+								type: \"POST\",
+								data: {	\"cat_id\":cat_id, 
+										\"table\":table, 
+										\"pk\":pk 
+									},								
+								success: function(data)
+									{
+										console.log(data);
+									},
+								}); 
+					},						
 				
 });
 		  } );		
