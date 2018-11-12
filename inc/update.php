@@ -111,8 +111,8 @@ if(isset($_POST)){
 		}
 		mysqli_multi_query($con, $update);
 		echo $update;
- 		}					
 		return;
+ 		}					
 	
 	
 /* 	//Kategorien der Themen/Beuiträge ändern
