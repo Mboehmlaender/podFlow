@@ -84,13 +84,12 @@ if(isset($_POST)){
 					$table = "topics";
 					$update1 = "UPDATE ".DB_PREFIX."links SET REIHENF = '$order' WHERE ID_TOPIC='$id_link' ";
 					mysqli_query($con, $update1);
-					echo $update1;
 				}
 			$id = substr($item,1);
 			$update = "UPDATE ".DB_PREFIX.$table." SET REIHENF = '$order' WHERE ID='$id' ";
 			$order++; 
-			mysqli_query($con, $update);
-		}					
+ 			mysqli_query($con, $update);
+ 		}					
 		return;
 	}
 	

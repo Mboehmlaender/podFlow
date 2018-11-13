@@ -34,6 +34,22 @@ function save_order(){
 		});  
 }	
 
+//Kanbanreihenfolge speichern
+
+function save_order_kanban(id_cat){
+	var sortable_data = $("#"+id_cat).sortable("serialize"); 
+	console.log(sortable_data);
+	$.ajax({
+		url: "inc/update.php?set_order=1",
+		type: "POST",
+		data: sortable_data,
+		success: function(data)
+			{
+				console.log(data);
+			},
+		});  
+}	
+
 //Links/Themen checken
 function check_link(id, table){
 	$("#check_"+id).blur();
@@ -424,11 +440,11 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
  });
 
 
-	//Themen/Beiträge ordnen für den Export
+/* 	//Themen/Beiträge ordnen für den Export
 	if ($("#list_check").has("li").length === 0)
 		{
 			$("#btn-save").attr("disabled", true);
-		}
+		} */
 		
 	//Themen/Beiträge in die Exportliste hinzufügen
 	$(function  (){

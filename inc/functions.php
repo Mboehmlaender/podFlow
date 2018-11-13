@@ -679,7 +679,7 @@ function kanban(){
 			echo "</li>"; 
 			echo "</ul>"; 
 			
-		echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."'>";
+		echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."'>";
 		global $con;
 		$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
 		$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
@@ -741,7 +741,7 @@ function kanban(){
 			}
 			if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 				{
-					$class = "class='timeline-inverted' id='topic_".$sql_kanban_entries_row['ID']."'";
+					$class = "class='timeline-inverted' id='item-t".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
 					$title = "<div class='timeline-heading'>";
@@ -751,7 +751,7 @@ function kanban(){
 				}
 			else
 				{
-					$class = "class='' id='link_".$sql_kanban_entries_row['ID']."'";
+					$class = "class='' id='item-l".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-link fa-fw'></i>";
 					$icon_color = " warning";
 					$title = "";
@@ -809,7 +809,7 @@ function kanban(){
 				echo "<i class='rotate-arrow fas fa-angle-double-down fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
 			echo "</span>";
 				echo "<div class='collapse collapse-inner-content' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "<ul class='topic_links sortable_topic_links' >";
+				echo "<ul class='topic_links' >";
 			$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
 			$select_topic_links_result = mysqli_query($con, $select_topic_links);
 			while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
@@ -978,14 +978,16 @@ echo "</div>";
 										console.log(data);
 									},
 								}); 
+					},
+				update: function( event, ui){
+					var id = $(this).attr('id');
+					if ($(\".kanban_sortable\").has(\"li\").length !== 0)
+						{
+							save_order_kanban(id);
+						}
 					},						
 				
 });
-		  } );		
-	</script>";	
-	echo "<script>
-		  $( function() {
-			$( \".sortable_topic_links\" ).sortable({ handle: '.link_icon',   connectWith: '.sortable_topic_links' });
 		  } );		
 	</script>";	
 
