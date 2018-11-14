@@ -610,8 +610,8 @@ function category_list(){
 //Kanban-View
 
 function kanban(){
-	echo "<div class='container' style='padding: 0px;'>";
-	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
+	echo "<div class='container' id='container' style='padding: 0px;'>";
+	echo "<a style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div> <i id='edit_cat_link' class='fas fa-filter fa-2x fa-fw'></i><span id='text_test'></span><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
 		{
@@ -734,14 +734,16 @@ function kanban(){
 			if($sql_kanban_entries_row['ID_USER'] == $_SESSION['userid'])
 			{
 				$editable = "edit_topic_".$sql_kanban_entries_row['ID'];
+				$own = "1";
 			}
 			else
 			{
 				$editable = "";
+				$own = "0";
 			}
 			if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 				{
-					$class = "class='timeline-inverted' id='item-t".$sql_kanban_entries_row['ID']."'";
+					$class = "class='kanban_entry timeline-inverted' own='".$own."' id='item-t".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
 					$title = "<div class='timeline-heading'>";
@@ -751,7 +753,7 @@ function kanban(){
 				}
 			else
 				{
-					$class = "class='' id='item-l".$sql_kanban_entries_row['ID']."'";
+					$class = "class='kanban_entry' own='".$own."'id='item-l".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-link fa-fw'></i>";
 					$icon_color = " warning";
 					$title = "";
@@ -958,10 +960,34 @@ echo "</div>";
 		}
 echo "</div>";
 	echo "<script>
-		  $( function() {
+			$(document).ready(function(){
+			$(\"#edit_cat_link\").on(\"click\", function(){
+				$('[own=\"0\"]').toggle(\"slow\"); 
+				if($(this).hasClass(\"edit_mode\"))
+				{
+					$(\"#text_test\").text(\"\");
+					$(this).removeClass(\"edit_mode\");
+					$( \".kanban_sortable\" ).sortable({ 
+						connectWith: '',				
+						});					
+				}
+				else
+				{
+			
+					$(\"#text_test\").text(\"Kategorien-Transfer möglich\");
+					$(this).addClass(\"edit_mode\");
+					$( \".kanban_sortable\" ).sortable({ 
+						connectWith: '.kanban_sortable',				
+						});
+					
+				}
+			});
+			
+			var test = $(this).attr('cat_id');
+			
+			
 			$( \".kanban_sortable\" ).sortable({ 
 				handle: '.timeline-handle',
-				connectWith: '.kanban_sortable',
 				receive: function( event, ui){
 							var cat_id = event.target.getAttribute('cat_id');
 							var pk = ui.item.attr(\"data-pk\");
@@ -981,13 +1007,12 @@ echo "</div>";
 					},
 				update: function( event, ui){
 					var id = $(this).attr('id');
-					if ($(\".kanban_sortable\").has(\"li\").length !== 0)
-						{
 							save_order_kanban(id);
-						}
 					},						
 				
-});
+				});					
+		
+
 		  } );		
 	</script>";	
 
