@@ -987,8 +987,8 @@ echo "</div>";
 					$.gritter.add({
 						title: \"OK\",
 						text: \"Kategorienübergreifendes Verschieben möglich!\",
-						image: \"images/delete.png\",
-						time: \"1000\"
+						image: \"images/confirm.png\",
+						time: \"2000\"
 					});				
 					$(\".timeline\").addClass(\"timeline_move\");
 
