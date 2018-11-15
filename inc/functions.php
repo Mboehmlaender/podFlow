@@ -290,7 +290,7 @@ function export(){
 					return;
 				}
 			echo "<div class='row'>";
-				echo "<div class='col-6'>";
+/* 				echo "<div class='col-6'>";
 					echo "<div class='form-group'>";
 						echo "<div class='btn btn-danger btn-block' style='pointer-events: none; text-align: center'><i class='fas fa-ban'></i></div>";
 						echo "<ul class='list-group sortuncheck sortable' data-name='DONE' id='list_uncheck' table='links' style='min-height:80px; background-color: rgba(211,211,211,0.3); border-radius: .25rem; box-shadow: 2px 2px 2px grey'>";
@@ -309,9 +309,11 @@ function export(){
 							}
 						echo"</ul>";
 					echo "</div>"; 
-				echo "</div>"; 
-				echo "<div class='col-6'>";
-					echo "<div class='form-group'>";
+				echo "</div>";  */
+				echo "<div class='col-12'>";
+					echo "<div id='export_result'>";
+					echo "</div>";
+/* 					echo "<div class='form-group'>";
 						echo "<div class='btn btn-success btn-block' style='pointer-events: none; text-align: center'><i class='fas fa-check'></i></div>";
 							echo "<ul class='list-group sortcheck sortable' data-name='DONE' id='list_check'  table='links' style='min-height:100px; background-color: rgba(211,211,211,0.3); border-radius: .25rem; box-shadow: 2px 2px 2px grey'>";
 							global $con;
@@ -331,13 +333,15 @@ function export(){
 								}
 							echo"</ul>";
 						echo "</div>"; 
-					echo "</div>"; 
+					echo "</div>";  */
 				echo "</div>";					
 			echo "</div>";					
-			echo "<button type='button' id='export_list' class='btn btn-outline-primary btn-block' data-toggle='modal' data-target='#export_modal'><i class='fas fa-upload fa-fw'></i> Liste exportieren</button>";
+			echo "<div style='margin-top: 10px'>";
+			echo "<button type='button' id='export_list' class='btn btn-outline-primary btn-block' export_episode_id='".$_SESSION['cur_episode']."'><i class='fas fa-upload fa-fw'></i> Liste exportieren</button>";
 			echo "<button type='button' id='clean_episode' class='btn btn-outline-tertiary btn-block clean_episode' change_value='".$_SESSION['cur_episode']."'><i class='fas fa-broom fa-fw'></i> Episode bereinigen</button>";		
+			echo "</div>";					
 		
-			echo "<div class='modal fade' id='export_modal' tabindex='-1' role='dialog' aria-labelledby='export_modal_title' aria-hidden='true'>";
+			/* echo "<div class='modal fade' id='export_modal' tabindex='-1' role='dialog' aria-labelledby='export_modal_title' aria-hidden='true'>";
 				echo "<div class='modal-dialog modal-dialog-centered' role='document'>";
 					echo "<div class='modal-content'>";
 						echo "<div class='modal-header'>";
@@ -409,7 +413,7 @@ function export(){
 						echo "</div>";
 					echo "</div>";
 				echo "</div>";
-			echo "</div>";							
+			echo "</div>";		 */					
 		}
 }
 
@@ -967,6 +971,7 @@ echo "</div>";
 				{
 					$(\"#text_test\").text(\"\");
 					$(this).removeClass(\"edit_mode\");
+					$(this).css(\"color\",\"black\");
 					$( \".kanban_sortable\" ).sortable({ 
 						connectWith: '',				
 						});					
@@ -976,6 +981,7 @@ echo "</div>";
 			
 					$(\"#text_test\").text(\"Kategorien-Transfer möglich\");
 					$(this).addClass(\"edit_mode\");
+					$(this).css(\"color\",\"green\");
 					$( \".kanban_sortable\" ).sortable({ 
 						connectWith: '.kanban_sortable',				
 						});

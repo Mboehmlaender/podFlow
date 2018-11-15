@@ -7,6 +7,72 @@ if(!isset($_SESSION['userid']))
 		header('Location: ../login.php');
 	}		
 
+
+//Export: Liste
+
+if(isset($_GET['export_list'])){
+	$id_episode = $_POST['id_episode'];
+							echo "<ul class='nav nav-pills mb-3' id='pills-tab' role='tablist'>";
+								echo "<li class='nav-item'>";
+									echo "<a class='nav-link active' id='pills-home-tab' data-toggle='pill' href='#HTML-list' role='tab' aria-controls='pills-home' aria-selected='true'>HTML Bindestriche</a>";
+								echo "</li>";								
+								echo "<li class='nav-item'>";
+									echo "<a class='nav-link' id='pills-profile-tab' data-toggle='pill' href='#HTML-bullet' role='tab' aria-controls='pills-profile' aria-selected='false'>HTML Gliederung</a>";
+								echo "</li>";
+								echo "<li class='nav-item'>";
+									echo "<a class='nav-link' id='pills-profile-tab' data-toggle='pill' href='#text' role='tab' aria-controls='pills-profile' aria-selected='false'>Text</a>";
+								echo "</li>";
+							echo "</ul>";
+							echo "<div class='tab-content' id='pills-tabContent'>";
+									$sql_select = "SELECT * FROM ".DB_PREFIX."view_links WHERE EPISODEN_ID=".$id_episode." AND LINKS_DONE = 1 ORDER BY LINKS_REIHENF, LINKS_DONE_TS ASC";
+									$sql_select_result = mysqli_query($con, $sql_select);
+									$stringarray = array();
+									$stringarray2 = array();
+									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
+									{
+										$fund_url = $sql_select_row['LINKS_URL'];
+										$pos = "http";
+										if(empty($fund_url))
+											{
+												$base = "&lt;a href='#' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
+											}
+										else if (strpos($fund_url, $pos) === false)
+											{
+												$base = "&lt;a href='http://".$fund_url."' target='_blank' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
+											}
+										else
+											{
+												$base = "&lt;a href='".$fund_url."' target='_blank' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
+											}
+											array_push($stringarray, $base);	
+											array_push($stringarray2, "<li>".$sql_select_row['LINKS_DESCR']."</li>");	
+									}
+								echo "<div class='tab-pane fade show active' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
+									echo "<textarea class='form-control' id='exampleFormControlTextarea1' rows='5'>";
+										echo implode(" - ",$stringarray);
+									echo"</textarea>"; 
+									echo "<div style='padding: 5px 5px 0px 5px; font-size:80%; font-weight: 400'>";
+										echo "<br>Beispiel: <a href='http://www.google.de' target='_blank'>Beitrag 1</a> - <a href='http://www.google.de' target='_blank'>Beitrag 2</a>";
+									echo "</i></div>";
+								echo "</div>";								
+								echo "<div class='tab-pane fade' id='HTML-bullet' role='tabpanel' aria-labelledby='pills-profile-tab'>";
+									echo "<textarea class='form-control' id='exampleFormControlTextarea1' rows='5'>";
+										echo "<ul>\r\n<li>";
+										echo implode("</li>\r\n<li>",$stringarray);
+										echo "</li>\r\n</ul>";
+									echo"</textarea>";     
+									echo "<div style='padding: 5px 5px 0px 5px; font-size:80%; font-weight: 400'>";
+									echo "<br>Beispiel: <ul><li><a href='http://www.google.de' target='_blank'>Beitrag 1</a></li><li><a href='http://www.google.de' target='_blank'>Beitrag 2</a></li></ul>";
+									echo "</i></div>";
+								echo "</div>";
+								echo "<div class='tab-pane fade' id='text' role='tabpanel' aria-labelledby='pills-profile-tab'>";
+									echo "<ul style='list-style-type:none'>";
+										echo implode($stringarray2);
+									echo "</ul>";
+								echo "</div>";
+							echo "</div>";
+			
+}
 //Modal: Eintrag bearbeiten
 
 if(isset($_GET['edit_entry'])){
@@ -471,7 +537,7 @@ if(isset($_GET['change'])){
 			echo "<div class='row'>";
 				echo $filter;
 			echo "</div>";
-			echo "<div class='row' style='max-height: 300px;' data-simplebar id='episodes'data-simplebar-auto-hide='false'>";
+			echo "<div class='row' style='max-height: 300px;' data-simplebar id='episodes' data-simplebar-auto-hide='false'>";
 			if($number_of_rows_episode == 0)
 				{
 					echo "<div class='col-md-12'>";

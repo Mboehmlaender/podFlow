@@ -475,7 +475,6 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 	//Themen/Beiträge aus der Exportliste entfernen
 	$(function  (){
 		$("#list_check").sortable({
-		connectWith: ".sortuncheck",
 		remove: function( event, ui ) {
 		var pk = ui.item.attr("data-pk");
 		var name = $(this).attr("data-name");
@@ -510,6 +509,22 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 		});
 	});		
 
+	//Export ausführen
+	$("#export_list").on("click", function(){
+		var id_episode = $(this).attr("export_episode_id");
+		$.ajax({
+			url: "inc/select.php?export_list=1",
+			type: "POST",
+			data: {	"id_episode":id_episode, 
+				},
+			success: function(data)
+				{
+					console.log(data);
+					$("#export_result").html(data);
+				},
+			}); 		
+	});
+	
 	//Anzeigenamen prüfen
 	$("#Username_Show").on("change input keyup blur", function(){
 		$.ajax({
