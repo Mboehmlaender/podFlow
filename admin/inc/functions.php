@@ -903,14 +903,6 @@ function categories_edit_list(){
 								{
 									$check_export_title_topics = '';
 								} 
- 							if($sql_get_categories_rows['EXPORT_TITLE_LINKS'] == 1)
-								{
-									$check_export_title_links = 'checked';
-								}
-							else
-								{
-									$check_export_title_links = '';
-								} 
  							if($sql_get_categories_rows['EXPORT_URL_LINKS'] == 1)
 								{
 									$check_export_url_links = 'checked';
@@ -984,19 +976,6 @@ function categories_edit_list(){
 									echo "<div class='toggle lg'>";
 										echo "<label class='switch'>";
 											echo "<input ".$check_export_title_topics." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_TITLE_TOPICS'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
-											echo "<span class='button-indecator'></span>";
-											echo "</label>";
-									echo "</div>";
-								echo "</div>";
-							echo "</div>";
-							echo "<div class='row'>";
-								echo "<div class='col-9 lead'>";
-									echo "Titel der Beiträge";
-								echo "</div>";
-								echo "<div class='col-3' style='text-align:right'>";
-									echo "<div class='toggle lg'>";
-										echo "<label class='switch'>";
-											echo "<input ".$check_export_title_links." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_TITLE_LINKS'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
 											echo "<span class='button-indecator'></span>";
 											echo "</label>";
 									echo "</div>";

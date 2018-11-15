@@ -11,7 +11,7 @@ if(!isset($_SESSION['userid']))
 if(isset($_POST)){
 	
 	//Beitrag löschen
-	if(isset($_GET['del_link'])){
+	if(isset($_GET['del_links'])){
 		$pk = mysqli_real_escape_string($con,$_POST['pk']);
 		$sql_delete_link = "DELETE FROM ".DB_PREFIX."links WHERE ID=".$pk;
 		$sql_delete_link_result = mysqli_query($con, $sql_delete_link); 
@@ -20,7 +20,7 @@ if(isset($_POST)){
 	}
 		
 	//Thema löschen
-	if(isset($_GET['del_topic'])){
+	if(isset($_GET['del_topics'])){
 		$pk = mysqli_real_escape_string($con,$_POST['pk']);
 		$sql_delete_topic = "DELETE FROM ".DB_PREFIX."links WHERE ID_TOPIC=".$pk.";";
 		$sql_delete_topic .= "DELETE FROM ".DB_PREFIX."topics WHERE ID=".$pk;

@@ -379,7 +379,7 @@ $(document).ready(function(){
 			$("#"+panel).show();
 			$("#"+panel).addClass("show");	
 			var test = $("#"+panel).attr("topic");	
-			var angle = -90;
+			var angle = 180;
 			$(".expand_icon_" + test).attr('angle', angle);	
 			$(".expand_icon_" + test).css({'transform': 'rotate(' + angle + 'deg)'});	
 		}  
@@ -422,7 +422,7 @@ $(".collapse-inner").on("click", function(){
 	{
 		Cookies.set("collapse_topic_" + topic_id, "topic");	
 		$("#collapse_topic_" + topic_id).addClass("show");
-		var angle = -90;
+		var angle = 180;
 		$(".expand_icon_" + topic_id).attr('angle', angle);	
 		$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
 	}

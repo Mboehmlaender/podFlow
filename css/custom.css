@@ -113,6 +113,11 @@ li.topic_links_item {
         left: 50%;
         margin-left: -1.5px;
     }
+	
+    .timeline_move:before {
+        background-color: green;
+
+    }
 
     .timeline > li {
         margin-bottom: 20px;

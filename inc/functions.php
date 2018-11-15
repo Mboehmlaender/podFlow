@@ -615,7 +615,7 @@ function category_list(){
 
 function kanban(){
 	echo "<div class='container' id='container' style='padding: 0px;'>";
-	echo "<a style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div> <i id='edit_cat_link' class='fas fa-filter fa-2x fa-fw'></i><span id='text_test'></span><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
+	echo "<a style='font-size: 1.5rem; margin-right: 10px; cursor: pointer' id='show'><i id='edit_cat_link' class='fas fa-users fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
 		{
@@ -653,7 +653,7 @@ function kanban(){
 						{
 							$entries = "Einträge";
 						}
-					$max_entries = "<i data-toggle='tooltip' data-placement='top' title='Max. ".$sql_categories_list_rows['MAX_ENTRIES']." ".$entries."' class='fa-fw ".getSetting('MAX_ENTRIES',0)."'></i>";
+					$max_entries = "<i data-toggle='tooltip' style='float:right' data-placement='top' title='Max. ".$sql_categories_list_rows['MAX_ENTRIES']." ".$entries."' class='fa-fw ".getSetting('MAX_ENTRIES',0)."'></i>";
 				}
 			else 
 				{
@@ -661,12 +661,15 @@ function kanban(){
 				}
 				
 			echo "<div data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'class='row load_content' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
-				echo "<div class='col-9 col-sm-10 col-xl-11'>";
+				echo "<div class='col-8 col-sm-8 col-xl-10'>";
 					echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'></span>".$sql_categories_list_rows['DESCR']."</h5></div>";
 				echo "</div>";
-				echo "<div class='col-3 col-sm-2 col-xl-1'>";
-					echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";
+				echo "<div class='col-2 col-sm-2 col-xl-1'>";
+					echo "<i data-toggle='tooltip' style='float:right' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";
 					echo $max_entries;
+				echo "</div>";
+				echo "<div class='col-2 col-sm-2 col-xl-1'>";
+					echo "<i style='cursor:pointer' class='fas fa-angle-double-up fa-2x fa-fw'></i>";
 				echo "</div>";
 			echo "</div>";
 			echo "<hr class='seperator'>";
@@ -679,7 +682,7 @@ function kanban(){
 		echo "<div class='collapse collapse-outer' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
 		echo "<ul class='timeline' style='margin-bottom: 10px'>";
  		    echo "<li>";
-				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -15px;'><i class='fas fa-plus fa-fw'></i></div>";
+				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
 			echo "</li>"; 
 			echo "</ul>"; 
 			
@@ -812,7 +815,7 @@ function kanban(){
 			echo "</span>"; 
 				echo "</div>";
 			echo "<span class='collapse-inner' style='cursor:pointer; color:#009688' id_topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "<i class='rotate-arrow fas fa-angle-double-down fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
+				echo "<i class='rotate-arrow fas fa-angle-double-up fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
 			echo "</span>";
 				echo "<div class='collapse collapse-inner-content' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
 				echo "<ul class='topic_links' >";
@@ -960,6 +963,7 @@ function kanban(){
 		
     
 echo "</ul>";
+echo "<hr>";
 echo "</div>";
 		}
 echo "</div>";
@@ -969,19 +973,28 @@ echo "</div>";
 				$('[own=\"0\"]').toggle(\"slow\"); 
 				if($(this).hasClass(\"edit_mode\"))
 				{
+					$(\".timeline\").removeClass(\"timeline_move\");
 					$(\"#text_test\").text(\"\");
+					$(this).removeClass(\"fa-user\");
+					$(this).addClass(\"fa-users\");					
 					$(this).removeClass(\"edit_mode\");
-					$(this).css(\"color\",\"black\");
 					$( \".kanban_sortable\" ).sortable({ 
 						connectWith: '',				
 						});					
 				}
 				else
 				{
-			
-					$(\"#text_test\").text(\"Kategorien-Transfer möglich\");
+					$.gritter.add({
+						title: \"OK\",
+						text: \"Kategorienübergreifendes Verschieben möglich!\",
+						image: \"images/delete.png\",
+						time: \"1000\"
+					});				
+					$(\".timeline\").addClass(\"timeline_move\");
+
 					$(this).addClass(\"edit_mode\");
-					$(this).css(\"color\",\"green\");
+					$(this).removeClass(\"fa-users\");
+					$(this).addClass(\"fa-user\");
 					$( \".kanban_sortable\" ).sortable({ 
 						connectWith: '.kanban_sortable',				
 						});
