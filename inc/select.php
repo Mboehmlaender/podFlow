@@ -24,7 +24,52 @@ if(isset($_GET['export_list'])){
 								echo "</li>";
 							echo "</ul>";
 							echo "<div class='tab-content' id='pills-tabContent'>";
-									$sql_select = "SELECT * FROM ".DB_PREFIX."view_links WHERE EPISODEN_ID=".$id_episode." AND LINKS_DONE = 1 ORDER BY LINKS_REIHENF, LINKS_DONE_TS ASC";
+								echo "<div class='tab-pane fade show active' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
+									echo "<ul style='list-style-type:none; padding-left: 0px'>";
+							 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE=".$id_episode." AND EXPORT_CAT = 1 ORDER BY REIHENF ASC";
+									$sql_select_result = mysqli_query($con, $sql_select);
+									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
+									{	
+										echo "<li>";
+										echo $sql_select_row['DESCR'];
+										if($sql_select_row['ID_EXPORT_OPTION'] == 2)
+										{
+											$list_type_open = "<ol>";
+											$close_type_close = "</ol>";
+											$data_type_open = "<li>";
+											$data_type_close = "</li>";
+										}
+										
+										else if($sql_select_row['ID_EXPORT_OPTION'] == 3)
+										{
+											$list_type_open = "<ul>";
+											$close_type_close = "</ul>";
+											$data_type_open = "<li>";
+											$data_type_close = "</li>";											
+										}
+										else
+										{
+											
+											$list_type_open = "";
+											$close_type_close = "";
+											$data_type_open = "";
+											$data_type_close = "";
+										}
+											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, NULL AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, 1 AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `DESCR` ASC";
+											$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
+											while ($sql_select_content_1_row = mysqli_fetch_assoc($sql_select_content_1_result))
+											{	
+												echo $list_type_open;
+													echo $data_type_open;
+														echo $sql_select_content_1_row['DESCR'];
+													echo $data_type_close;
+												echo $close_type_close;
+											}
+											echo "</li>";
+									}
+									echo "</ul>";
+								echo "</div>";
+							/* 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_links WHERE EPISODEN_ID=".$id_episode." AND LINKS_DONE = 1 ORDER BY LINKS_REIHENF, LINKS_DONE_TS ASC";
 									$sql_select_result = mysqli_query($con, $sql_select);
 									$stringarray = array();
 									$stringarray2 = array();
@@ -69,7 +114,7 @@ if(isset($_GET['export_list'])){
 									echo "<ul style='list-style-type:none'>";
 										echo implode($stringarray2);
 									echo "</ul>";
-								echo "</div>";
+								echo "</div>"; */
 							echo "</div>";
 			
 }
