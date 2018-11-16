@@ -669,7 +669,7 @@ function kanban(){
 					echo $max_entries;
 				echo "</div>";
 				echo "<div class='col-2 col-sm-2 col-xl-1'>";
-					echo "<i style='cursor:pointer' class='fas fa-angle-double-up fa-2x fa-fw'></i>";
+					echo "<i style='cursor:pointer' class='rotate-arrow cat_icon_".$sql_categories_list_rows['ID_CATEGORY']." fas fa-angle-double-right fa-2x fa-fw'></i>";
 				echo "</div>";
 			echo "</div>";
 			echo "<hr class='seperator'>";
@@ -679,7 +679,7 @@ function kanban(){
 				echo $sql_categories_list_rows['DESCR']."<br>";
 			echo "</a>"; */
 		
-		echo "<div class='collapse collapse-outer' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
+		echo "<div class='collapse collapse-outer' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
 		echo "<ul class='timeline' style='margin-bottom: 10px'>";
  		    echo "<li>";
 				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
@@ -770,6 +770,25 @@ function kanban(){
       echo "<li ".$class." table='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'>";
         echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
         echo "<div class='timeline-panel'>";
+		echo "<div id='entry_buttons_".$type.$sql_kanban_entries_row['ID']."' style='display:none'>";
+								echo "<div class='row' style='margin: 0px;'>";
+									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' ".$edit." ".$done." class='btn ".$btn." btn-block check_link btn-sm' id='check_".$type."".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"".$type."\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
+											echo "<i class='far fa-check-circle'></i>";
+										echo "</button>";									
+									echo "</div>";
+ 									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' edit_type='".$type."' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry btn-sm' id='".$type."_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
+									echo "</div>";
+/* 									echo "<div class='col-6' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
+									echo "</div>"; */
+									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry btn-sm' disabled id='delete_".$type.$sql_kanban_entries_row['ID']."' table='".$type."' option='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
+									echo "</div>"; 
+								echo "</div>";
+								echo "<hr>";
+		echo "</div>";
 				echo " <small class='text-muted'>".$user."</small><span style='margin-left: 10px; color: green' class='check_icon_".$type."_".$sql_kanban_entries_row['ID']."'>".$entry_done."</span>";;
 				if($sql_kanban_entries_row['ID_USER'] != $_SESSION['userid'])
 				{
@@ -777,8 +796,8 @@ function kanban(){
 				}
 				else
 				{ 
-					$actions = "<a class='tooltipster' style='float:right' data-tooltip-content='#tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
-					$actions .= "<i class='fas fa-angle-double-up'></i>";
+					$actions = "<a class='toggle_entry_buttons rotate-arrow' entry_id='".$sql_kanban_entries_row['ID']."' style='float:right; cursor:pointer' type='".$type."'>";
+					$actions .= "<i class='fas fa-angle-double-right'></i>";
 					$actions .= "</a>";
 				}
 				echo $actions;
@@ -794,28 +813,8 @@ function kanban(){
           echo "<div class='timeline-body'>";
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 		  {
-				echo "<div class='tooltip_templates' style='display:none'>";
-					echo "<span id='tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
-								echo "<div class='row' style='margin: 0px;'>";
-									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_topics".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"topics\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
-											echo "<i class='far fa-check-circle'></i>";
-										echo "</button>";									
-									echo "</div>";
- 									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' edit_type='topics' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry' id='topic_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
-									echo "</div>";
-/* 									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
-									echo "</div>"; */
-									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry' disabled id='delete_topic".$sql_kanban_entries_row['ID']."' table='topics' option='topic' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
-									echo "</div>"; 
-								echo "</div>";
-			echo "</span>"; 
-				echo "</div>";
 			echo "<span class='collapse-inner' style='cursor:pointer; color:#009688' id_topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "<i class='rotate-arrow fas fa-angle-double-up fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
+				echo "<i class='rotate-arrow fas fa-angle-double-right fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
 			echo "</span>";
 				echo "<div class='collapse collapse-inner-content' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
 				echo "<ul class='topic_links' >";
@@ -826,7 +825,7 @@ function kanban(){
 				echo "<li class='topic_links_item' id='link_".$select_topic_links_rows['ID']."'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
 					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
-						echo "<div class='link_icon link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
+						echo "<div class='link_icon topic_link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
 							echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
 					echo "</div>";
 					echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='link' data-pk='".$select_topic_links_rows['ID']."'>";
@@ -884,27 +883,6 @@ function kanban(){
 		  }
 		  else
 		  {
-				echo "<div class='tooltip_templates' style='display:none'>";
-					echo "<span id='tooltip_content".$type."_".$sql_kanban_entries_row['ID']."'>";
-								echo "<div class='row' style='margin: 0px;'>";
-									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button'  ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_links".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"links\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
-											echo "<i class='far fa-check-circle'></i>";
-										echo "</button>";									
-									echo "</div>";
- 									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' edit_type='links' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry' id='link_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
-									echo "</div>";
-/* 									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
-									echo "</div>"; */
-									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' id='delete_link".$sql_kanban_entries_row['ID']."' disabled table='links' option='link' data-pk='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-danger btn-block delete_entry'><i class='far fa-times-circle fa-fw'></i></button>";
-									echo "</div>"; 
-								echo "</div>";
-			echo "</span>"; 
-				echo "</div>";
-
 			echo "<div class='row' style='padding: 0px 14px 0px 14px; margin-top: 15px'>";
 				echo "<ul class='topic_links'>";
 				echo "<li class='topic_links_item'>";
@@ -969,6 +947,26 @@ echo "</div>";
 echo "</div>";
 	echo "<script>
 			$(document).ready(function(){
+				
+			$(\".toggle_entry_buttons\").on(\"click\", function(){
+				var type = $(this).attr(\"type\");
+				var entry_id = $(this).attr(\"entry_id\");
+				
+					if($(\"#entry_buttons_\" + type + entry_id).css('display') == 'none')
+					{
+						var angle = -90;
+					}
+					
+					else
+					{
+						var angle = -0;
+						
+					}
+					$(this).attr('angle', angle);	
+					$(this).css({'transform': 'rotate(' + angle + 'deg)'});	
+				$(\"#entry_buttons_\" + type + entry_id).toggle(\"slow\");
+			
+			});
 			$(\"#edit_cat_link\").on(\"click\", function(){
 				$('[own=\"0\"]').toggle(\"slow\"); 
 				if($(this).hasClass(\"edit_mode\"))
@@ -1001,10 +999,7 @@ echo "</div>";
 					
 				}
 			});
-			
-			var test = $(this).attr('cat_id');
-			
-			
+						
 			$( \".kanban_sortable\" ).sortable({ 
 				handle: '.timeline-handle',
 				receive: function( event, ui){
@@ -1068,7 +1063,7 @@ function close_episode(){
 		}
 }
 
-//Eigene Themen/Beiträge		
+/* //Eigene Themen/Beiträge		
 function topic_edit_list($id_user){
 global $con;
 	echo "<div class='tile'>";
@@ -1586,7 +1581,7 @@ global $con;
 				echo "</div>";
 			echo "</div>";
 		echo "</div>";
-}	
+}	 */
 
 //Profil bearbeiten
 function profil_edit(){
