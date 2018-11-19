@@ -125,6 +125,11 @@ $(document).ready(function(){
 		{
 			if($("#topics_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				var angle = 0;
+				$("#" + edit_type + "_notice_" + edit_id).hide("fast");			
+				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeAttr('angle');	
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('show');	
 				$(".link_topic_delete_"+edit_id).removeClass("col-xl-4 col-12");
 				$(".link_topic_delete_"+edit_id).removeAttr("style");
 				$(".link_topic_delete_"+edit_id).empty();
@@ -139,8 +144,6 @@ $(document).ready(function(){
 				$(".topic_link_icon_"+edit_id).toggle("show");
 				$(".links_url_"+edit_id).toggle("hide");
 				
-				$("#delete_topics"+edit_id).attr("disabled", true),
-
 				$(".edit_topic_"+edit_id).removeClass("update");
 				$(".link_topic_"+edit_id).removeClass("update");
 				
@@ -148,7 +151,12 @@ $(document).ready(function(){
 			}
 			else
 			{
+				$("#" + edit_type + "_notice_" + edit_id).show("fast");			
 				var delete_button = "<button type=\"button\" class=\"btn btn-danger btn-block btn-sm\"><i class=\"far fa-times-circle fa-fw\"></i></button></div>";
+				var angle = 90;
+				$("#notice_toggle_"+edit_type+"_"+edit_id).attr('angle', angle);	
+				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
+				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('show');	
 				$(".links_url_"+edit_id).toggle("show");
 				$(".edit_topic_"+edit_id).addClass("update");
 				$(".link_topic_"+edit_id).addClass("update");
@@ -158,7 +166,6 @@ $(document).ready(function(){
 				$(this).removeClass("btn-outline-tertiary"),
 				
 				$(this).addClass("btn-tertiary"),
-				$("#delete_topics"+edit_id).removeAttr("disabled"),
 			
 				$(".topic_link_icon_"+edit_id).toggle("hide");
 				
@@ -222,12 +229,16 @@ $(document).ready(function(){
 		{
 			if($("#links_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$("#" + edit_type + "_notice_" + edit_id).hide("fast");			
+				var angle = 0;
+				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeAttr('angle');	
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('show');	
 				$(this).removeClass("btn-tertiary"),			
 				$(this).addClass("btn-outline-tertiary"),
 				
 				$(".edit_link_"+edit_id).editable("destroy")
 				
-				$("#delete_links"+edit_id).attr("disabled", true),
 
 				
 				$(".link_icon_"+edit_id).toggle("show");
@@ -239,10 +250,14 @@ $(document).ready(function(){
 			}
 			else
 			{
+				$("#" + edit_type + "_notice_" + edit_id).show("fast");			
+				var angle = 90;
+				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('show');	
+				$("#notice_toggle_"+edit_type+"_"+edit_id).attr('angle', angle);	
+				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
 				$(this).removeClass("btn-outline-tertiary"),
 				
 				$(this).addClass("btn-tertiary"),
-				$("#delete_links"+edit_id).removeAttr("disabled"),
 				
 				$("#links_edit_button_"+edit_id).addClass("active_edit");
 				$(".edit_link_"+edit_id).addClass("update");

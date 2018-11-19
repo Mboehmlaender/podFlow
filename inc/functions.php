@@ -688,11 +688,12 @@ function kanban(){
 			
 		echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."'>";
 		global $con;
-		$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
+		$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."links.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."topics.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
 		$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
  		while($sql_kanban_entries_row = mysqli_fetch_assoc($sql_kanban_entries_result))
  		{
 							
+						
 						if ($sql_kanban_entries_row['DONE'] == 1  && $sql_kanban_entries_row['EPISODE_DONE'] == 0)
 							{
 								$btn = "btn-success";
@@ -773,19 +774,19 @@ function kanban(){
 		echo "<div id='entry_buttons_".$type.$sql_kanban_entries_row['ID']."' style='display:none'>";
 								echo "<div class='row' style='margin: 0px;'>";
 									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry btn-sm' id='delete_".$type.$sql_kanban_entries_row['ID']."' table='".$type."' option='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
+									echo "</div>"; 
+ 									echo "<div class='col-4' style='padding:1px'>";
+										echo "<button type='button' edit_type='".$type."' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry btn-sm' id='".$type."_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
+									echo "</div>";
+									echo "<div class='col-4' style='padding:1px'>";
 										echo "<button type='button' ".$edit." ".$done." class='btn ".$btn." btn-block check_link btn-sm' id='check_".$type."".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"".$type."\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
 											echo "<i class='far fa-check-circle'></i>";
 										echo "</button>";									
 									echo "</div>";
- 									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' edit_type='".$type."' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry btn-sm' id='".$type."_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
-									echo "</div>";
 /* 									echo "<div class='col-6' style='padding:1px'>";
 										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
 									echo "</div>"; */
-									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry btn-sm' disabled id='delete_".$type.$sql_kanban_entries_row['ID']."' table='".$type."' option='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
-									echo "</div>"; 
 								echo "</div>";
 								echo "<hr>";
 		echo "</div>";
@@ -811,6 +812,16 @@ function kanban(){
 					else{
 				echo $title;
           echo "<div class='timeline-body'>";
+			if(!empty($sql_kanban_entries_row['INFO']))
+				{
+					$notice = "<hr style='margin-top: 5px; margin-bottom: 5px'><p>";
+					$notice .= "<i id_entry='".$sql_kanban_entries_row['ID']."' id='notice_toggle_".$type."_".$sql_kanban_entries_row['ID']."' type='".$type."' style='cursor:pointer; color: #6c3600' class='rotate-arrow far fa-hand-point-right fa-2x toggle_notice'></i>";
+					$notice .= "</p>";
+				}
+			else
+				{
+					$notice = "";
+				}
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 		  {
 			echo "<span class='collapse-inner' style='cursor:pointer; color:#009688' id_topic='".$sql_kanban_entries_row['ID']."'>";
@@ -877,9 +888,12 @@ function kanban(){
 				echo "</li>";
 			}
 				echo "</ul>";
-			echo "<hr style='margin-bottom: 0px;margin-top: 10px'>";
 
 				echo "</div>";
+		  echo $notice;
+		  echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
+			echo "<div class='lead' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+		  echo "</div>";
 		  }
 		  else
 		  {
@@ -932,6 +946,10 @@ function kanban(){
 				echo "</li>";
 				echo "</ul>";
 			echo "</div>";
+		  echo $notice;
+		  echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
+			echo "<div class='lead' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+		  echo "</div>";
 		  }
           echo "</div>";
         echo "</div>";
@@ -948,6 +966,28 @@ echo "</div>";
 	echo "<script>
 			$(document).ready(function(){
 				
+			$(\".toggle_notice\").on(\"click\", function(){
+				var type = $(this).attr(\"type\");
+				var id_entry = $(this).attr(\"id_entry\");
+				$(\"#\" + type + \"_notice_\" + id_entry).toggle(\"fast\");			
+				
+				if ($(this).hasClass('show'))
+				{
+					var angle = 0;
+					$(this).css({'transform': 'rotate(' + angle + 'deg)'});
+					$(this).removeAttr('angle');	
+					$(this).removeClass(\"show\");
+
+				}
+				else
+				{
+					var angle = 90;
+					$(this).attr('angle', angle);	
+					$(this).css({'transform': 'rotate(' + angle + 'deg)'});
+					$(this).addClass(\"show\");
+				}
+	
+			});
 			$(\".toggle_entry_buttons\").on(\"click\", function(){
 				var type = $(this).attr(\"type\");
 				var entry_id = $(this).attr(\"entry_id\");
