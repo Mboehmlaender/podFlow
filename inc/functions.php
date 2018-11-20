@@ -186,9 +186,9 @@ function dashboard(){
 	if(!empty($_SESSION['cur_episode']))
 		{
 			echo "<div class='col-xl-4'>";
-				echo "<a style='text-decoration: none' href='episode.php'><div class='widget-small primary coloured-icon'><i class='icon fas fa-tasks fa-3x fa-fw'></i>";
+				echo "<a style='text-decoration: none' href='episode.php'><div class='widget-small primary coloured-icon'><i class='icon fas fa-ellipsis-v fa-3x fa-fw'></i>";
 					echo "<div class='info'>";
-						echo "<h4  style='text-transform: none'>Alle Beiträge</h4>";
+						echo "<h4  style='text-transform: none'>Timeline</h4>";
 					echo "</div>";
 				echo "</div></a>";
 			echo "</div>";
@@ -254,7 +254,7 @@ function sidebar(){
 			echo "<li><a class='app-menu__item' id='menu_dash' href='index.php'><i class='app-menu__icon fab fa-fort-awesome'></i><span class='app-menu__label'>Dashboard</span></a></li>";
 			if(!empty($_SESSION['cur_episode']))
 				{
-					echo "<li><a class='app-menu__item' id='menu_episode' href='episode.php'><i class='app-menu__icon fas fa-tasks'></i><span class='app-menu__label'>Alle Beiträge</span></a></li>";
+					echo "<li><a class='app-menu__item' id='menu_episode' href='episode.php'><i class='app-menu__icon fas fa-ellipsis-v'></i><span class='app-menu__label'>Timeline</span></a></li>";
 /* 					echo "<li><a class='app-menu__item' id='menu_links' href='links.php'><i class='app-menu__icon fas fa-bookmark'></i><span class='app-menu__label'>Meine Beiträge</span></a></li>";
  */					if(getPermission($_SESSION['userid']) > 1)
 						{
@@ -815,7 +815,7 @@ function kanban(){
 			if(!empty($sql_kanban_entries_row['INFO']))
 				{
 					$notice = "<hr style='margin-top: 5px; margin-bottom: 5px'><p>";
-					$notice .= "<i id_entry='".$sql_kanban_entries_row['ID']."' id='notice_toggle_".$type."_".$sql_kanban_entries_row['ID']."' type='".$type."' style='cursor:pointer; color: #6c3600' class='rotate-arrow far fa-hand-point-right fa-2x toggle_notice'></i>";
+					$notice .= "<i id_entry='".$sql_kanban_entries_row['ID']."' id='notice_toggle_".$type."_".$sql_kanban_entries_row['ID']."' type='".$type."' style='cursor:pointer; color: #6c3600' class='rotate-arrow far fa-sticky-note fa-2x toggle_notice'></i>";
 					$notice .= "</p>";
 				}
 			else
@@ -976,17 +976,15 @@ echo "</div>";
 				
 				if ($(this).hasClass('show'))
 				{
-					var angle = 0;
-					$(this).css({'transform': 'rotate(' + angle + 'deg)'});
-					$(this).removeAttr('angle');	
+				$(this).removeClass('fas');
+				$(this).addClass('far');
 					$(this).removeClass(\"show\");
 
 				}
 				else
 				{
-					var angle = 90;
-					$(this).attr('angle', angle);	
-					$(this).css({'transform': 'rotate(' + angle + 'deg)'});
+				$(this).removeClass('far');
+				$(this).addClass('fas');
 					$(this).addClass(\"show\");
 				}
 	

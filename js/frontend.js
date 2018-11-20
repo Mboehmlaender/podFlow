@@ -61,8 +61,8 @@ function save_note(id, type){
 			success: function(data){
 			console.log(data);
 			$.gritter.add({
-				title: 'Bearbeiten ok!',
-				text: 'Die Änderungen wurden gespeichert!',
+				title: 'OK!',
+				text: 'Die Notizen wurden gespeichert!',
 				image: '../images/confirm.png',
 				time: '1000'
 			});		
@@ -146,17 +146,19 @@ function check_link(id, table){
 		}); 						
 }	
 
-	//Link kopieren Meldung
-	function copy_link(){
-		$.gritter.add({
-			title: "Link kopiert",
-			text: "Der Link wurde in die Zwischenablage kopiert!",
-			image: "images/confirm.png",
-			time: "1000"
-		});		
-	}
+//Link kopieren Meldung
+function copy_link(){
+	$.gritter.add({
+		title: "Link kopiert",
+		text: "Der Link wurde in die Zwischenablage kopiert!",
+		image: "images/confirm.png",
+		time: "1000"
+	});		
+}
 	
 $(document).ready(function(){
+
+	// Beitrag bearbeiten
 															
 	$(".edit_entry").on("click", function(){
 		var edit_id = $(this).attr("edit_id");
@@ -167,13 +169,12 @@ $(document).ready(function(){
 		{
 			if($("#topics_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
+				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
 				disableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', false)
-				var angle = 0;
 				$("#" + edit_type + "_notice_" + edit_id).hide("fast");			
-				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
-				$("#notice_toggle_"+edit_type+"_"+edit_id).removeAttr('angle');	
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('show');	
 				$(".link_topic_delete_"+edit_id).removeClass("col-xl-4 col-12");
 				$(".link_topic_delete_"+edit_id).removeAttr("style");
@@ -196,14 +197,14 @@ $(document).ready(function(){
 			}
 			else
 			{
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('far');
+				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('fas');
+				$("#"+edit_type+"_notice_"+edit_id).addClass('update');
 				$("#savebutton" + edit_type + edit_id).html(save_button)
 				enableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', true)
 				$("#" + edit_type + "_notice_" + edit_id).show("fast");			
 				var delete_button = "<button type=\"button\" class=\"btn btn-danger btn-block btn-sm\"><i class=\"far fa-times-circle fa-fw\"></i></button></div>";
-				var angle = 90;
-				$("#notice_toggle_"+edit_type+"_"+edit_id).attr('angle', angle);	
-				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('show');	
 				$(".links_url_"+edit_id).toggle("show");
 				$(".edit_topic_"+edit_id).addClass("update");
@@ -277,13 +278,12 @@ $(document).ready(function(){
 		{
 			if($("#links_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
+				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
 				disableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', false)
 				$("#" + edit_type + "_notice_" + edit_id).hide("fast");			
-				var angle = 0;
-				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
-				$("#notice_toggle_"+edit_type+"_"+edit_id).removeAttr('angle');	
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('show');	
 				$(this).removeClass("btn-tertiary"),			
 				$(this).addClass("btn-outline-tertiary"),
@@ -301,14 +301,15 @@ $(document).ready(function(){
 			}
 			else
 			{
+				$("#"+edit_type+"_notice_"+edit_id).addClass('update');
+
 				$("#savebutton" + edit_type + edit_id).html(save_button)
 				enableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', true)
 				$("#" + edit_type + "_notice_" + edit_id).show("fast");			
-				var angle = 90;
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('show');	
-				$("#notice_toggle_"+edit_type+"_"+edit_id).attr('angle', angle);	
-				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
+				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('far');
+				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('fas');
 				$(this).removeClass("btn-outline-tertiary"),
 				
 				$(this).addClass("btn-tertiary"),
@@ -431,6 +432,7 @@ $(document).ready(function(){
 
 console.log(content);
 
+//Beim Öffnen einer Kategorie den Pfeil drehen
 $( ".load_content" ).on('click', function(){
 			var cat_id = $(this).attr("category_id");
 			if($(this).attr("aria-expanded") == "true")
@@ -444,6 +446,8 @@ $( ".load_content" ).on('click', function(){
 			$(".cat_icon_" + cat_id).attr('angle', angle);	
 			$(".cat_icon_" + cat_id).css({'transform': 'rotate(' + angle + 'deg)'});		
 });
+
+//Alle Kategorin einklappen
 $( ".collapse_me" ).on('click', function(){
 			$(".collapse-outer").collapse("hide");
 			$(".collapse-inner-content").hide("slow");
@@ -460,10 +464,13 @@ $( ".collapse_me" ).on('click', function(){
 			}
 			
 });
+
+//Alle Kategorien ausklappen
 $( ".expand_me" ).on('click', function(){
 			$(".collapse-outer").collapse('show');
 });
-			
+		
+//Themenlinks aus/einklappen		
 $(".collapse-inner").on("click", function(){
 	var topic_id = $(this).attr("id_topic");
 	$("#collapse_topic_" + topic_id).toggle("fast");
@@ -485,7 +492,8 @@ $(".collapse-inner").on("click", function(){
 	}
 		
  });
- 
+
+//Cookies der Kategorien setzen/entfernen
 $(".collapse-outer").on("show.bs.collapse", function(){
 	var cat_id = $(this).attr("id");
  	Cookies.set(cat_id, "category");	
