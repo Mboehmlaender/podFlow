@@ -39,7 +39,7 @@ function head(){
 		echo "<link rel='stylesheet' href='css/custom.css'>";
 		echo "<link rel='stylesheet' href='css/jquery.gritter.css'>";
 		echo "<link rel='stylesheet' href='css/jquery-confirm.min.css'>";
-		echo "<script src='//cdn.ckeditor.com/4.9.2/basic/ckeditor.js'></script>";
+		echo "<script src='//cdn.ckeditor.com/4.11.1/basic/ckeditor.js'></script>";
 		echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js' integrity='sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49' crossorigin='anonymous'></script>";
 		echo "<script src='https://code.jquery.com/jquery-3.3.1.min.js' integrity='sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=' crossorigin='anonymous'></script>";
 		echo "<script src='js/jquery.gritter.min.js'></script>";
@@ -892,7 +892,8 @@ function kanban(){
 				echo "</div>";
 		  echo $notice;
 		  echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
-			echo "<div class='lead' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+			echo "<div class='lead' id='".$type."_notice_edit_".$sql_kanban_entries_row['ID']."' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+			echo "<div id='savebutton".$type.$sql_kanban_entries_row['ID']."'></div>";
 		  echo "</div>";
 		  }
 		  else
@@ -948,7 +949,8 @@ function kanban(){
 			echo "</div>";
 		  echo $notice;
 		  echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
-			echo "<div class='lead' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+			echo "<div class='lead' id='".$type."_notice_edit_".$sql_kanban_entries_row['ID']."' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+			echo "<div id='savebutton".$type.$sql_kanban_entries_row['ID']."'></div>";
 		  echo "</div>";
 		  }
           echo "</div>";
@@ -965,7 +967,8 @@ echo "</div>";
 echo "</div>";
 	echo "<script>
 			$(document).ready(function(){
-				
+			
+			
 			$(\".toggle_notice\").on(\"click\", function(){
 				var type = $(this).attr(\"type\");
 				var id_entry = $(this).attr(\"id_entry\");

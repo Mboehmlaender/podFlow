@@ -34,6 +34,46 @@ function save_order(){
 		});  
 } */	
 
+
+	function enableEditing(editbox) {
+				CKEDITOR.inline(editbox);
+			
+		}	
+	function disableEditing(editbox) {
+				CKEDITOR.instances[editbox].destroy();
+		}
+
+function save_note(id, type){
+	var editbox = type+"_notice_edit_"+id;
+	var name = "INFO";
+	var table = type;
+	var pk = id;
+	var value= CKEDITOR.instances[editbox].getData();	
+	$.ajax({
+		url: 'inc/update.php',
+		type: 'POST',
+		data: {name:name, pk:pk, value:value, table:table},
+		success: function(data){
+		$.ajax({
+			url: 'inc/update.php',
+			type: 'POST',
+			data: {name:name, pk:pk, value:value, table:table},
+			success: function(data){
+			console.log(data);
+			$.gritter.add({
+				title: 'Bearbeiten ok!',
+				text: 'Die Änderungen wurden gespeichert!',
+				image: '../images/confirm.png',
+				time: '1000'
+			});		
+			}
+		});
+		console.log(data);
+		}
+	});
+	
+}
+	
 //Kanbanreihenfolge speichern
 
 function save_order_kanban(id_cat){
@@ -117,14 +157,19 @@ function check_link(id, table){
 	}
 	
 $(document).ready(function(){
-	
+															
 	$(".edit_entry").on("click", function(){
 		var edit_id = $(this).attr("edit_id");
 		var edit_type = $(this).attr("edit_type");
+		var editbox = edit_type + "_notice_edit_" + edit_id;
+		var save_button = "<button class='btn btn-outline-success btn-block save_note' onclick='save_note("+edit_id+",\""+edit_type+"\")' id='update_notizen_"+edit_type+edit_id+"'><i class='fas fa-save'></i> Notizen Speichern</button>";
 		if(edit_type == "topics")
 		{
 			if($("#topics_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$("#savebutton" + edit_type + edit_id).empty()
+				disableEditing(editbox);
+				$("#" + editbox).attr('contenteditable', false)
 				var angle = 0;
 				$("#" + edit_type + "_notice_" + edit_id).hide("fast");			
 				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
@@ -151,6 +196,9 @@ $(document).ready(function(){
 			}
 			else
 			{
+				$("#savebutton" + edit_type + edit_id).html(save_button)
+				enableEditing(editbox);
+				$("#" + editbox).attr('contenteditable', true)
 				$("#" + edit_type + "_notice_" + edit_id).show("fast");			
 				var delete_button = "<button type=\"button\" class=\"btn btn-danger btn-block btn-sm\"><i class=\"far fa-times-circle fa-fw\"></i></button></div>";
 				var angle = 90;
@@ -229,6 +277,9 @@ $(document).ready(function(){
 		{
 			if($("#links_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$("#savebutton" + edit_type + edit_id).empty()
+				disableEditing(editbox);
+				$("#" + editbox).attr('contenteditable', false)
 				$("#" + edit_type + "_notice_" + edit_id).hide("fast");			
 				var angle = 0;
 				$("#notice_toggle_"+edit_type+"_"+edit_id).css({'transform': 'rotate(' + angle + 'deg)'});
@@ -250,6 +301,9 @@ $(document).ready(function(){
 			}
 			else
 			{
+				$("#savebutton" + edit_type + edit_id).html(save_button)
+				enableEditing(editbox);
+				$("#" + editbox).attr('contenteditable', true)
 				$("#" + edit_type + "_notice_" + edit_id).show("fast");			
 				var angle = 90;
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('show');	
