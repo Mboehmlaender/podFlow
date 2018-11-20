@@ -169,6 +169,7 @@ $(document).ready(function(){
 		{
 			if($("#topics_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$("#"+edit_type+"_notice_"+edit_id).removeClass('update');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
@@ -278,6 +279,7 @@ $(document).ready(function(){
 		{
 			if($("#links_edit_button_"+edit_id).hasClass("active_edit"))
 			{
+				$("#"+edit_type+"_notice_"+edit_id).removeClass('update');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
@@ -302,7 +304,6 @@ $(document).ready(function(){
 			else
 			{
 				$("#"+edit_type+"_notice_"+edit_id).addClass('update');
-
 				$("#savebutton" + edit_type + edit_id).html(save_button)
 				enableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', true)
