@@ -615,7 +615,9 @@ function category_list(){
 
 function kanban(){
 	echo "<div class='container' id='container' style='padding: 0px;'>";
-	echo "<a style='font-size: 1.5rem; margin-right: 10px; cursor: pointer' id='show'><i id='edit_cat_link' class='fas fa-users fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
+	echo "<a style='font-size: 1.5rem; margin-right: 10px; cursor: pointer' id='show'><i id='edit_cat_link' class='fas fa-users fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'>";
+/* 	echo "<i class='fas fa-chevron-circle-up fa-2x collapse_me'></i>";
+ */	echo "<i class='fas fa-window-minimize fa-2x expand_me fa-fw'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
 		{
@@ -640,8 +642,10 @@ function kanban(){
 				echo "</div";
 				return;
 			}
+
 		while($sql_categories_list_rows = mysqli_fetch_assoc($sql_categories_list_result))
 		{
+		$number_entries = getnumber($sql_categories_list_rows['ID_CATEGORY'], $_SESSION['cur_episode']);
 			
 			if ($sql_categories_list_rows['MAX_ENTRIES'] >= 1)
 				{
@@ -662,7 +666,7 @@ function kanban(){
 				
 			echo "<div data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'class='row load_content' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
 				echo "<div class='col-8 col-sm-8 col-xl-10'>";
-					echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'></span>".$sql_categories_list_rows['DESCR']."</h5></div>";
+					echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'>".$number_entries."</span>".$sql_categories_list_rows['DESCR']."</h5></div>";
 				echo "</div>";
 				echo "<div class='col-2 col-sm-2 col-xl-1'>";
 					echo "<i data-toggle='tooltip' style='float:right' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";

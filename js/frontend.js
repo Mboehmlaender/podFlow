@@ -36,7 +36,7 @@ function save_order(){
 
 
 	function enableEditing(editbox) {
-				CKEDITOR.inline(editbox);
+				CKEDITOR.replace(editbox);
 			
 		}	
 	function disableEditing(editbox) {
@@ -169,7 +169,6 @@ $(document).ready(function(){
 		{
 			if($("#topics_edit_button_"+edit_id).hasClass("active_edit"))
 			{
-				$("#"+edit_type+"_notice_"+edit_id).removeClass('update');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
@@ -200,7 +199,6 @@ $(document).ready(function(){
 			{
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('far');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('fas');
-				$("#"+edit_type+"_notice_"+edit_id).addClass('update');
 				$("#savebutton" + edit_type + edit_id).html(save_button)
 				enableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', true)
@@ -279,7 +277,6 @@ $(document).ready(function(){
 		{
 			if($("#links_edit_button_"+edit_id).hasClass("active_edit"))
 			{
-				$("#"+edit_type+"_notice_"+edit_id).removeClass('update');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
@@ -303,7 +300,6 @@ $(document).ready(function(){
 			}
 			else
 			{
-				$("#"+edit_type+"_notice_"+edit_id).addClass('update');
 				$("#savebutton" + edit_type + edit_id).html(save_button)
 				enableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', true)
@@ -448,7 +444,7 @@ $( ".load_content" ).on('click', function(){
 			$(".cat_icon_" + cat_id).css({'transform': 'rotate(' + angle + 'deg)'});		
 });
 
-//Alle Kategorin einklappen
+/* //Alle Kategorin einklappen
 $( ".collapse_me" ).on('click', function(){
 			$(".collapse-outer").collapse("hide");
 			$(".collapse-inner-content").hide("slow");
@@ -469,7 +465,36 @@ $( ".collapse_me" ).on('click', function(){
 //Alle Kategorien ausklappen
 $( ".expand_me" ).on('click', function(){
 			$(".collapse-outer").collapse('show');
+}); */
+
+//Alle Kategorien aus/einklappen
+$( ".expand_me" ).on('click', function(){
+	var count = $(".collapse-outer.show").length;
+	if(count > 0)
+	{
+			var angle = 0;
+			$(".collapse-outer").collapse("hide");
+			$(".collapse-inner-content").hide("slow");
+			$(".collapse-inner-content").removeClass("show");
+			for (var de_panel in content){
+				if(de_panel.substr(0,8) == "collapse")
+				{
+					Cookies.remove(de_panel);
+				}
+				
+/* 			$(".rotate-arrow").removeAttr('angle');	
+			$(".rotate-arrow").css({'transform': ''}); */
+		
+			}		
+	}
+	else{
+			var angle = 90;
+			$(".collapse-outer").collapse('show');
+	}
+			$(".rotate-arrow").attr('angle', angle);	
+			$(".rotate-arrow").css({'transform': 'rotate(' + angle + 'deg)'});	
 });
+
 		
 //Themenlinks aus/einklappen		
 $(".collapse-inner").on("click", function(){
