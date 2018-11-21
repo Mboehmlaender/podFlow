@@ -615,7 +615,7 @@ function category_list(){
 
 function kanban(){
 	echo "<div class='container' id='container' style='padding: 0px;'>";
-	echo "<a style='font-size: 1.5rem; margin-right: 10px; cursor: pointer' id='show'><i id='edit_cat_link' class='fas fa-users fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer; font-size: 0.7rem'><i class='fas fa-chevron-circle-up fa-2x collapse_me'></i><i class='fas fa-chevron-circle-down fa-2x expand_me fa-fw'></i></span>";
+	echo "<a style='font-size: 1.5rem; margin-right: 10px; cursor: pointer' id='show'><i id='edit_cat_link' class='fas fa-users fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div><span id='collapse_icon' style='float:right; cursor:pointer;'><i style='margin: 0 5px' class='fas fa-angle-double-up fa-2x collapse_me'></i><i style='margin: 0 5px' class='fas fa-angle-double-down fa-2x expand_me'></i></span>";
 	echo "<hr>";
 	if(empty($_SESSION['podcast']))
 		{
@@ -659,19 +659,18 @@ function kanban(){
 				{
 					$max_entries = "";
 				}
-				
-			echo "<div data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'class='row load_content' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
-				echo "<div class='col-8 col-sm-8 col-xl-10'>";
-					echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'></span>".$sql_categories_list_rows['DESCR']."</h5></div>";
+				echo "<div class='row'>";
+					echo "<div class='col-8 col-sm-8 col-xl-10 load_content' data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
+						echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'></span>".$sql_categories_list_rows['DESCR']."</h5></div>";
+					echo "</div>";
+					echo "<div class='col-2 col-sm-2 col-xl-1'>";
+						echo "<i data-toggle='tooltip' style='float:right' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";
+						echo $max_entries;
+					echo "</div>";
+					echo "<div class='col-2 col-sm-2 col-xl-1 load_content' data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
+						echo "<i style='cursor:pointer' class='rotate-arrow cat-rotate-arrow cat_icon_".$sql_categories_list_rows['ID_CATEGORY']." fas fa-angle-double-left fa-2x fa-fw'></i>";
+					echo "</div>";
 				echo "</div>";
-				echo "<div class='col-2 col-sm-2 col-xl-1'>";
-					echo "<i data-toggle='tooltip' style='float:right' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";
-					echo $max_entries;
-				echo "</div>";
-				echo "<div class='col-2 col-sm-2 col-xl-1'>";
-					echo "<i style='cursor:pointer' class='rotate-arrow cat_icon_".$sql_categories_list_rows['ID_CATEGORY']." fas fa-angle-double-right fa-2x fa-fw'></i>";
-				echo "</div>";
-			echo "</div>";
 			echo "<hr class='seperator'>";
 			
 			
@@ -798,7 +797,7 @@ function kanban(){
 				else
 				{ 
 					$actions = "<a class='toggle_entry_buttons rotate-arrow' entry_id='".$sql_kanban_entries_row['ID']."' style='float:right; cursor:pointer' type='".$type."'>";
-					$actions .= "<i class='fas fa-angle-double-right'></i>";
+					$actions .= "<i class='fas fa-angle-double-left fa-2x'></i>";
 					$actions .= "</a>";
 				}
 				echo $actions;
@@ -814,9 +813,10 @@ function kanban(){
           echo "<div class='timeline-body'>";
 			if(!empty($sql_kanban_entries_row['INFO']))
 				{
-					$notice = "<hr style='margin-top: 5px; margin-bottom: 5px'><p>";
-					$notice .= "<i id_entry='".$sql_kanban_entries_row['ID']."' id='notice_toggle_".$type."_".$sql_kanban_entries_row['ID']."' type='".$type."' style='cursor:pointer; color: #6c3600' class='rotate-arrow far fa-sticky-note fa-2x toggle_notice'></i>";
-					$notice .= "</p>";
+					$notice = "<hr>";
+					$notice .= "<div style='text-align:right'>";
+					$notice .= "<i id_entry='".$sql_kanban_entries_row['ID']."' id='notice_toggle_".$type."_".$sql_kanban_entries_row['ID']."' type='".$type."' style='cursor:pointer; color: #6c3600;' class='rotate-arrow far fa-sticky-note fa-2x toggle_notice'></i>";
+					$notice .= "</div>";
 				}
 			else
 				{
@@ -824,10 +824,10 @@ function kanban(){
 				}
 		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 		  {
-			echo "<span class='collapse-inner' style='cursor:pointer; color:#009688' id_topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "<i class='rotate-arrow fas fa-angle-double-right fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
-			echo "</span>";
-				echo "<div class='collapse collapse-inner-content' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
+			echo "<div class='collapse-inner' style='cursor:pointer; color:#009688; text-align: right' id_topic='".$sql_kanban_entries_row['ID']."'>";
+				echo "<i class='rotate-arrow fas fa-angle-double-left fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
+			echo "</div>";
+				echo "<div class='collapse collapse-inner-content' style='margin-top:10px' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
 				echo "<ul class='topic_links' >";
 			$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
 			$select_topic_links_result = mysqli_query($con, $select_topic_links);
@@ -995,12 +995,12 @@ echo "</div>";
 				
 					if($(\"#entry_buttons_\" + type + entry_id).css('display') == 'none')
 					{
-						var angle = -90;
+						var angle = 90;
 					}
 					
 					else
 					{
-						var angle = -0;
+						var angle = 0;
 						
 					}
 					$(this).attr('angle', angle);	

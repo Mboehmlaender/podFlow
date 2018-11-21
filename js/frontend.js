@@ -36,7 +36,7 @@ function save_order(){
 
 
 	function enableEditing(editbox) {
-				CKEDITOR.inline(editbox);
+				CKEDITOR.replace(editbox);
 			
 		}	
 	function disableEditing(editbox) {
@@ -169,7 +169,6 @@ $(document).ready(function(){
 		{
 			if($("#topics_edit_button_"+edit_id).hasClass("active_edit"))
 			{
-				$("#"+edit_type+"_notice_"+edit_id).removeClass('update');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
@@ -200,7 +199,6 @@ $(document).ready(function(){
 			{
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('far');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('fas');
-				$("#"+edit_type+"_notice_"+edit_id).addClass('update');
 				$("#savebutton" + edit_type + edit_id).html(save_button)
 				enableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', true)
@@ -279,7 +277,6 @@ $(document).ready(function(){
 		{
 			if($("#links_edit_button_"+edit_id).hasClass("active_edit"))
 			{
-				$("#"+edit_type+"_notice_"+edit_id).removeClass('update');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).removeClass('fas');
 				$("#notice_toggle_"+edit_type+"_"+edit_id).addClass('far');
 				$("#savebutton" + edit_type + edit_id).empty()
@@ -303,7 +300,6 @@ $(document).ready(function(){
 			}
 			else
 			{
-				$("#"+edit_type+"_notice_"+edit_id).addClass('update');
 				$("#savebutton" + edit_type + edit_id).html(save_button)
 				enableEditing(editbox);
 				$("#" + editbox).attr('contenteditable', true)
@@ -416,7 +412,7 @@ $(document).ready(function(){
 		{
 			$("#"+panel).collapse();
 			var cat_id = $("#"+panel).attr("id_cat");
-			var angle = 90;
+			var angle = -90;
 			$(".cat_icon_" + cat_id).attr('angle', angle);	
 			$(".cat_icon_" + cat_id).css({'transform': 'rotate(' + angle + 'deg)'});				
 		}  
@@ -425,7 +421,7 @@ $(document).ready(function(){
 			$("#"+panel).show();
 			$("#"+panel).addClass("show");	
 			var test = $("#"+panel).attr("topic");	
-			var angle = 90;
+			var angle = -90;
 			$(".expand_icon_" + test).attr('angle', angle);	
 			$(".expand_icon_" + test).css({'transform': 'rotate(' + angle + 'deg)'});	
 		}  
@@ -442,7 +438,7 @@ $( ".load_content" ).on('click', function(){
 			}
 			else
 			{
-				var angle = 90;
+				var angle = -90;
 			}
 			$(".cat_icon_" + cat_id).attr('angle', angle);	
 			$(".cat_icon_" + cat_id).css({'transform': 'rotate(' + angle + 'deg)'});		
@@ -450,6 +446,7 @@ $( ".load_content" ).on('click', function(){
 
 //Alle Kategorin einklappen
 $( ".collapse_me" ).on('click', function(){
+			var angle = 0;
 			$(".collapse-outer").collapse("hide");
 			$(".collapse-inner-content").hide("slow");
 			$(".collapse-inner-content").removeClass("show");
@@ -461,15 +458,41 @@ $( ".collapse_me" ).on('click', function(){
 				
 			$(".rotate-arrow").removeAttr('angle');	
 			$(".rotate-arrow").css({'transform': ''});
-		
-			}
+		}
 			
 });
 
-//Alle Kategorien ausklappen
+ //Alle Kategorien ausklappen
 $( ".expand_me" ).on('click', function(){
+			var angle = -90;
 			$(".collapse-outer").collapse('show');
-});
+			$(".cat-rotate-arrow").attr('angle', angle);	
+			$(".cat-rotate-arrow").css({'transform': 'rotate(' + angle + 'deg)'});	
+}); 
+
+/*  //Alle Kategorien aus/einklappen
+$( ".expand_me" ).on('click', function(){
+	var count = $(".collapse-outer.show").length;
+	if(count > 0)
+	{
+			$(".collapse-outer").collapse("hide");
+			$(".collapse-inner-content").hide("slow");
+			$(".collapse-inner-content").removeClass("show");
+			for (var de_panel in content){
+				if(de_panel.substr(0,8) == "collapse")
+				{
+					Cookies.remove(de_panel);
+				}
+				
+		
+			}		
+	}
+	else{
+			var angle = -90;
+			$(".collapse-outer").collapse('show');
+	}
+});   */
+
 		
 //Themenlinks aus/einklappen		
 $(".collapse-inner").on("click", function(){
@@ -487,7 +510,7 @@ $(".collapse-inner").on("click", function(){
 	{
 		Cookies.set("collapse_topic_" + topic_id, "topic");	
 		$("#collapse_topic_" + topic_id).addClass("show");
-		var angle = 90;
+		var angle = -90;
 		$(".expand_icon_" + topic_id).attr('angle', angle);	
 		$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
 	}
