@@ -41,8 +41,12 @@ if(isset($_POST)){
 		$url = mysqli_real_escape_string($con,$_POST['url']);
 		$topic = mysqli_real_escape_string($con,$_POST['topic']);
 		$category = mysqli_real_escape_string($con,$_POST['category']);
-		$sql_new_topic_link = "INSERT INTO ".DB_PREFIX."links (ID_USER, ID_EPISODE, ID_TOPIC, ID_CATEGORY, DESCR, URL, ID_PODCAST) VALUES ('".$_SESSION['userid']."', '".$_SESSION['cur_episode']."', '".$topic."', '".$category."', '".$descr."', '".$url."', '".$_SESSION['podcast']."')";
+		$sql_select_topic_reihenf = "SELECT REIHENF FROM topics WHERE ID_EPISODE = '".$_SESSION['cur_episode']."' AND ID_PODCAST = '".$_SESSION['podcast']."' AND ID = ".$topic;
+		$sql_select_topic_reihenf_result = mysqli_query($con, $sql_select_topic_reihenf);
+		$row = mysqli_fetch_assoc($sql_select_topic_reihenf_result);	
+		$sql_new_topic_link = "INSERT INTO ".DB_PREFIX."links (ID_USER, ID_EPISODE, ID_TOPIC, ID_CATEGORY, DESCR, URL, ID_PODCAST, REIHENF) VALUES ('".$_SESSION['userid']."', '".$_SESSION['cur_episode']."', '".$topic."', '".$category."', '".$descr."', '".$url."', '".$_SESSION['podcast']."', '".$row['REIHENF']."')";
 		$sql_result = mysqli_query($con, $sql_new_topic_link);
+		echo $sql_new_topic_link;
 		return;
 	}	
 
