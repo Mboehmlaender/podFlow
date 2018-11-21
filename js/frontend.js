@@ -371,16 +371,23 @@ $(document).ready(function(){
 		var pk = $(this).attr("data-pk");
 		var table = $(this).attr("table");
 		var option = $(this).attr("option");
+		var cat_id = $(this).attr("cat");
 
+		var old_anzahl_old = $("#cat_" + cat_id + "_number_user").text();							
+		var old_anzahl_old_gesamt = $("#cat_" + cat_id + "_number_all").text();
+
+		var new_anzahl_current = parseInt(old_anzahl_old)-1;			
+		var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
+		
 		if(table == 'topics')
 			{
 				var content = 'Das Thema und alle enthaltenen Beiträge werden gelöscht!';
-				function remove(delete_id) {$("#topic_"+pk).remove()};
+				function remove(delete_id) {$("#item-t"+pk).remove()};
 			}
 		else
 			{
 				var content = 'Der Beitrag wird gelöscht!';
-				function remove(delete_id) {$("#link_"+pk).remove()};
+				function remove(delete_id) {$("#item-l"+pk).remove()};
 			}
 		$.confirm({
 			title: 'Wirklich löschen?',
@@ -401,6 +408,8 @@ $(document).ready(function(){
 						success:function(data){
 							console.log(data);
 							remove(pk);
+							$("#cat_" + cat_id + "_number_user").text(new_anzahl_current);										
+							$("#cat_" + cat_id + "_number_all").text(new_anzahl_current_gesamt);
 							},
 						error:function ()
 							{

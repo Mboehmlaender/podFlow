@@ -779,7 +779,7 @@ function kanban(){
 		echo "<div id='entry_buttons_".$type.$sql_kanban_entries_row['ID']."' style='display:none'>";
 								echo "<div class='row' style='margin: 0px;'>";
 									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry btn-sm' id='delete_".$type.$sql_kanban_entries_row['ID']."' table='".$type."' option='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
+										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry btn-sm' cat='".$sql_kanban_entries_row['ID_CATEGORY']."' id='delete_".$type.$sql_kanban_entries_row['ID']."' table='".$type."' option='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
 									echo "</div>"; 
  									echo "<div class='col-4' style='padding:1px'>";
 										echo "<button type='button' edit_type='".$type."' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry btn-sm' id='".$type."_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
