@@ -19,9 +19,9 @@ function episodeclosed($episode){
 }
 
 //Anzahl der Beiträge einer Kategorie
-function getnumber($category, $episode){
+function getnumber($category, $episode, $append, $id_user){
 	global $con;
-	$sql = "SELECT ID FROM links WHERE ID_CATEGORY = ".$category." AND ID_EPISODE = ".$episode." AND ID_TOPIC IS NULL UNION ALL SELECT ID FROM topics WHERE ID_CATEGORY = ".$category." AND ID_EPISODE = ".$episode;
+	$sql = "SELECT ID FROM links WHERE ID_CATEGORY = ".$category." AND ID_EPISODE = ".$episode." AND ID_TOPIC IS NULL ".$append.$id_user." UNION ALL SELECT ID FROM topics WHERE ID_CATEGORY = ".$category." AND ID_EPISODE = ".$episode.$append.$id_user;
 	$res = mysqli_query($con, $sql);
 	$num = mysqli_num_rows($res);
 	return $num;

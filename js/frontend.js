@@ -48,7 +48,15 @@ function save_note(id, type){
 	var name = "INFO";
 	var table = type;
 	var pk = id;
-	var value= CKEDITOR.instances[editbox].getData();	
+	var value= CKEDITOR.instances[editbox].getData();
+	if(value === '')
+	{
+		$("#notice_toggle_" + table + "_" + pk).hide("fast");
+	}
+	else{
+		
+		$("#notice_toggle_" + table + "_" + pk).show("fast");
+	}
 	$.ajax({
 		url: 'inc/update.php',
 		type: 'POST',
@@ -96,6 +104,7 @@ function check_link(id, table){
 	var check_icon = "<i class='far fa-check-circle'></i>";
 	if ($("#check_"+table+id).attr("data-checked") == "1")
 		{
+			$("#panel_" + table + "_" + id).removeClass("entry_done");
 			var value = "0";
 			$("#check_"+table+id).removeClass("btn-success");
 			$("#check_"+table+id).addClass("btn-outline-success");
@@ -112,6 +121,7 @@ function check_link(id, table){
 		}
 	else
 		{
+			$("#panel_" + table + "_" + id).addClass("entry_done");
 			var value = "1";
 			$("#check_"+table+id).removeClass("btn-outline-success");
 			$("#check_"+table+id).addClass("btn-success");
