@@ -667,8 +667,8 @@ function kanban(){
 						echo "<i data-toggle='tooltip' style='float:right' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";
 						echo $max_entries;
 					echo "</div>";
-					echo "<div class='col-2 col-sm-2 col-xl-1 load_content' data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
-						echo "<i style='cursor:pointer' class='rotate-arrow cat-rotate-arrow cat_icon_".$sql_categories_list_rows['ID_CATEGORY']." fas fa-angle-double-left fa-2x fa-fw'></i>";
+					echo "<div class='col-2 col-sm-2 col-xl-1 load_content' style='text-align:right' data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
+						echo "<i style='cursor:pointer' class='rotate-arrow cat-rotate-arrow cat_icon_".$sql_categories_list_rows['ID_CATEGORY']." fas fa-angle-double-left fa-2x'></i>";
 					echo "</div>";
 				echo "</div>";
 			echo "<hr class='seperator'>";
