@@ -31,8 +31,8 @@
          <p>Alle Beiträge der gewählten Episode</p>
        </div>
        <ul class="app-breadcrumb breadcrumb">
-         <li class="breadcrumb-item"><i class="fas fa-tasks fa-lg"></i></li>
-         <li class="breadcrumb-item"><a href="#">Alle Beiträge</a></li>
+         <li class="breadcrumb-item"><i class="fas fa-ellipsis-v"></i></li>
+         <li class="breadcrumb-item"><a href="#">Timeline</a></li>
        </ul>
      </div>
 
