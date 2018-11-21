@@ -471,7 +471,7 @@ if(isset($_GET['change'])){
 			$change_podcast_result = mysqli_query($con, $change_podcast_select);
 			$number_of_rows = mysqli_num_rows($change_podcast_result);
 
-			echo "<div class='row' style='max-height: 300px' data-simplebar data-simplebar-auto-hide='false'>";
+			echo "<div class='row' style='max-height: 300px; overflow-y:hidden' data-simplebar data-simplebar-auto-hide='true'>";
 			if($number_of_rows == 0)
 				{
 					echo "<div class='col-md-12'>";
@@ -582,7 +582,7 @@ if(isset($_GET['change'])){
 			echo "<div class='row'>";
 				echo $filter;
 			echo "</div>";
-			echo "<div class='row' style='max-height: 300px;' data-simplebar id='episodes' data-simplebar-auto-hide='false'>";
+			echo "<div class='row' style='max-height: 300px; overflow-y:hidden' data-simplebar id='episodes' data-simplebar-auto-hide='true'>";
 			if($number_of_rows_episode == 0)
 				{
 					echo "<div class='col-md-12'>";
