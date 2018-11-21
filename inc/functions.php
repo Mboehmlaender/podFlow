@@ -663,7 +663,7 @@ function kanban(){
  				$number_all = getnumber($sql_categories_list_rows['ID_CATEGORY'], $_SESSION['cur_episode'], '', '');
 				echo "<div class='row'>";
 					echo "<div class='col-8 col-sm-8 col-xl-10 load_content' data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' category_ID ='".$sql_categories_list_rows['ID_CATEGORY']."'>";
-						echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='display:none; margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary cat_number_user'>".$number_user."</span><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary cat_number_all' >".$number_all."</span>".$sql_categories_list_rows['DESCR']."</h5></div>";
+						echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='display:none; margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary cat_number_user' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."_number_user'>".$number_user."</span><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary cat_number_all' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."_number_all'>".$number_all."</span>".$sql_categories_list_rows['DESCR']."</h5></div>";
 					echo "</div>";
 					echo "<div class='col-2 col-sm-2 col-xl-1'>";
 						echo "<i data-toggle='tooltip' style='float:right' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_rows['VISIBLE'])."'></i>";
@@ -756,7 +756,7 @@ function kanban(){
 			}
 			if($sql_kanban_entries_row['IS_TOPIC'] == 1)
 				{
-					$class = "class='kanban_entry timeline-inverted' own='".$own."' id='item-t".$sql_kanban_entries_row['ID']."'";
+					$class = "class='kanban_entry timeline-inverted' cat=".$sql_kanban_entries_row['ID_CATEGORY']." own='".$own."' id='item-t".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-bars fa-fw'></i>";
 					$icon_color = " info";
 					$title = "<div class='timeline-heading'>";
@@ -766,7 +766,7 @@ function kanban(){
 				}
 			else
 				{
-					$class = "class='kanban_entry' own='".$own."'id='item-l".$sql_kanban_entries_row['ID']."'";
+					$class = "class='kanban_entry' cat=".$sql_kanban_entries_row['ID_CATEGORY']." own='".$own."'id='item-l".$sql_kanban_entries_row['ID']."'";
 					$icon = "<i class='fas fa-link fa-fw'></i>";
 					$icon_color = " warning";
 					$title = "";
@@ -802,7 +802,7 @@ function kanban(){
 				}
 				else
 				{ 
-					$actions = "<a class='toggle_entry_buttons rotate-arrow' entry_id='".$sql_kanban_entries_row['ID']."' style='float:right; cursor:pointer' type='".$type."'>";
+					$actions = "<a class='toggle_entry_buttons rotate-arrow' id='toggle_entry_buttons_".$type."_".$sql_kanban_entries_row['ID']."' entry_id='".$sql_kanban_entries_row['ID']."' style='float:right; cursor:pointer' type='".$type."'>";
 					$actions .= "<i class='fas fa-angle-double-left fa-2x'></i>";
 					$actions .= "</a>";
 				}
@@ -1053,19 +1053,40 @@ echo "</div>";
 			$( \".kanban_sortable\" ).sortable({ 
 				handle: '.timeline-handle',
 				receive: function( event, ui){
-							var cat_id = event.target.getAttribute('cat_id');
+							var cat_id_receiver = event.target.getAttribute('cat_id');
+							var cat_id_current = ui.item.attr(\"cat\");
+							
+							var old_anzahl = $(\"#cat_\" + cat_id_receiver + \"_number_user\").text();
+							var old_anzahl_old = $(\"#cat_\" + cat_id_current + \"_number_user\").text();							
+							
+							var old_anzahl_gesamt = $(\"#cat_\" + cat_id_receiver + \"_number_all\").text();
+							var old_anzahl_old_gesamt = $(\"#cat_\" + cat_id_current + \"_number_all\").text();
+							
+							var new_anzahl_receiver = parseInt(old_anzahl)+1;
+							var new_anzahl_current = parseInt(old_anzahl_old)-1;							
+							
+							var new_anzahl_receiver_gesamt = parseInt(old_anzahl_gesamt)+1;
+							var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
+							
 							var pk = ui.item.attr(\"data-pk\");
 							var table = ui.item.attr(\"table\");
 							$.ajax({
 								url: \"inc/update.php?set_category_sortable=1\",
 								type: \"POST\",
-								data: {	\"cat_id\":cat_id, 
+								data: {	\"cat_id\":cat_id_receiver, 
 										\"table\":table, 
 										\"pk\":pk 
 									},								
 								success: function(data)
 									{
 										console.log(data);
+										$(\"#cat_\" + cat_id_receiver + \"_number_user\").text(new_anzahl_receiver);
+										$(\"#cat_\" + cat_id_current + \"_number_user\").text(new_anzahl_current);										
+										
+										$(\"#cat_\" + cat_id_receiver + \"_number_all\").text(new_anzahl_receiver_gesamt);
+										$(\"#cat_\" + cat_id_current + \"_number_all\").text(new_anzahl_current_gesamt);
+										ui.item.attr(\"cat\", cat_id_receiver)
+
 									},
 								}); 
 					},

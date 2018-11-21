@@ -102,6 +102,9 @@ function save_order_kanban(id_cat){
 function check_link(id, table){
 	$("#check_"+id).blur();
 	var check_icon = "<i class='far fa-check-circle'></i>";
+	$("#entry_buttons_" + table + id).hide("fast");
+	$("#toggle_entry_buttons_" + table + "_" + id).attr('angle', 0);	
+	$("#toggle_entry_buttons_" + table + "_" + id).css({'transform': 'rotate(' + 0 + 'deg)'});	
 	if ($("#check_"+table+id).attr("data-checked") == "1")
 		{
 			$("#panel_" + table + "_" + id).removeClass("entry_done");
