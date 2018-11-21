@@ -3,7 +3,10 @@
 }
 
 .entry_done:before{
-	border-left: 15px solid rgba(49, 160, 49, 0.8) !important;
+	border-left-color: rgba(49, 160, 49, 0.8) !important;
+}
+.entry_done:before{
+	border-right-color: rgba(49, 160, 49, 0.8) !important;
 }
 
 .full{
