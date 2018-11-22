@@ -28,40 +28,85 @@ if(isset($_GET['export_list'])){
 									echo "<ul style='list-style-type:none; padding-left: 0px'>";
 							 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE=".$id_episode." AND EXPORT_CAT = 1 ORDER BY REIHENF ASC";
 									$sql_select_result = mysqli_query($con, $sql_select);
+									$stringarray = array();
 									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
 									{	
 										echo "<li>";
 										echo $sql_select_row['DESCR'];
 										if($sql_select_row['ID_EXPORT_OPTION'] == 2)
 										{
+											$list_type = "list";
 											$list_type_open = "<ol>";
 											$close_type_close = "</ol>";
 											$data_type_open = "<li>";
 											$data_type_close = "</li>";
+											$pre = "";
 										}
 										
 										else if($sql_select_row['ID_EXPORT_OPTION'] == 3)
 										{
+											$list_type = "list";
 											$list_type_open = "<ul>";
 											$close_type_close = "</ul>";
 											$data_type_open = "<li>";
 											$data_type_close = "</li>";											
+											$pre = "";
+										}
+										else if($sql_select_row['ID_EXPORT_OPTION'] == 1)
+										{
+											$list_type = "no_list";
+											$list_type_open = "";
+											$close_type_close = "";
+											$data_type_open = "";
+											$data_type_close = "";											
+											$pre = "<br>";
 										}
 										else
 										{
-											
+											$list_type = "list";
+											$pre = "";
 											$list_type_open = "";
 											$close_type_close = "";
 											$data_type_open = "";
 											$data_type_close = "";
 										}
-											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, NULL AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, 1 AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `DESCR` ASC";
+										
+										echo $pre;
+											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, URL, NULL AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, NULL AS URL, 1 AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `DESCR` ASC";
 											$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
 											while ($sql_select_content_1_row = mysqli_fetch_assoc($sql_select_content_1_result))
 											{	
+													if($sql_select_content_1_row['IS_TOPIC'] == 1)
+													{
+															$descr = $sql_select_content_1_row['DESCR'];
+														
+													}
+													else
+													{
+														$stringarray = array();
+														$fund_url = $sql_select_content_1_row['URL'];
+														$pos = "http";
+														if(empty($fund_url))
+															{
+																$base = "<a href='#' >".$sql_select_content_1_row['DESCR']."</a>";
+															}
+														else if (strpos($fund_url, $pos) === false)
+															{
+																$base = "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
+															}
+														else
+															{
+																$base = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
+															}
+
+															array_push($stringarray, $base);	
+															$descr = implode(" - ",$stringarray);
+													}
+											
+											
 												echo $list_type_open;
 													echo $data_type_open;
-														echo $sql_select_content_1_row['DESCR'];
+															echo $descr;
 													echo $data_type_close;
 												echo $close_type_close;
 											}
