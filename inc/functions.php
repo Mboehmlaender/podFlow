@@ -637,7 +637,7 @@ function kanban(){
 		if(mysqli_num_rows($sql_categories_list_result) == 0)
 			{
 				echo "<p class='lead'>Es wurden noch keine Kategorien angelegt!</p>";
-				echo "</div";
+				echo "</div>";
 				return;
 			}
 		while($sql_categories_list_rows = mysqli_fetch_assoc($sql_categories_list_result))
