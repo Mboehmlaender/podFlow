@@ -432,7 +432,7 @@ $(document).ready(function(){
 	for (var panel in content){ //<-- panel is the name of the cookie
 	if ($("#"+panel).hasClass("collapse-outer")) // check if this is a panel
 		{
-			$("#"+panel).collapse();
+			$("#"+panel).show();
 			var cat_id = $("#"+panel).attr("id_cat");
 			var angle = -90;
 			$(".cat_icon_" + cat_id).attr('angle', angle);	

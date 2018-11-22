@@ -121,7 +121,7 @@ if(isset($_POST)){
 							});
 						});								   
 				</script>"; 
-				echo "<script>
+/* 				echo "<script>
 					var button = \"<button type='button' id='absenden_link_new' name='absenden_link_new' class='btn btn-outline-secondary savebtn'>Speichern</button>\";
 
 					$(\"#button_footer\").html(button);
@@ -158,7 +158,7 @@ if(isset($_POST)){
 							}
 						});
 					});								   
-				</script>"; 
+				</script>";  */
 			
 			return;
 	} 
@@ -282,8 +282,7 @@ if(isset($_POST)){
 						success:function(data)
 							{
 								console.log(data);
-								location.reload();
-						
+								window.location.reload(true);						
 						},
 						error:function ()
 							{
@@ -336,7 +335,7 @@ if(isset($_POST)){
 							{
 								$(\"#newentry\").modal('hide');
 								console.log(data);
-								location.reload();
+								window.location.reload(true);						
 							},
 						error:function ()
 							{

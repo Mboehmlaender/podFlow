@@ -835,13 +835,13 @@ function kanban(){
 			$select_topic_links_result = mysqli_query($con, $select_topic_links);
 			while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
 			{
-				echo "<li class='topic_links_item' id='link_".$select_topic_links_rows['ID']."'>";
+				echo "<li class='topic_links_item' id='item-l".$select_topic_links_rows['ID']."'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
 					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
 						echo "<div class='link_icon topic_link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
 							echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
 					echo "</div>";
-					echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='link' data-pk='".$select_topic_links_rows['ID']."'>";
+					echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='links' data-pk='".$select_topic_links_rows['ID']."'>";
 					
 					echo "</div>";
 					echo "<div class='col-12 col-xl-8 links_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display: none'>";
