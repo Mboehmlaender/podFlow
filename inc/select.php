@@ -136,10 +136,14 @@ if(isset($_GET['export_list'])){
 																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
 																		}																	
 																	$descr2 .= $data_type_close;
+																	
 																	array_push($stringarray_2, $descr2);	
 																} 
 															$descr = implode($sep,$stringarray_2);
-
+																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= $sql_select_content_1_row['INFO'];
+																	}
 															array_push($stringarray, $descr);
 														}
 														else
