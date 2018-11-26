@@ -13,7 +13,7 @@ if(!isset($_SESSION['userid']))
 if(isset($_GET['export_list'])){
 	$id_episode = $_POST['id_episode'];
 							echo "<div class='tab-content' id='pills-tabContent'>";
-								echo "<div class='tab-pane fade show active' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
+								echo "<div class='tab-pane fade show active lead' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
 							 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE=".$id_episode." AND EXPORT_CAT = 1 ORDER BY REIHENF ASC";
 									$sql_select_result = mysqli_query($con, $sql_select);
 									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
@@ -68,7 +68,7 @@ if(isset($_GET['export_list'])){
 											}
 											
 											echo $cat_title_open;
-											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `DESCR` ASC";
+											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `DESCR` ASC";
 											$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
 											$stringarray = array();
 											echo $list_type_open;
@@ -181,6 +181,12 @@ if(isset($_GET['export_list'])){
 															$descr .= $close_type_close;
 
 															$descr .= $data_type_close;
+															
+																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= $sql_select_content_1_row['INFO'];
+																	}
+																	
 															array_push($stringarray, $descr);	
 														}
 													}
@@ -197,7 +203,7 @@ if(isset($_GET['export_list'])){
 														$pos = "http";
 														if(empty($fund_url))
 															{
-																$descr = $data_type_open.$sql_select_content_1_row['DESCR']."</a>";
+																$descr = $data_type_open.$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
 															}
 														else if (strpos($fund_url, $pos) === false)
 															{
@@ -207,19 +213,37 @@ if(isset($_GET['export_list'])){
 															{
 																$descr = $data_type_open."<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
 															}
+																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= $sql_select_content_1_row['INFO'];
+																	}
 																array_push($stringarray, $descr);	
 						
 													}
 												
 												}
-												
-
 											}
 										echo implode($sep,$stringarray);
 										echo $close_type_close;
 										echo $cat_title_close;
 									}
 								echo "</div>";
+								echo "<hr>";
+								  echo "<div class='form-group'>";
+									echo "<label for='html_export'>HTML-Code:</label>";
+									echo "<textarea class='form-control' id='html_export' rows='3'>";
+									
+									echo "</textarea>";
+								  echo "</div>";
+										
+										echo "<script>
+													$(document).ready(function(){
+														var htmlString = $(\"#HTML-list\").html();
+														$(\"#html_export\").html(htmlString);
+													});
+
+											
+										</script>";
 							/* 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_links WHERE EPISODEN_ID=".$id_episode." AND LINKS_DONE = 1 ORDER BY LINKS_REIHENF, LINKS_DONE_TS ASC";
 									$sql_select_result = mysqli_query($con, $sql_select);
 									$stringarray = array();
