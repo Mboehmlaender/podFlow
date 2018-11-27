@@ -142,7 +142,7 @@ if(isset($_GET['export_list'])){
 															$descr = implode($sep,$stringarray_2);
 																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																		$descr .= $sql_select_content_1_row['INFO'];
+																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
 																	}
 															array_push($stringarray, $descr);
 														}
@@ -188,7 +188,7 @@ if(isset($_GET['export_list'])){
 															
 																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																		$descr .= $sql_select_content_1_row['INFO'];
+																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
 																	}
 																	
 															array_push($stringarray, $descr);	
