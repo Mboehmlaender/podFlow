@@ -37,8 +37,8 @@ if(isset($_GET['export_list'])){
 										}
 										else if($sql_select_row['ID_EXPORT_OPTION'] == 1)
 										{
-											$list_type_open = "<ul style='list-style-type:none; padding-left: 0px'>";
-											$close_type_close = "</ul>";
+											$list_type_open = "";
+											$close_type_close = "";
 											$data_type_open = "";
 											$data_type_close = "";											
 											$sep = " - ";
@@ -78,7 +78,7 @@ if(isset($_GET['export_list'])){
 												{
 													if($sql_select_content_1_row['IS_TOPIC'] == 1)
 													{
-															$descr = $data_type_open.$sql_select_content_1_row['DESCR'].$data_type_close;
+															$descr = $sql_select_content_1_row['DESCR'];
 															array_push($stringarray, $descr);	
 													}
 													else
@@ -87,16 +87,16 @@ if(isset($_GET['export_list'])){
 														$pos = "http";
 														if(empty($fund_url))
 															{
-																$descr = $data_type_open."<a href='#' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
+																$descr = "<a href='#' >".$sql_select_content_1_row['DESCR']."</a>";
 																array_push($stringarray, $descr);	
 															}
 														else if (strpos($fund_url, $pos) === false)
 															{
-																$descr = $data_type_open."<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
+																$descr = "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
 															}
 														else
 															{
-																$descr = $data_type_open."<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
+																$descr = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
 															}
 																array_push($stringarray, $descr);	
 						
