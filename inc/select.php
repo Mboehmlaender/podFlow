@@ -68,7 +68,7 @@ if(isset($_GET['export_list'])){
 											}
 											
 											echo $cat_title_open;
-											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `DESCR` ASC";
+											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `REIHENF` ASC";											
 											$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
 											$stringarray = array();
 											echo $list_type_open;
@@ -78,8 +78,95 @@ if(isset($_GET['export_list'])){
 												{
 													if($sql_select_content_1_row['IS_TOPIC'] == 1)
 													{
-															$descr = $sql_select_content_1_row['DESCR'];
+														if($sql_select_row['EXPORT_TITLE_TOPICS'] == 0)
+														{
+					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
+																$stringarray_2 = array();
+																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
+																{	
+																	$descr2 = $data_type_open;
+																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
+																	{
+																		$fund_url = "";
+																	}
+																	else
+																	{
+																		$fund_url = $sql_select_content_2_row['URL'];
+																	}
+																	$pos = "http";
+																	if(empty($fund_url))
+																		{
+																			$descr2 .= $sql_select_content_2_row['DESCR'];
+																		}
+																	else if (strpos($fund_url, $pos) === false)
+																		{
+																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																		}
+																	else
+																		{
+																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																		}																	
+																	$descr2 .= $data_type_close;
+																	
+																	array_push($stringarray_2, $descr2);	
+																} 
+/* 															$descr = implode($sep,$stringarray_2);
+																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	} */
+															array_push($stringarray, $descr);
+														}
+														else
+														{
+															$descr = $data_type_open;
+															$descr .= $sql_select_content_1_row['DESCR'].": ";
+					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
+																$stringarray_2 = array();
+																$descr .= $list_type_open;
+																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
+																{	
+																	$descr2 = $data_type_open;
+																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
+																	{
+																		$fund_url = "";
+																	}
+																	else
+																	{
+																		$fund_url = $sql_select_content_2_row['URL'];
+																	}																	
+																	$pos = "http";
+																	if(empty($fund_url))
+																		{
+																			$descr2 .= $sql_select_content_2_row['DESCR'];
+																		}
+																	else if (strpos($fund_url, $pos) === false)
+																		{
+																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																		}
+																	else
+																		{
+																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																		}
+																	$descr2 .= $data_type_close;
+																	array_push($stringarray_2, $descr2);	
+																} 
+															$descr .= implode($sep,$stringarray_2);
+															$descr .= $close_type_close;
+
+															$descr .= $data_type_close;
+															
+/* 																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	} */
+																	
 															array_push($stringarray, $descr);	
+														}
+/* 															$descr = $sql_select_content_1_row['DESCR'];
+															array_push($stringarray, $descr);	 */
 													}
 													else
 													{
