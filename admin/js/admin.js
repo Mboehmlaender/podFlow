@@ -601,6 +601,27 @@ $(document).ready(function(){
 		{
 			$("#export_cat_options_"+pk).toggle("slow");
 		}
+		
+		if(($(this).attr("row") == "ID_EXPORT_OPTION") && ($("option:selected",this).attr('value') == 1))
+		{
+			$('[row=\"EXPORT_NOTICE\"][id_cat=\"'+pk+'\"').prop("checked", false);	
+			$('[row=\"EXPORT_NOTICE\"][id_cat=\"'+pk+'\"').prop("disabled", true);
+			$.ajax({
+				url: 'inc/update.php?up_cat=1',
+				type: 'POST',
+				data: {row:"EXPORT_NOTICE", pk:pk, value:"0", table:table },
+				success: function(data)
+					{
+						console.log(data);
+					},
+				});			
+		}
+		else
+		{
+			$('[row=\"EXPORT_NOTICE\"]').prop("disabled", false); 
+
+		}			
+		
 
 		if($(this).attr('type') == 'checkbox')
 			{
