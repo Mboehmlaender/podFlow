@@ -45,7 +45,8 @@ function head(){
 		echo "<script src='js/jquery.gritter.min.js'></script>";
 		echo "<script src='https://code.jquery.com/ui/1.12.0/jquery-ui.min.js'></script>";
 		echo "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js' integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy' crossorigin='anonymous'></script>";
-		echo "<script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>";
+/* 		echo "<script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>";
+ */		echo "<script src='js/js.cookie.min.js'></script>";
 		echo "<script src='js/clipboard.min.js'></script>";
 		echo "<script src='js/jquery-confirm.min.js'></script>";
 		echo "<script src='js/jquery.ui.touch-punch.min.js'></script>";
