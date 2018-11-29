@@ -963,11 +963,20 @@ function kanban(){
 		
     
 echo "</ul>";
+			if(!empty($_SESSION['cur_episode']))
+				{
+					if ((getPermission($_SESSION['userid']) > 1 && !userInEpisode($_SESSION['userid'], $_SESSION['cur_episode'])) || episodeclosed($_SESSION['cur_episode']) == 1)
+						{
+						}
+					else
+						{
 		echo "<ul class='timeline' style='margin-bottom: 20px'>";
  		    echo "<li>";
 				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
 			echo "</li>"; 
 			echo "</ul>"; 
+						}
+				}
 echo "<hr>";
 echo "</div>";
 		}
