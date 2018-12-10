@@ -112,10 +112,10 @@ if(isset($_GET['export_list'])){
 																	array_push($stringarray_2, $descr2);	
 																} 
  															$descr .= implode($sep,$stringarray_2);
-/* 																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+ 																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}  */
+																	$descr .= " <span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	}  
 															array_push($stringarray, $descr);
 														}
 														else
@@ -158,10 +158,10 @@ if(isset($_GET['export_list'])){
 
 															$descr .= $data_type_close;
 															
-/*  																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+  																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}  */
+																	$descr .= " <span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	}  
 																	
 															array_push($stringarray, $descr);	
 														}
@@ -185,6 +185,10 @@ if(isset($_GET['export_list'])){
 															{
 																$descr = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
 															}
+  																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																	$descr .= " <span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	}  
 																array_push($stringarray, $descr);	
 						
 													}
@@ -381,8 +385,7 @@ if(isset($_GET['export_list'])){
 										echo implode($stringarray2);
 									echo "</ul>";
 								echo "</div>"; */
-							echo "</div>";
-			
+							echo "</div>";			
 }
 //Modal: Eintrag bearbeiten
 

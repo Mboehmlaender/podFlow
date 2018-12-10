@@ -870,14 +870,6 @@ function categories_edit_list(){
 					echo "<div class='tile-body' style='padding: 10px 20px 10px 20px'>";
 						echo "<div class='row'>";
 							echo "<div class='col-12'>";
-							if($sql_get_categories_rows['ID_EXPORT_OPTION'] == 1)
-								{
-									$disabled = 'disabled';
-								}
-							else
-								{
-									$disabled = '';
-								}	
 							if($sql_get_categories_rows['VISIBLE'] == 1)
 								{
 									$check_visible = 'checked';
@@ -1010,7 +1002,7 @@ function categories_edit_list(){
 								echo "<div class='col-3' style='text-align:right'>";
 									echo "<div class='toggle lg'>";
 										echo "<label class='switch'>";
-											echo "<input ".$check_export_notice." ".$disabled." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_NOTICE'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
+											echo "<input ".$check_export_notice." class='form-check-input cat_up' type='checkbox' id_cat='".$sql_get_categories_rows['ID']."' row='EXPORT_NOTICE'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung' >";
 											echo "<span class='button-indecator'></span>";
 											echo "</label>";
 									echo "</div>";

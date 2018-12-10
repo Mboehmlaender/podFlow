@@ -602,7 +602,7 @@ $(document).ready(function(){
 			$("#export_cat_options_"+pk).toggle("slow");
 		}
 		
-		if(($(this).attr("row") == "ID_EXPORT_OPTION") && ($("option:selected",this).attr('value') == 1))
+/* 		if(( row == "ID_EXPORT_OPTION") && (value == 1))
 		{
 			$('[row=\"EXPORT_NOTICE\"][id_cat=\"'+pk+'\"').prop("checked", false);	
 			$('[row=\"EXPORT_NOTICE\"][id_cat=\"'+pk+'\"').prop("disabled", true);
@@ -616,11 +616,11 @@ $(document).ready(function(){
 					},
 				});			
 		}
-		else
+		else if ((row == "ID_EXPORT_OPTION") && (value !== 1))		
 		{
 			$('[row=\"EXPORT_NOTICE\"]').prop("disabled", false); 
 
-		}			
+		}	 */		
 		
 
 		if($(this).attr('type') == 'checkbox')
