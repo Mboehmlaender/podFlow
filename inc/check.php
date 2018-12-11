@@ -10,6 +10,16 @@ if(!isset($_SESSION['userid']))
 
 if(isset($_POST)){
 
+	//Kategeorien/Benutzer einer Episode hinzufügen 
+	if(isset($_GET['add_episode_category'])){
+		$id = $_POST['cat_id'];
+		$episode = $_POST['next_episode'];
+		$sql_add = "INSERT INTO ".DB_PREFIX."episode_categories (ID_EPISODE, ID_CATEGORY) VALUES (".$episode.", ".$id.")";
+		$sql_add_result = mysqli_query($con, $sql_add);
+		echo $sql_add;
+		exit;
+	}
+
 	if(isset($_GET['check_categories_next'])){
 		$current_episode = mysqli_real_escape_string($con,$_POST['episode_id_current']);
 		$next_episode = mysqli_real_escape_string($con,$_POST['id_next']);	
@@ -46,6 +56,20 @@ if(isset($_POST)){
 					}) 
 					$(\".create_category\").on('click', function(){
 						var cat_id = $(this).attr('cat_id');
+						var next_episode = $(this).attr('next_episode');
+									jQuery.ajax({
+										url: \"inc/check.php?add_episode_category=1\",
+										data: {	cat_id:cat_id,
+												next_episode:next_episode
+											},
+										type: \"POST\",
+										success:function(data)
+											{
+											},
+										error:function ()
+											{
+											}
+										});
 						$(\"#cat_missing_\"+cat_id).remove();
 						if($(\".create_category\").length == 0)
 						{
@@ -60,7 +84,7 @@ if(isset($_POST)){
 		{
 			if(!in_array($query_cat_current_row['ID_CATEGORY'], $array_next))
 			{
-				echo "<div id='cat_missing_".$query_cat_current_row['ID_CATEGORY']."'> <p>\"".$query_cat_current_row['DESCR']."\"<br><div class='btn btn-outline-info btn-block btn-sm create_category' cat_id='".$query_cat_current_row['ID_CATEGORY']."'>Jetzt anlegen</div></p></div>";
+				echo "<div id='cat_missing_".$query_cat_current_row['ID_CATEGORY']."'> <p>\"".$query_cat_current_row['DESCR']."\"<br><div class='btn btn-outline-info btn-block btn-sm create_category' next_episode='".$next_episode."' cat_id='".$query_cat_current_row['ID_CATEGORY']."'>Jetzt anlegen</div></p></div>";
 			}
 		}
 		echo "<div style='color: red; font-weight: bold; margin: 10px 0px'>Beiträge und Themen, die übernommen werden, zu denen keine Kategorie existiert, werden nicht angezeigt, so lange die Kategorie nicht in der Folge aktiviert wurde!</div>";
