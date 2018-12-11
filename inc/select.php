@@ -221,13 +221,9 @@ if(isset($_GET['export_list'])){
 					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
 																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
 																$stringarray_2 = array();
-																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}
+																	$descr2 = $data_type_open;
 																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
 																{	
-																	$descr2 = $data_type_open;
 																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
 																	{
 																		$fund_url = "";
@@ -239,21 +235,25 @@ if(isset($_GET['export_list'])){
 																	$pos = "http";
 																	if(empty($fund_url))
 																		{
-																			$descr2 .= $sql_select_content_2_row['DESCR'];
+																			$descr2 .= $sql_select_content_2_row['DESCR']."<br>";
 																		}
 																	else if (strpos($fund_url, $pos) === false)
 																		{
-																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a><br>";
 																		}
 																	else
 																		{
-																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a><br>";
 																		}																	
-																	$descr2 .= $data_type_close;
 																	
-																	array_push($stringarray_2, $descr2);	
 																} 
+																	$descr2 .= $data_type_close;
+																	array_push($stringarray_2, $descr2);	
 															$descr = implode($sep,$stringarray_2);
+																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	}
 															array_push($stringarray, $descr);
 														}
 														else
