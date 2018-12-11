@@ -71,6 +71,8 @@ if(isset($_GET['export_list'])){
 											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `REIHENF` ASC";											
 											$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
 											$stringarray = array();
+											$stringarray_notice = array();
+											$count = 0;
 											echo $list_type_open;
 											while ($sql_select_content_1_row = mysqli_fetch_assoc($sql_select_content_1_result))
 											{	
@@ -114,9 +116,15 @@ if(isset($_GET['export_list'])){
  															$descr .= implode($sep,$stringarray_2);
  																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																	$descr .= " <span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}  
+																		$descr .= "<sup>".$count."</sup>";
+																	$descr_notice = "<span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span>";
+																	} 
+																else
+																{
+																	$descr_notice = "";
+																}																	
 															array_push($stringarray, $descr);
+															array_push($stringarray_notice, $descr_notice);
 														}
 														else
 														{
@@ -160,10 +168,16 @@ if(isset($_GET['export_list'])){
 															
   																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																	$descr .= " <span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																		$descr .= "<sup>".$count."</sup>";
+																	$descr_notice = "<span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span>";
 																	}  
+																else
+																{
+																	$descr_notice = "";
+																}
 																	
 															array_push($stringarray, $descr);	
+															array_push($stringarray_notice, $descr_notice);	
 														}
 /* 															$descr = $sql_select_content_1_row['DESCR'];
 															array_push($stringarray, $descr);	 */
@@ -187,11 +201,18 @@ if(isset($_GET['export_list'])){
 															}
   																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																	$descr .= " <span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																		$descr .= "<sup>".$count."</sup>";
+																	$descr_notice = "<span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span>";
 																	}  
+																else
+																{
+																	$descr_notice = "";
+																}
 																array_push($stringarray, $descr);	
+																array_push($stringarray_notice, $descr_notice);	
 						
 													}
+													$count++;
 												}
 												else
 												{
@@ -318,7 +339,10 @@ if(isset($_GET['export_list'])){
 												
 												}
 											}
+
 										echo implode($sep,$stringarray);
+										echo "";
+										echo implode("<p>",$stringarray_notice);
 										echo $close_type_close;
 										echo $cat_title_close;
 									}

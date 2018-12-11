@@ -37,6 +37,7 @@ function save_order(){
 
 	function enableEditing(editbox) {
 				CKEDITOR.replace(editbox);
+				CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 			
 		}	
 	function disableEditing(editbox) {
