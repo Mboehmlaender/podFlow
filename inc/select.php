@@ -221,6 +221,10 @@ if(isset($_GET['export_list'])){
 					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
 																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
 																$stringarray_2 = array();
+																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	}
 																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
 																{	
 																	$descr2 = $data_type_open;
@@ -250,16 +254,16 @@ if(isset($_GET['export_list'])){
 																	array_push($stringarray_2, $descr2);	
 																} 
 															$descr = implode($sep,$stringarray_2);
-																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}
 															array_push($stringarray, $descr);
 														}
 														else
 														{
 															$descr = $data_type_open;
 															$descr .= $sql_select_content_1_row['DESCR'];
+																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+																	{
+																		$descr .= "<br><span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+																	}
 					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
 																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
 																$stringarray_2 = array();
@@ -296,10 +300,6 @@ if(isset($_GET['export_list'])){
 
 															$descr .= $data_type_close;
 															
-																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}
 																	
 															array_push($stringarray, $descr);	
 														}
@@ -329,7 +329,7 @@ if(isset($_GET['export_list'])){
 															}
 																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
-																		$descr .= $sql_select_content_1_row['INFO'];
+																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
 																	}
 																array_push($stringarray, $descr);	
 						
