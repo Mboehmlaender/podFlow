@@ -179,8 +179,6 @@ if(isset($_GET['export_list'])){
 															array_push($stringarray, $descr);	
 															array_push($stringarray_notice, $descr_notice);	
 														}
-/* 															$descr = $sql_select_content_1_row['DESCR'];
-															array_push($stringarray, $descr);	 */
 													}
 													else
 													{
@@ -363,52 +361,7 @@ if(isset($_GET['export_list'])){
 
 											
 										</script>";
-							/* 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_links WHERE EPISODEN_ID=".$id_episode." AND LINKS_DONE = 1 ORDER BY LINKS_REIHENF, LINKS_DONE_TS ASC";
-									$sql_select_result = mysqli_query($con, $sql_select);
-									$stringarray = array();
-									$stringarray2 = array();
-									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
-									{
-										$fund_url = $sql_select_row['LINKS_URL'];
-										$pos = "http";
-										if(empty($fund_url))
-											{
-												$base = "&lt;a href='#' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
-											}
-										else if (strpos($fund_url, $pos) === false)
-											{
-												$base = "&lt;a href='http://".$fund_url."' target='_blank' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
-											}
-										else
-											{
-												$base = "&lt;a href='".$fund_url."' target='_blank' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
-											}
-											array_push($stringarray, $base);	
-											array_push($stringarray2, "<li>".$sql_select_row['LINKS_DESCR']."</li>");	
-									}
-								echo "<div class='tab-pane fade show active' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
-									echo "<textarea class='form-control' id='exampleFormControlTextarea1' rows='5'>";
-										echo implode(" - ",$stringarray);
-									echo"</textarea>"; 
-									echo "<div style='padding: 5px 5px 0px 5px; font-size:80%; font-weight: 400'>";
-										echo "<br>Beispiel: <a href='http://www.google.de' target='_blank'>Beitrag 1</a> - <a href='http://www.google.de' target='_blank'>Beitrag 2</a>";
-									echo "</i></div>";
-								echo "</div>";								
-								echo "<div class='tab-pane fade' id='HTML-bullet' role='tabpanel' aria-labelledby='pills-profile-tab'>";
-									echo "<textarea class='form-control' id='exampleFormControlTextarea1' rows='5'>";
-										echo "<ul>\r\n<li>";
-										echo implode("</li>\r\n<li>",$stringarray);
-										echo "</li>\r\n</ul>";
-									echo"</textarea>";     
-									echo "<div style='padding: 5px 5px 0px 5px; font-size:80%; font-weight: 400'>";
-									echo "<br>Beispiel: <ul><li><a href='http://www.google.de' target='_blank'>Beitrag 1</a></li><li><a href='http://www.google.de' target='_blank'>Beitrag 2</a></li></ul>";
-									echo "</i></div>";
-								echo "</div>";
-								echo "<div class='tab-pane fade' id='text' role='tabpanel' aria-labelledby='pills-profile-tab'>";
-									echo "<ul style='list-style-type:none'>";
-										echo implode($stringarray2);
-									echo "</ul>";
-								echo "</div>"; */
+
 							echo "</div>";			
 }
 //Modal: Eintrag bearbeiten
@@ -624,17 +577,38 @@ if(isset($_GET['move_links'])){
 					echo "<option value='".$sql_select_episodes_clean_row['ID']."'>Episode ".str_pad($sql_select_episodes_clean_row['NUMMER'],3,'0', STR_PAD_LEFT)." ".$date."</option>";
 				}
 		echo "</select>";
+		echo "<div id='warning' style='text-align: left; display:none'></div>";
 		echo "<button style='margin-top: 10px' disabled id='move_button' class='btn btn-success btn-block'>Verschieben</button>";
 	echo "</div>";
 	
 	echo "<script>
 		$(\"#move_links_select\").on('change', function(){
+			
+			var id_next = $(\"#move_links_select option:selected\").val();
+			var episode_id_current = $(\"#select_unchecked\").attr('episode_id_current');
+			
 			if($(\"option:selected\",this).attr('sel') == 'none')
 				{
 					$(\"#move_button\").attr('disabled', true);
 				}
 			else
 				{
+					jQuery.ajax({
+						url: \"inc/check.php?check_categories_next=1\",
+						data: {	id_next:id_next,
+								episode_id_current:episode_id_current
+							},
+						type: \"POST\",
+						success:function(data)	
+							{
+								$(\"#warning\").html(data);
+								console.log(data);
+							},
+						error:function ()
+							{
+							}
+						});
+										
 					$(\"#move_button\").removeAttr('disabled');
 				}
 			});

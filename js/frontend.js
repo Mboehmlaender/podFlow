@@ -17,24 +17,7 @@
  * @since     2018-09-01
  */
 
-/* //Exportreihenfolge speichern
-
-function save_order(){
-	var sortable_data = $("#list_check").sortable("serialize"); 
-	console.log(sortable_data);
-	$.ajax({
-		url: "inc/update.php?set_order=1",
-		type: "POST",
-		data: sortable_data,
-		success: function(data)
-			{
-				console.log(data);
-				$("#export_out").load(" #export_out > *");
-			},
-		});  
-} */	
-
-
+ //CKEditor initialisieren
 	function enableEditing(editbox) {
 				CKEDITOR.replace(editbox);
 				CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
@@ -451,176 +434,83 @@ $(document).ready(function(){
 		}  
 	}	
 
-console.log(content);
 
-//Beim Öffnen einer Kategorie den Pfeil drehen
-$( ".load_content" ).on('click', function(){
-			var cat_id = $(this).attr("category_id");
-			if($(this).attr("aria-expanded") == "true")
-			{
-				var angle = 0;
-			}
-			else
-			{
-				var angle = -90;
-			}
-			$(".cat_icon_" + cat_id).attr('angle', angle);	
-			$(".cat_icon_" + cat_id).css({'transform': 'rotate(' + angle + 'deg)'});		
-});
-
-//Alle Kategorin einklappen
-$( ".collapse_me" ).on('click', function(){
-			var angle = 0;
-			$(".collapse-outer").collapse("hide");
-			$(".collapse-inner-content").hide("slow");
-			$(".collapse-inner-content").removeClass("show");
-			for (var de_panel in content){
-				if(de_panel.substr(0,8) == "collapse")
+	//Beim Öffnen einer Kategorie den Pfeil drehen
+	$( ".load_content" ).on('click', function(){
+				var cat_id = $(this).attr("category_id");
+				if($(this).attr("aria-expanded") == "true")
 				{
-					Cookies.remove(de_panel);
+					var angle = 0;
 				}
+				else
+				{
+					var angle = -90;
+				}
+				$(".cat_icon_" + cat_id).attr('angle', angle);	
+				$(".cat_icon_" + cat_id).css({'transform': 'rotate(' + angle + 'deg)'});		
+	});
+
+	//Alle Kategorin einklappen
+	$( ".collapse_me" ).on('click', function(){
+				var angle = 0;
+				$(".collapse-outer").collapse("hide");
+				$(".collapse-inner-content").hide("slow");
+				$(".collapse-inner-content").removeClass("show");
+				for (var de_panel in content){
+					if(de_panel.substr(0,8) == "collapse")
+					{
+						Cookies.remove(de_panel);
+					}
+					
+				$(".rotate-arrow").removeAttr('angle');	
+				$(".rotate-arrow").css({'transform': ''});
+			}
 				
-			$(".rotate-arrow").removeAttr('angle');	
-			$(".rotate-arrow").css({'transform': ''});
+	});
+
+	 //Alle Kategorien ausklappen
+	$( ".expand_me" ).on('click', function(){
+				var angle = -90;
+				$(".collapse-outer").collapse('show');
+				$(".cat-rotate-arrow").attr('angle', angle);	
+				$(".cat-rotate-arrow").css({'transform': 'rotate(' + angle + 'deg)'});	
+	}); 
+
+
+	//Themenlinks aus/einklappen		
+	$(".collapse-inner").on("click", function(){
+		var topic_id = $(this).attr("id_topic");
+		$("#collapse_topic_" + topic_id).toggle("fast");
+		if ($("#collapse_topic_" + topic_id).hasClass("show"))
+		{
+			Cookies.remove("collapse_topic_" + topic_id);	
+			var angle = 0;
+			$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
+			$(".expand_icon_" + topic_id).removeAttr('angle');	
+			$("#collapse_topic_" + topic_id).removeClass("show");
+		}
+		else
+		{
+			Cookies.set("collapse_topic_" + topic_id, "topic");	
+			$("#collapse_topic_" + topic_id).addClass("show");
+			var angle = -90;
+			$(".expand_icon_" + topic_id).attr('angle', angle);	
+			$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
 		}
 			
-});
+	 });
 
- //Alle Kategorien ausklappen
-$( ".expand_me" ).on('click', function(){
-			var angle = -90;
-			$(".collapse-outer").collapse('show');
-			$(".cat-rotate-arrow").attr('angle', angle);	
-			$(".cat-rotate-arrow").css({'transform': 'rotate(' + angle + 'deg)'});	
-}); 
+	//Cookies der Kategorien setzen/entfernen
+	$(".collapse-outer").on("show.bs.collapse", function(){
+		var cat_id = $(this).attr("id");
+		Cookies.set(cat_id, "category");	
+	 });
+	 
+	$(".collapse-outer").on("hide.bs.collapse", function(){
+		var cat_id_remove = $(this).attr("id");
+		Cookies.remove(cat_id_remove);	
+	 });
 
-/*  //Alle Kategorien aus/einklappen
-$( ".expand_me" ).on('click', function(){
-	var count = $(".collapse-outer.show").length;
-	if(count > 0)
-	{
-			$(".collapse-outer").collapse("hide");
-			$(".collapse-inner-content").hide("slow");
-			$(".collapse-inner-content").removeClass("show");
-			for (var de_panel in content){
-				if(de_panel.substr(0,8) == "collapse")
-				{
-					Cookies.remove(de_panel);
-				}
-				
-		
-			}		
-	}
-	else{
-			var angle = -90;
-			$(".collapse-outer").collapse('show');
-	}
-});   */
-
-		
-//Themenlinks aus/einklappen		
-$(".collapse-inner").on("click", function(){
-	var topic_id = $(this).attr("id_topic");
-	$("#collapse_topic_" + topic_id).toggle("fast");
-	if ($("#collapse_topic_" + topic_id).hasClass("show"))
-	{
-		Cookies.remove("collapse_topic_" + topic_id);	
-		var angle = 0;
-		$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
-		$(".expand_icon_" + topic_id).removeAttr('angle');	
-		$("#collapse_topic_" + topic_id).removeClass("show");
-	}
-	else
-	{
-		Cookies.set("collapse_topic_" + topic_id, "topic");	
-		$("#collapse_topic_" + topic_id).addClass("show");
-		var angle = -90;
-		$(".expand_icon_" + topic_id).attr('angle', angle);	
-		$(".expand_icon_" + topic_id).css({'transform': 'rotate(' + angle + 'deg)'});
-	}
-		
- });
-
-//Cookies der Kategorien setzen/entfernen
-$(".collapse-outer").on("show.bs.collapse", function(){
-	var cat_id = $(this).attr("id");
- 	Cookies.set(cat_id, "category");	
- });
- 
-$(".collapse-outer").on("hide.bs.collapse", function(){
-	var cat_id_remove = $(this).attr("id");
- 	Cookies.remove(cat_id_remove);	
- });
-
-
-/* 	//Themen/Beiträge ordnen für den Export
-	if ($("#list_check").has("li").length === 0)
-		{
-			$("#btn-save").attr("disabled", true);
-		} */
-		
-/* 	//Themen/Beiträge in die Exportliste hinzufügen
-	$(function  (){
-		$("#list_uncheck").sortable({
-			connectWith: ".sortcheck",
-			remove: function( event, ui ){
-				$("#btn-save").removeAttr("disabled");
-				var pk = ui.item.attr("data-pk");
-				var name = $(this).attr("data-name");
-				var table = ui.item.attr("table");
-				$.ajax({
-					url: "inc/update.php?update_links=1",
-					type: "POST",
-					data: {	"name":name, 
-							"pk":pk, "value":1, 
-							"table":table 
-						},
-					success: function(data)
-						{
-							console.log(data);
-						},
-					}); 
-				}
-
-			});
-		});	
-		
-	//Themen/Beiträge aus der Exportliste entfernen
-	$(function  (){
-		$("#list_check").sortable({
-		remove: function( event, ui ) {
-		var pk = ui.item.attr("data-pk");
-		var name = $(this).attr("data-name");
-		var table = ui.item.attr("table");
-		$.ajax({
-			url: "inc/update.php?update_links=1",
-			type: "POST",
-			data: {	"name":name, 
-					"pk":pk, 
-					"value":0, 
-					"table":table, 
-					"order":0 
-				},
-			success: function(data)
-				{
-					console.log(data);
-					$("#export_out").load(" #export_out > *");
-				},
-			}); 
-		},
-		update: function( event, ui){
-			if ($("#list_check").has("li").length !== 0)
-				{
-					save_order();
-				}
-			},		
-		create: function( event, ui){
-			if ($("#list_check").has("li").length !== 0)
-				{
-				}
-			}
-		});
-	});	 */	
 
 	//Export ausführen
 	$("#export_list").on("click", function(){
@@ -726,39 +616,6 @@ $(".collapse-outer").on("hide.bs.collapse", function(){
 				console.log(data);
 			}
 	});
-
-/* 	//Beiträge verschieben
-	$(".update_cat").change(function(){
-		var pk = $(this).attr("data-pk")
-		var name = $(this).attr("data-name")
-		var table = $(this).attr("table")
-		var value = $(this).val()
-		$.ajax({
-			url: "inc/update.php",
-			type: "POST",
-			data: {	"name":name, 
-					"pk":pk, 
-					"value":value, 
-					"table":table
-				},
-			success: function(data)
-				{
-					console.log(data);
-					location.reload();
-				},
-		});
-	});	 */
-
-/* 	//Meine Beiträge --> Geöffnetes Tab im lokalen Speicher belassen und Öffnen
-	$("a[data-toggle='pill']").on('show.bs.tab', function(e) {
-		localStorage.setItem('activeTab', $(e.target).attr('href'));
-	});
-	
-	var activeTab = localStorage.getItem('activeTab');
-	if(activeTab)
-		{
-			$('#pills-tab a[href=\"' + activeTab + '\"]').tab('show');
-		} */
 
 	//Change-Modal für Podcast/Episodenwechsel aufrufen
 	$(".change").on("click", function(){
