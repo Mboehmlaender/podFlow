@@ -28,6 +28,11 @@ if(isset($_POST)){
 		echo "<div style='color: red; font-weight: bold; margin: 10px 0px'>Folgende Kategorien sind noch nicht in der Zielepisode angelegt:</div>";
 				echo "<script>
 					
+					if($(\".create_category\").length !== 0)
+					{
+						$(\"#warning\").show();
+						$(\"#move_button\").attr('disabled', true);
+					}
 					$('#move_eitherway').click(function(){
 						if (this.checked) 
 						{
@@ -39,8 +44,6 @@ if(isset($_POST)){
 							$(\"#move_button\").attr('disabled', true);
 						}
 					}) 
-					$(\"#warning\").show();
-					$(\"#move_button\").attr('disabled', true);
 					$(\".create_category\").on('click', function(){
 						var cat_id = $(this).attr('cat_id');
 						$(\"#cat_missing_\"+cat_id).remove();
