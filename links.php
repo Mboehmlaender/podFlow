@@ -35,7 +35,7 @@
       <div class="row">
 		<div class="col-md-12">
 		<?php
-			topic_edit_list($_SESSION['userid']);
+			own_entries($_SESSION['userid']);
 		?>
 	  </div>
       </div>

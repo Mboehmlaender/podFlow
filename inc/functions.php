@@ -257,6 +257,125 @@ function sidebar(){
 	echo "</aside>";
 }
 
+//Eigene Beiträge
+function own_entries($userid){
+	global $con;
+	echo "<div class='row'>";
+	echo "<div class='col-12'>";
+	echo "<div class='tile'>";
+	echo "<div class='row'>";
+	echo "<div class='col-4'>";
+			echo "<div class='form-group'>";
+				echo "<select class='form-control' id='set_podcast'>";
+					if(getPermission($_SESSION['userid']) !== 1)
+					{
+						$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX.".view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid;
+					}
+					else
+					{
+						$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast";
+					}
+					$sql_select_podcast_result = mysqli_query($con, $sql_select_podcast);
+						echo "<option id_podcast='all' selected>Alle Podcasts</option>";
+					while($sql_select_podcast_row = mysqli_fetch_assoc($sql_select_podcast_result))
+					{
+						echo "<option id_podcast='".$sql_select_podcast_row['ID']."'>".$sql_select_podcast_row['PODCAST_SHORT']."</option>";
+					}
+					
+				echo "</select>";
+		echo "</div>";
+		echo "</div>";
+		echo "<div class='col-4'>";
+			echo "<div class='form-group'>";
+				echo "<select class='form-control' id='set_episode'>";
+					if(getPermission($_SESSION['userid']) == 1)
+					{
+						$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
+					}
+					else
+					{
+						$sql_select_episodes = "SELECT ID, ID_PODCAST, TITEL, DATE FROM ".DB_PREFIX."episoden";
+					}
+					$sql_select_episodes_result = mysqli_query($con, $sql_select_episodes);
+						echo "<option class='episode_menu' id_episode='all' id_podcast_menu='all' selected>Alle Episoden</option>";
+					while($sql_select_episodes_row = mysqli_fetch_assoc($sql_select_episodes_result))
+					{
+						echo "<option class='episode_menu' id_episode='".$sql_select_episodes_row['ID']."' id_podcast_menu='all'>".$sql_select_episodes_row['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row['DATE']))."</option>";
+					}
+					
+				echo "</select>";
+		echo "</div>";
+		echo "</div>";
+	echo "</div>";
+	echo "<hr>";
+	echo "<div class='row'>";
+		echo "<div class='col-7 lead' style='font-weight: bold'>";
+			echo "Beitrag";
+		echo "</div>";
+		echo "<div class='col-5 lead' style='font-weight: bold'>";
+			echo "Episode";
+		echo "</div>";
+	echo "</div>";
+	echo "<hr>";
+	$sql_own_entries = "SELECT ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR,".DB_PREFIX."links.REIHENF FROM ".DB_PREFIX."links WHERE ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF FROM ".DB_PREFIX."topics WHERE ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
+	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
+	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
+	{
+	echo "<div class='row lead episodes' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
+		echo "<div class='col-7'>";
+			echo $sql_own_entries_row['DESCR'];
+		echo "</div>";
+		echo "<div class='col-5'>";
+			echo "<div class='form-group'>";
+				echo "<select class='form-control' id='change_episode'>";
+					if(getPermission($_SESSION['userid']) !== 1)
+					{
+						$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
+					}
+					else
+					{
+						$sql_select_episodes2 = "SELECT ID, TITEL, DATE FROM ".DB_PREFIX."episoden";
+					}
+					$sql_select_episodes_result2 = mysqli_query($con, $sql_select_episodes2);
+					while($sql_select_episodes_row2 = mysqli_fetch_assoc($sql_select_episodes_result2))
+					{
+						echo "<option ";
+							if($sql_select_episodes_row2['ID'] == $sql_own_entries_row['ID_EPISODE'])
+							{
+								echo "selected disabled";
+							}
+						echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE']))."</option>";
+					}
+					
+				echo "</select>";
+		echo "</div>";		echo "</div>";
+	echo "</div>";
+	}
+	echo "</div>";
+	echo "</div>";
+	echo "</div>";
+	
+	echo "<script>
+		$(\"#set_podcast\").on('change', function(){
+			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
+			$(\".episode_menu\").attr('id_podcast_menu', id_podcast);
+		});
+		
+		$(\"#set_episode\").on('change', function(){
+			var id_episode = $(\"option:selected\", this).attr('id_episode');
+			if(id_episode === 'all')
+			{
+				$(\"[id_podcast_list]\").show(\"slow\");
+			}
+			else
+			{
+				$('.episodes').not(\"[id_episode_list='\"+id_episode+\"']\").hide(\"slow\");
+				$(\"[id_episode_list='\"+id_episode+\"']\").show(\"slow\");
+			}
+		});
+	</script>";
+	
+}
 
 //Episode exportieren
 function export(){
