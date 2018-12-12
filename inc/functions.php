@@ -297,10 +297,10 @@ function own_entries($userid){
 						$sql_select_episodes = "SELECT ID, ID_PODCAST, TITEL, DATE FROM ".DB_PREFIX."episoden";
 					}
 					$sql_select_episodes_result = mysqli_query($con, $sql_select_episodes);
-						echo "<option class='episode_menu' id_episode='all' id_podcast_menu='all' selected>Alle Episoden</option>";
+						echo "<option class='episode_menu_all' id_episode='all' selected>Alle Episoden</option>";
 					while($sql_select_episodes_row = mysqli_fetch_assoc($sql_select_episodes_result))
 					{
-						echo "<option class='episode_menu' id_episode='".$sql_select_episodes_row['ID']."' id_podcast_menu='all'>".$sql_select_episodes_row['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row['DATE']))."</option>";
+						echo "<option class='episode_menu' id_episode='".$sql_select_episodes_row['ID']."' id_podcast_menu='".$sql_select_episodes_row['ID_PODCAST']."'>".$sql_select_episodes_row['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row['DATE']))."</option>";
 					}
 					
 				echo "</select>";
@@ -358,7 +358,22 @@ function own_entries($userid){
 	echo "<script>
 		$(\"#set_podcast\").on('change', function(){
 			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
-			$(\".episode_menu\").attr('id_podcast_menu', id_podcast);
+			if($(\"option:selected\", this).attr('id_podcast') == 'all')
+			{
+				$(\"[id_podcast_menu]\").show();
+				$(\".episode_menu_all\").attr('id_podcast_menu', 'all');				
+			}
+			
+			else
+			{
+				$('.episode_menu').not(\"[id_podcast_menu='\"+id_podcast+\"']\").hide();
+				$(\"[id_podcast_menu='\"+id_podcast+\"']\").show();
+				$(\".episode_menu_all\").attr('id_podcast_menu', id_podcast);				
+
+				$('.episodes').not(\"[id_podcast_list='\"+id_podcast+\"']\").hide(\"slow\");
+				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"slow\");
+			}
+			
 		});
 		
 		$(\"#set_episode\").on('change', function(){
