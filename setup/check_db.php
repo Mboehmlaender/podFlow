@@ -10,6 +10,23 @@ function clearStoredResults(){
         } while ($con->more_results() && $con->next_result());
 }
 
+if(isset($_GET['update_to_101'])){
+	require('../config/dbconnect.php');
+	echo "Setze Versionsnummer";
+	$set_version = $_POST['set_version'];
+	$query_version = "UPDATE ".DB_PREFIX."INI SET KEYVALUE = '".$set_version."' WHERE KEYWORD = 'PF_VERSION'";
+	$result = mysqli_multi_query($con,$query_version);
+		if(!$result)
+			{
+				echo " --> <span style='color:red'>FEHLER</span>";
+				printf(mysqli_error($con));
+				return;
+			}
+		else
+			{
+				echo " --> <span style='color:green'>OK!</span><br>";
+			}	
+}
 
 if(isset($_GET['check_connection'])){
 
