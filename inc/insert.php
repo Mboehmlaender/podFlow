@@ -63,6 +63,8 @@ if(isset($_POST)){
 		
 		$sql_new_link = "INSERT INTO ".DB_PREFIX."links (ID_USER, ID_EPISODE, ID_CATEGORY, DESCR, URL, ID_PODCAST, REIHENF) VALUES ('".$_SESSION['userid']."', '".$_SESSION['cur_episode']."', '".$category."', '".$descr."', '".$url."', '".$_SESSION['podcast']."', '".$row_new."')";
 		$sql_result = mysqli_query($con, $sql_new_link);
+		$id_new = $con->insert_id;
+		echo "panel_links_".$id_new;
 		return;
 	}
 }

@@ -10,6 +10,94 @@ if(!isset($_SESSION['userid']))
 
 if(isset($_POST)){
 
+	//Kategeorien/Benutzer einer Episode hinzufügen 
+	if(isset($_GET['add_episode_category'])){
+		$id = $_POST['cat_id'];
+		$episode = $_POST['next_episode'];
+		$sql_add = "INSERT INTO ".DB_PREFIX."episode_categories (ID_EPISODE, ID_CATEGORY) VALUES (".$episode.", ".$id.")";
+		$sql_add_result = mysqli_query($con, $sql_add);
+		echo $sql_add;
+		exit;
+	}
+
+	if(isset($_GET['check_categories_next'])){
+		$current_episode = mysqli_real_escape_string($con,$_POST['episode_id_current']);
+		$next_episode = mysqli_real_escape_string($con,$_POST['id_next']);	
+
+		$array_next = array();
+		$query_cat_next = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE = '".$next_episode."'";
+		$query_cat_next_result = mysqli_query($con, $query_cat_next);
+		while($query_cat_next_row = mysqli_fetch_assoc($query_cat_next_result))
+		{
+			array_push($array_next, $query_cat_next_row['ID_CATEGORY']);	
+		}
+		
+ 		$query_cat_current = "SELECT DISTINCT ".DB_PREFIX."categories.DESCR, ".DB_PREFIX."links.ID_CATEGORY FROM ".DB_PREFIX."links JOIN ".DB_PREFIX."categories ON ".DB_PREFIX."categories.ID = ".DB_PREFIX."links.ID_CATEGORY WHERE (".DB_PREFIX."links.DONE IS NULL OR ".DB_PREFIX."links.DONE = '' ) AND ".DB_PREFIX."links.ID_EPISODE = '".$current_episode."' UNION SELECT DISTINCT ".DB_PREFIX."categories.DESCR, ".DB_PREFIX."topics.ID_CATEGORY FROM ".DB_PREFIX."topics JOIN ".DB_PREFIX."categories ON ".DB_PREFIX."categories.ID = ".DB_PREFIX."topics.ID_CATEGORY WHERE (".DB_PREFIX."topics.DONE IS NULL OR ".DB_PREFIX."topics.DONE = '' ) AND ".DB_PREFIX."topics.ID_EPISODE = '".$current_episode."'";
+		$query_cat_next_result = mysqli_query($con, $query_cat_current);
+		echo "<hr>";
+		echo "<div style='color: red; font-weight: bold; margin: 10px 0px'>Folgende Kategorien sind noch nicht in der Zielepisode angelegt:</div>";
+				echo "<script>
+					
+					if($(\".create_category\").length !== 0)
+					{
+						$(\"#warning\").show();
+						$(\"#move_button\").attr('disabled', true);
+					}
+					$('#move_eitherway').click(function(){
+						if (this.checked) 
+						{
+							$(\"#move_button\").attr('disabled', false);
+						}
+						
+						else
+						{
+							$(\"#move_button\").attr('disabled', true);
+						}
+					}) 
+					$(\".create_category\").on('click', function(){
+						var cat_id = $(this).attr('cat_id');
+						var next_episode = $(this).attr('next_episode');
+									jQuery.ajax({
+										url: \"inc/check.php?add_episode_category=1\",
+										data: {	cat_id:cat_id,
+												next_episode:next_episode
+											},
+										type: \"POST\",
+										success:function(data)
+											{
+											},
+										error:function ()
+											{
+											}
+										});
+						$(\"#cat_missing_\"+cat_id).remove();
+						if($(\".create_category\").length == 0)
+						{
+							$(\"#warning\").hide();
+							$(\"#move_button\").attr('disabled', false);
+							
+						}
+					});
+
+				</script>";
+		while($query_cat_current_row = mysqli_fetch_assoc($query_cat_next_result))
+		{
+			if(!in_array($query_cat_current_row['ID_CATEGORY'], $array_next))
+			{
+				echo "<div id='cat_missing_".$query_cat_current_row['ID_CATEGORY']."'> <p>\"".$query_cat_current_row['DESCR']."\"<br><div class='btn btn-outline-info btn-block btn-sm create_category' next_episode='".$next_episode."' cat_id='".$query_cat_current_row['ID_CATEGORY']."'>Jetzt anlegen</div></p></div>";
+			}
+		}
+		echo "<div style='color: red; font-weight: bold; margin: 10px 0px'>Beiträge und Themen, die übernommen werden, zu denen keine Kategorie existiert, werden nicht angezeigt, so lange die Kategorie nicht in der Folge aktiviert wurde!</div>";
+		  echo "<div class='form-check'>";
+			echo "<input type='checkbox' class='form-check-input' id='move_eitherway'>";
+			echo "<label class='form-check-label' for='exampleCheck1'>Trotzdem übernehmen</label>";
+		  echo "</div>";
+		echo "<hr>";
+		
+		
+		
+	
+	}
 	//Anzeigenamen prüfen
 	if(isset($_GET['check_edit_user_short'])){
 		$user_show_name_edit = mysqli_real_escape_string($con,$_POST['name_show_edit']);
@@ -121,7 +209,7 @@ if(isset($_POST)){
 							});
 						});								   
 				</script>"; 
-				echo "<script>
+/* 				echo "<script>
 					var button = \"<button type='button' id='absenden_link_new' name='absenden_link_new' class='btn btn-outline-secondary savebtn'>Speichern</button>\";
 
 					$(\"#button_footer\").html(button);
@@ -158,7 +246,7 @@ if(isset($_POST)){
 							}
 						});
 					});								   
-				</script>"; 
+				</script>";  */
 			
 			return;
 	} 
@@ -282,8 +370,7 @@ if(isset($_POST)){
 						success:function(data)
 							{
 								console.log(data);
-								location.reload();
-						
+								window.location.reload(true);						
 						},
 						error:function ()
 							{
@@ -336,7 +423,7 @@ if(isset($_POST)){
 							{
 								$(\"#newentry\").modal('hide');
 								console.log(data);
-								location.reload();
+								window.location.reload(true);						
 							},
 						error:function ()
 							{

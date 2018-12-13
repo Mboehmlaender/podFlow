@@ -45,7 +45,7 @@ function head(){
 		echo "<script src='js/jquery.gritter.min.js'></script>";
 		echo "<script src='https://code.jquery.com/ui/1.12.0/jquery-ui.min.js'></script>";
 		echo "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js' integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy' crossorigin='anonymous'></script>";
-		echo "<script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>";
+		echo "<script src='js/js.cookie.min.js'></script>";
 		echo "<script src='js/clipboard.min.js'></script>";
 		echo "<script src='js/jquery-confirm.min.js'></script>";
 		echo "<script src='js/jquery.ui.touch-punch.min.js'></script>";
@@ -122,11 +122,6 @@ function select_podcast(){
 
 //Obere Navigation
 function navbar_top(){
-/* 	if(isset($_POST['change_podcast']))
-		{
-			$_SESSION['podcast'] = $_POST['change_podcast'];
-			$_SESSION['cur_episode'] = '';
-		} */
 	$podcast_color = getSetting('PC_COLOR',$_SESSION['podcast']);
 
 	echo "<header class='app-header' style='padding-right: 0px;'><a class='app-header__logo' href='index.php'></a>";
@@ -192,13 +187,6 @@ function dashboard(){
 					echo "</div>";
 				echo "</div></a>";
 			echo "</div>";
-/* 			echo "<div class='col-xl-4'>";
-				echo "<a style='text-decoration: none' href='links.php'><div class='widget-small primary coloured-icon'><i class='icon fas fa-bookmark fa-3x fa-fw'></i>";
-					echo "<div class='info'>";
-						echo "<h4  style='text-transform: none'>Meine Beiträge</h4>";
-					echo "</div>";
-				echo "</div>";
-			echo "</div>"; */
 			if(getPermission($_SESSION['userid']) > 1)
 				{	
 					echo "<div class='col-xl-4'>";
@@ -255,8 +243,7 @@ function sidebar(){
 			if(!empty($_SESSION['cur_episode']))
 				{
 					echo "<li><a class='app-menu__item' id='menu_episode' href='episode.php'><i class='app-menu__icon fas fa-ellipsis-v'></i><span class='app-menu__label'>Timeline</span></a></li>";
-/* 					echo "<li><a class='app-menu__item' id='menu_links' href='links.php'><i class='app-menu__icon fas fa-bookmark'></i><span class='app-menu__label'>Meine Beiträge</span></a></li>";
- */					if(getPermission($_SESSION['userid']) > 1)
+					if(getPermission($_SESSION['userid']) > 1)
 						{
 							echo "<li><a class='app-menu__item' id='menu_export' href='export.php'><i class='app-menu__icon fas fa-upload'></i><span class='app-menu__label'>Export</span></a></li>";
 						}
@@ -270,6 +257,164 @@ function sidebar(){
 	echo "</aside>";
 }
 
+//Eigene Beiträge
+function own_entries($userid){
+	global $con;
+	echo "<div class='row'>";
+	echo "<div class='col-12'>";
+	echo "<div class='tile'>";
+	echo "<div class='row'>";
+	echo "<div class='col-12 col-md-6'>";
+			echo "<div class='form-group'>";
+				echo "<select class='form-control' id='set_podcast'>";
+					if(getPermission($_SESSION['userid']) !== 1)
+					{
+						$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX.".view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid;
+					}
+					else
+					{
+						$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast";
+					}
+					$sql_select_podcast_result = mysqli_query($con, $sql_select_podcast);
+						echo "<option id_podcast='all' selected>Alle Podcasts</option>";
+					while($sql_select_podcast_row = mysqli_fetch_assoc($sql_select_podcast_result))
+					{
+						echo "<option id_podcast='".$sql_select_podcast_row['ID']."'>".$sql_select_podcast_row['PODCAST_SHORT']."</option>";
+					}
+					
+				echo "</select>";
+		echo "</div>";
+		echo "</div>";
+		echo "<div class='col-12 col-md-6'>";
+			echo "<div class='form-group'>";
+				echo "<select class='form-control' id='set_episode'>";
+					if(getPermission($_SESSION['userid']) == 1)
+					{
+						$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
+					}
+					else
+					{
+						$sql_select_episodes = "SELECT ID, ID_PODCAST, TITEL, DATE FROM ".DB_PREFIX."episoden";
+					}
+					$sql_select_episodes_result = mysqli_query($con, $sql_select_episodes);
+						echo "<option class='episode_menu_all' id_episode='all' id_podcast_menu='all' selected>Alle Episoden</option>";
+					while($sql_select_episodes_row = mysqli_fetch_assoc($sql_select_episodes_result))
+					{
+						echo "<option class='episode_menu' id_episode='".$sql_select_episodes_row['ID']."' id_podcast_menu='".$sql_select_episodes_row['ID_PODCAST']."'>".$sql_select_episodes_row['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row['DATE']))."</option>";
+					}
+					
+				echo "</select>";
+		echo "</div>";
+		echo "</div>";
+	echo "</div>";
+	echo "<hr>";
+/* 	echo "<div class='row'>";
+		echo "<div class='col-6 lead' style='font-weight: bold'>";
+			echo "Beitrag";
+		echo "</div>";
+		echo "<div class='col-6 lead' style='font-weight: bold'>";
+			echo "Episode";
+		echo "</div>";
+	echo "</div>";
+	echo "<hr>"; */
+	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
+	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
+	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
+	{
+	echo "<div class='row lead episodes' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
+		if($sql_own_entries_row['DONE'] === '1')
+		{
+			$done = " style='color:green'";
+		}
+		else
+		{
+			$done = " style='color:red' ";
+		}
+		echo "<div class='col-md-6 col-12' ".$done.">";
+			echo $sql_own_entries_row['DESCR'];
+		echo "</div>";
+		echo "<div class='col-md-6 col-12'>";
+			echo "<div class='form-group'>";
+				echo "<select class='form-control' id='change_episode'>";
+					if(getPermission($_SESSION['userid']) !== 1)
+					{
+						$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
+					}
+					else
+					{
+						$sql_select_episodes2 = "SELECT ID, TITEL, DATE, DONE FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
+					}
+					$sql_select_episodes_result2 = mysqli_query($con, $sql_select_episodes2);
+					while($sql_select_episodes_row2 = mysqli_fetch_assoc($sql_select_episodes_result2))
+					{
+						if($sql_select_episodes_row2['DONE'] == '1')
+						{
+							$done = " (abgeschlossen) ";
+						}
+						else
+						{
+							$done = "";
+						}
+						echo "<option ";
+							if($sql_select_episodes_row2['ID'] == $sql_own_entries_row['ID_EPISODE'])
+							{
+								echo "selected disabled";
+							}
+						echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
+					}
+					
+				echo "</select>";
+		echo "</div>";		echo "</div>";
+	echo "</div>";
+	}
+	echo "</div>";
+	echo "</div>";
+	echo "</div>";
+	
+	echo "<script>
+	
+		$(\"#set_podcast\").on('change', function(){
+			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
+			$('#set_episode option:first').prop('selected', true);		
+			if($(\"option:selected\", this).attr('id_podcast') == 'all')
+			{
+				$(\"[id_podcast_menu]\").show();
+				$(\".episode_menu_all\").attr('id_podcast_menu', 'all');
+				$('.episodes').show(\"slow\");		
+			}
+			
+			else
+			{
+				$('.episode_menu').not(\"[id_podcast_menu='\"+id_podcast+\"']\").hide();
+				$(\"[id_podcast_menu='\"+id_podcast+\"']\").show();
+				$(\".episode_menu_all\").attr('id_podcast_menu', id_podcast);				
+
+				$('.episodes').not(\"[id_podcast_list='\"+id_podcast+\"']\").hide(\"slow\");
+				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"slow\");
+			}
+			
+		});
+		
+		$(\"#set_episode\").on('change', function(){
+			var id_podcast = $(\"option:selected\", this).attr('id_podcast_menu');
+			var id_episode = $(\"option:selected\", this).attr('id_episode');
+			if((id_episode === 'all') && (id_podcast ==='all'))
+			{
+				$(\"[id_podcast_list]\").show(\"slow\");
+			}
+			else if((id_episode === 'all') && (id_podcast !=='all'))
+			{
+				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"slow\");
+			}
+			else
+			{
+				$('.episodes').not(\"[id_episode_list='\"+id_episode+\"']\").hide(\"slow\");
+				$(\"[id_episode_list='\"+id_episode+\"']\").show(\"slow\");
+			}
+		});
+	</script>";
+	
+}
 
 //Episode exportieren
 function export(){
@@ -290,326 +435,17 @@ function export(){
 					return;
 				}
 			echo "<div class='row'>";
-/* 				echo "<div class='col-6'>";
-					echo "<div class='form-group'>";
-						echo "<div class='btn btn-danger btn-block' style='pointer-events: none; text-align: center'><i class='fas fa-ban'></i></div>";
-						echo "<ul class='list-group sortuncheck sortable' data-name='DONE' id='list_uncheck' table='links' style='min-height:80px; background-color: rgba(211,211,211,0.3); border-radius: .25rem; box-shadow: 2px 2px 2px grey'>";
-						$sql_select = "SELECT ID, ID_EPISODE, DESCR, NULL AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 0 UNION ALL SELECT ID, ID_EPISODE, DESCR, 1 AS IS_TOPIC, DONE, DONE_TS from ".DB_PREFIX."topics where ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 0 ORDER BY `DESCR` ASC";
-						$sql_select_result = mysqli_query($con, $sql_select);
-						while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
-							{
-								if($sql_select_row['IS_TOPIC'] == 0)
-									{													
-										echo "<li table='links' id ='item-l".$sql_select_row['ID']."' data-pk='".$sql_select_row['ID']."' class='list-group-item sortli' style='padding: 12px 10px; background:white; opacity: 1;'><div class='innerwrap' style='overflow:hidden;white-space:nowrap; text-overflow:ellipsis'><span class='fas fa-arrows-alt fa-fw glyphicon-move' aria-hidden='true'></span><input hidden value='".$sql_select_row['ID']."'>".$sql_select_row['DESCR']."</div></li>";
-									}
-								else
-									{
-										echo "<li table='topics' id ='item-t".$sql_select_row['ID']."' data-pk='".$sql_select_row['ID']."' class='list-group-item sortli' style='padding: 12px 10px; background:white; opacity: 1;'><div class='innerwrap' style='overflow:hidden;white-space:nowrap; text-overflow:ellipsis'><span class='fas fa-arrows-alt fa-fw glyphicon-move' aria-hidden='true'></span><input hidden value='".$sql_select_row['ID']."'>".$sql_select_row['DESCR']."</div></li>";
-									}	
-							}
-						echo"</ul>";
-					echo "</div>"; 
-				echo "</div>";  */
 				echo "<div class='col-12'>";
 					echo "<div id='export_result'>";
 					echo "</div>";
-/* 					echo "<div class='form-group'>";
-						echo "<div class='btn btn-success btn-block' style='pointer-events: none; text-align: center'><i class='fas fa-check'></i></div>";
-							echo "<ul class='list-group sortcheck sortable' data-name='DONE' id='list_check'  table='links' style='min-height:100px; background-color: rgba(211,211,211,0.3); border-radius: .25rem; box-shadow: 2px 2px 2px grey'>";
-							global $con;
-							$sql_select = "SELECT ID, ID_EPISODE, DESCR, NULL AS IS_TOPIC, DONE, REIHENF, DONE_TS from ".DB_PREFIX."links WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, 1 AS IS_TOPIC, DONE, REIHENF,DONE_TS from ".DB_PREFIX."topics where ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY REIHENF, DONE_TS";
-							$sql_select_result = mysqli_query($con, $sql_select);
-							while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
-								{
-									if($sql_select_row['IS_TOPIC'] == 0)
-										{													
-											echo "<li table='links' id='item-l".$sql_select_row['ID']."' data-pk='".$sql_select_row['ID']."' class='list-group-item sortli' style='padding: 12px 10px; background:white;  opacity: 1;'><div class='innerwrap' style='overflow:hidden;white-space:nowrap; text-overflow:ellipsis'><span class='fas fa-arrows-alt fa-fw glyphicon-move' aria-hidden='true'></span><input hidden value='".$sql_select_row['ID']."'>".$sql_select_row['DESCR']."</div></li>";
-										}
-									else
-										{
-											echo "<li table='topics' id='item-t".$sql_select_row['ID']."' data-pk='".$sql_select_row['ID']."' class='list-group-item sortli' style='padding: 12px 10px; background:white;  opacity: 1;'><div class='innerwrap' style='overflow:hidden;white-space:nowrap; text-overflow:ellipsis'><span class='fas fa-arrows-alt fa-fw glyphicon-move' aria-hidden='true'></span><input hidden value='".$sql_select_row['ID']."'>".$sql_select_row['DESCR']."</div>";
-											echo "</li>";
-										}	
-								}
-							echo"</ul>";
-						echo "</div>"; 
-					echo "</div>";  */
 				echo "</div>";					
 			echo "</div>";					
 			echo "<div style='margin-top: 10px'>";
 			echo "<button type='button' id='export_list' class='btn btn-outline-primary btn-block' export_episode_id='".$_SESSION['cur_episode']."'><i class='fas fa-upload fa-fw'></i> Liste exportieren</button>";
 			echo "<button type='button' id='clean_episode' class='btn btn-outline-tertiary btn-block clean_episode' change_value='".$_SESSION['cur_episode']."'><i class='fas fa-broom fa-fw'></i> Episode bereinigen</button>";		
-			echo "</div>";					
-		
-			/* echo "<div class='modal fade' id='export_modal' tabindex='-1' role='dialog' aria-labelledby='export_modal_title' aria-hidden='true'>";
-				echo "<div class='modal-dialog modal-dialog-centered' role='document'>";
-					echo "<div class='modal-content'>";
-						echo "<div class='modal-header'>";
-							echo "<h5 class='modal-title' id='export_modal_title'>Beiträge und Themen exportieren</h5>";
-						echo "</div>";
-						echo "<div class='modal-body' id='export_out'>";
-							echo "<ul class='nav nav-pills mb-3' id='pills-tab' role='tablist'>";
-								echo "<li class='nav-item'>";
-									echo "<a class='nav-link active' id='pills-home-tab' data-toggle='pill' href='#HTML-list' role='tab' aria-controls='pills-home' aria-selected='true'>HTML Bindestriche</a>";
-								echo "</li>";								
-								echo "<li class='nav-item'>";
-									echo "<a class='nav-link' id='pills-profile-tab' data-toggle='pill' href='#HTML-bullet' role='tab' aria-controls='pills-profile' aria-selected='false'>HTML Gliederung</a>";
-								echo "</li>";
-								echo "<li class='nav-item'>";
-									echo "<a class='nav-link' id='pills-profile-tab' data-toggle='pill' href='#text' role='tab' aria-controls='pills-profile' aria-selected='false'>Text</a>";
-								echo "</li>";
-							echo "</ul>";
-							echo "<div class='tab-content' id='pills-tabContent'>";
-									$sql_select = "SELECT * FROM ".DB_PREFIX."view_links WHERE EPISODEN_ID=".$_SESSION['cur_episode']." AND LINKS_DONE = 1 ORDER BY LINKS_REIHENF, LINKS_DONE_TS ASC";
-									$sql_select_result = mysqli_query($con, $sql_select);
-									$stringarray = array();
-									$stringarray2 = array();
-									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
-									{
-										$fund_url = $sql_select_row['LINKS_URL'];
-										$pos = "http";
-										if(empty($fund_url))
-											{
-												$base = "&lt;a href='#' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
-											}
-										else if (strpos($fund_url, $pos) === false)
-											{
-												$base = "&lt;a href='http://".$fund_url."' target='_blank' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
-											}
-										else
-											{
-												$base = "&lt;a href='".$fund_url."' target='_blank' &gt;".$sql_select_row['LINKS_DESCR']."&lt;/a&gt";
-											}
-											array_push($stringarray, $base);	
-											array_push($stringarray2, "<li>".$sql_select_row['LINKS_DESCR']."</li>");	
-									}
-								echo "<div class='tab-pane fade show active' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
-									echo "<textarea class='form-control' id='exampleFormControlTextarea1' rows='5'>";
-										echo implode(" - ",$stringarray);
-									echo"</textarea>"; 
-									echo "<div style='padding: 5px 5px 0px 5px; font-size:80%; font-weight: 400'>";
-										echo "<br>Beispiel: <a href='http://www.google.de' target='_blank'>Beitrag 1</a> - <a href='http://www.google.de' target='_blank'>Beitrag 2</a>";
-									echo "</i></div>";
-								echo "</div>";								
-								echo "<div class='tab-pane fade' id='HTML-bullet' role='tabpanel' aria-labelledby='pills-profile-tab'>";
-									echo "<textarea class='form-control' id='exampleFormControlTextarea1' rows='5'>";
-										echo "<ul>\r\n<li>";
-										echo implode("</li>\r\n<li>",$stringarray);
-										echo "</li>\r\n</ul>";
-									echo"</textarea>";     
-									echo "<div style='padding: 5px 5px 0px 5px; font-size:80%; font-weight: 400'>";
-									echo "<br>Beispiel: <ul><li><a href='http://www.google.de' target='_blank'>Beitrag 1</a></li><li><a href='http://www.google.de' target='_blank'>Beitrag 2</a></li></ul>";
-									echo "</i></div>";
-								echo "</div>";
-								echo "<div class='tab-pane fade' id='text' role='tabpanel' aria-labelledby='pills-profile-tab'>";
-									echo "<ul style='list-style-type:none'>";
-										echo implode($stringarray2);
-									echo "</ul>";
-								echo "</div>";
-							echo "</div>";
-						echo "</div>";
-						echo "<div class='modal-footer'>";
-							echo "<button type='button' class='btn btn-outline-secondary' data-dismiss='modal'>Schließen</button>";
-						echo "</div>";
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";		 */					
+			echo "</div>";							
 		}
 }
-
-//Beiträge eines Thema anzeigen			
-function topics(){
-	if(empty($_GET['topic']))
-		{
-			echo "<div class='tile-title'>";
-				echo "Kein Thema";
-			echo "</div>";
-			echo "Kein Thema";
-		echo "</div>";
-		return;
-		}
-	else
-		{
-			echo "<div class='tile-title'>";
-				echo "<div class='row'>";
-					echo "<div class='col-10' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
-					global $con;
-					$sql_topic_title = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID = ".$_GET['topic'];
-					$sql_topic_title_result = mysqli_query($con, $sql_topic_title);
-					$sql_topic_title_row = mysqli_fetch_assoc($sql_topic_title_result);
-					if($sql_topic_title_row['TOPICS_ID_USER'] != $_SESSION['userid'] && $sql_topic_title_row['CATEGORIES_VISIBLE'] == 0 && $sql_topic_title_row['TOPICS_DONE'] != 1)
-						{
-							echo "Gesperrt";
-						}
-					else
-						{
-							echo $sql_topic_title_row['TOPICS_DESCR'];
-						}
-					echo "</div>";
-					echo "<div class='col-2' style='text-align:right'>";
-						echo "<div onclick=\"location.href='../episode.php';\" style='cursor:pointer'><i class='fas fa-fw fa-window-close'></i>";
-						echo "</div>";
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";
-			echo "<div class='tile-body'>";
-			if(!empty($sql_topic_title_row['TOPICS_INFO']))
-				{
-					echo "<hr>";
-					echo "<button class='btn btn-notice btn-block' type='button' data-toggle='collapse' data-target='#collapseExample".$sql_topic_title_row['TOPICS_ID']."' aria-expanded='false' aria-controls='collapseExample".$sql_topic_title_row['TOPICS_ID']."'>";
-						echo "Notizen";
-					echo "</button>";
-					echo "<div class='collapse' id='collapseExample".$sql_topic_title_row['TOPICS_ID']."'>";
-						echo "<div style='margin-top:10px; padding: 15px'>";
-							echo $sql_topic_title_row['TOPICS_INFO'];
-						echo "</div>";				
-					echo "</div>";				
-					echo "<hr>";
-				}
-
-			$sql_topic_links = "SELECT * FROM ".DB_PREFIX."view_links WHERE LINKS_ID_TOPIC = ".$_GET['topic'];
-			$sql_topic_links_result = mysqli_query($con, $sql_topic_links);
-			while($sql_topic_row = mysqli_fetch_assoc($sql_topic_links_result))
-				{
-					if($sql_topic_row['LINKS_ID_USER'] != $_SESSION['userid'] && $sql_topic_row['CATEGORIES_VISIBLE'] == 0 && $sql_topic_row['TOPICS_DONE'] != 1)
-					{
-						echo "Gesperrt";
-						echo "</div>";
-						return;
-					}
-					echo "<div class='lead'>";
-						echo $sql_topic_row['LINKS_DESCR'];
-					echo "</div>";
-					echo "<div class='form-row'>";
-					if($sql_topic_row['LINKS_URL'] == NULL || $sql_topic_row['LINKS_URL'] == '')
-						{
-							echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-								echo "<button disabled type='button' class='btn btn-warning btn-block'>";
-									echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-								echo "</button>";
-							echo "</div>";
-							echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-								echo "<button disabled class='btn btn-info btn-block'>";
-									echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-								echo "</button>";
-							echo "</div>";
-						}
-					else
-						{
-							$fund_url = $sql_topic_row['LINKS_URL'];
-							$pos = "http";
-							if (strpos($fund_url, $pos) === false)
-								{
-									$base = "http://".$fund_url;
-								}
-							else
-								{
-									$base = $fund_url;
-								}
-							echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-								echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block'>";
-									echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-								echo "</button>";
-							echo "</div>";
-							echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-								echo "<div data-clipboard-text='".$sql_topic_row['LINKS_URL']."' class='btn".$sql_topic_row['LINKS_ID']." btn btn-info btn-block clipboard'>";
-									echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-								echo "</div>";
-							echo "</div>";
-							echo "<script>
-								var clip = new ClipboardJS('.btn".$sql_topic_row['LINKS_ID']."');
-							</script>";
-						}					
-					echo "</div>";
-					echo "<hr>";
-				}
-			echo "</div>";
-
-		} 
-}	
-
-/* //Kategorienliste mit Themen und Beiträge (Hauptseite)
-function category_list(){
-	echo "<a href='javascript:void(0);' style='font-size: 1.5rem;' id='show'><i class='fas fa-bars fa-fw'></i></a><div style='display:inline-flex; font-size: 1.5rem;'>Kategorien</div>";
-	echo "<hr>";
-	if(empty($_SESSION['podcast']))
-		{
-			echo "<p class='lead'><button class='btn btn-outline-success btn-block change' change_value='podcast' style='cursor: pointer'>Podcast wählen</button>";
-			echo "</div";
-			return;
-		}
-
-	if(empty($_SESSION['cur_episode']))
-		{
-			echo "<p class='lead'><button class='btn btn-outline-success btn-block change' change_value='episode' style='cursor: pointer'>Episode wählen</button>";
-			echo "</div";
-			return;
-		}
-
-		global $con;
-		$sql_categories_list = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE CATEGORIES_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode']." ORDER BY REIHENF, DESCR";
-		$sql_categories_list_result = mysqli_query($con, $sql_categories_list);
-
-	if(mysqli_num_rows($sql_categories_list_result) == 0)
-		{
-			echo "<p class='lead'>Es wurden noch keine Kategorien angelegt!</p>";
-			echo "</div";
-			return;
-		}
-			
-	
-	while ($sql_categories_list_row = mysqli_fetch_assoc($sql_categories_list_result))
-		{
-			if($sql_categories_list_row['ALLOW_TOPICS'] == 0)
-				{
-					$number = getnumber('links', $sql_categories_list_row['ID_CATEGORY'], $_SESSION['cur_episode'], 'AND ID_TOPIC IS NULL');
-				}
-			else
-				{
-					$number = getnumber('topics', $sql_categories_list_row['ID_CATEGORY'], $_SESSION['cur_episode'], '');
-				}
-		
-			if ($sql_categories_list_row['MAX_ENTRIES'] >= 1)
-				{
-					if ($sql_categories_list_row['MAX_ENTRIES'] == 1)
-						{
-							$entries = "Eintrag";
-						}
-					else
-						{
-							$entries = "Einträge";
-						}
-					$max_entries = "<i data-toggle='tooltip' data-placement='top' title='Max. ".$sql_categories_list_row['MAX_ENTRIES']." ".$entries."' class='fa-fw ".getSetting('MAX_ENTRIES',0)."'></i>";
-				}
-			else 
-				{
-					$max_entries = "";
-				}
-		
-			echo "<div class='row load_content' category_ID ='".$sql_categories_list_row['ID_CATEGORY']."' onclick='load_cat(".$sql_categories_list_row['ID_CATEGORY'].")'>";
-				echo "<div class='col-9 col-sm-10'>";
-					echo "<div class='btn-select-cat'><h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px' ><span style='margin-right: 3px; margin-top: -0.3rem; vertical-align: middle; width: 26px;' class='badge badge-secondary'>".$number."</span>".$sql_categories_list_row['DESCR']."</h5></div>";
-				echo "</div>";
-				echo "<div class='col-3 col-sm-2'>";
-					echo "<i data-toggle='tooltip' data-placement='top' title='Kollaborativ' class='fa-fw ".getSetting('COLL',$sql_categories_list_row['COLL'])."'></i>";
-					echo "<i data-toggle='tooltip' data-placement='top' title='Themen' class='fa-fw ".getSetting('ALLOW_TOPICS',$sql_categories_list_row['ALLOW_TOPICS'])."'></i>";
-					echo "<i data-toggle='tooltip' data-placement='top' title='Sichtbarkeit' class='fa-fw ".getSetting('CATEGORY_VISIBLE',$sql_categories_list_row['VISIBLE'])."'></i>";
-					echo $max_entries;				
-				echo "</div>";
-			echo "</div>";
-			echo "<hr>";
-			echo "<div class='row'>";
-				echo "<div class='col-md-12 cat-content' id='edit".$sql_categories_list_row['ID_CATEGORY']."' style='display:none'>";
-
-				echo "</div>";
-			echo "</div>";
-		}
-	echo "<script>
-		$(\"#show\").on(\"click\", function(){
-			$(\"#category_list\").toggle(\"slow\");
-		});
-	</script>";
-} */
 
 //Kanban-View
 
@@ -637,7 +473,7 @@ function kanban(){
 		if(mysqli_num_rows($sql_categories_list_result) == 0)
 			{
 				echo "<p class='lead'>Es wurden noch keine Kategorien angelegt!</p>";
-				echo "</div";
+				echo "</div>";
 				return;
 			}
 		while($sql_categories_list_rows = mysqli_fetch_assoc($sql_categories_list_result))
@@ -673,21 +509,10 @@ function kanban(){
 						echo "<i style='cursor:pointer' class='rotate-arrow cat-rotate-arrow cat_icon_".$sql_categories_list_rows['ID_CATEGORY']." fas fa-angle-double-left fa-2x'></i>";
 					echo "</div>";
 				echo "</div>";
-			echo "<hr class='seperator'>";
-			
-			
-/* 			echo "<a data-toggle='collapse' href='#collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' role='button' aria-expanded='false' aria-controls='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."'>";
-				echo $sql_categories_list_rows['DESCR']."<br>";
-			echo "</a>"; */
-		
+			echo "<hr class='seperator'>";		
 		echo "<div class='collapse collapse-outer' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
-		echo "<ul class='timeline' style='margin-bottom: 10px'>";
- 		    echo "<li>";
-				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
-			echo "</li>"; 
-			echo "</ul>"; 
-			
-		echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."'>";
+		
+		echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-bottom: 0px'>";
 		global $con;
 		$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."links.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."topics.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
 		$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
@@ -789,9 +614,6 @@ function kanban(){
 											echo "<i class='far fa-check-circle'></i>";
 										echo "</button>";									
 									echo "</div>";
-/* 									echo "<div class='col-6' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-notice btn-block'><i class='far fa-comment fa-fw'></i></button>";
-									echo "</div>"; */
 								echo "</div>";
 								echo "<hr>";
 		echo "</div>";
@@ -840,13 +662,13 @@ function kanban(){
 			$select_topic_links_result = mysqli_query($con, $select_topic_links);
 			while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
 			{
-				echo "<li class='topic_links_item' id='link_".$select_topic_links_rows['ID']."'>";
+				echo "<li class='topic_links_item' id='item-l".$select_topic_links_rows['ID']."'>";
 				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
 					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
 						echo "<div class='link_icon topic_link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
 							echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
 					echo "</div>";
-					echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='link' data-pk='".$select_topic_links_rows['ID']."'>";
+					echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='links' data-pk='".$select_topic_links_rows['ID']."'>";
 					
 					echo "</div>";
 					echo "<div class='col-12 col-xl-8 links_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display: none'>";
@@ -968,6 +790,20 @@ function kanban(){
 		
     
 echo "</ul>";
+			if(!empty($_SESSION['cur_episode']))
+				{
+					if ((getPermission($_SESSION['userid']) > 1 && !userInEpisode($_SESSION['userid'], $_SESSION['cur_episode'])) || episodeclosed($_SESSION['cur_episode']) == 1)
+						{
+						}
+					else
+						{
+		echo "<ul class='timeline' style='margin-bottom: 20px'>";
+ 		    echo "<li>";
+				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
+			echo "</li>"; 
+			echo "</ul>"; 
+						}
+				}
 echo "<hr>";
 echo "</div>";
 		}
@@ -1133,526 +969,6 @@ function close_episode(){
 				}	
 		}
 }
-
-/* //Eigene Themen/Beiträge		
-function topic_edit_list($id_user){
-global $con;
-	echo "<div class='tile'>";
-		echo "<div class='tile-title'>";
-			echo "Beiträge und Themen";
-		echo "</div>";
-		echo "<hr>";
-		echo "<div class='tile-body'>";
-		if(empty($_SESSION['cur_episode']))
-			{
-				echo "<p class='lead'>Bitte wähle eine Episode aus!</p>";
-				echo "</div";
-				echo "</div";
-				return;
-			}
-			if (!empty($_SESSION['cur_episode']) && (getPermission($_SESSION['userid']) > 1 && !userInEpisode($_SESSION['userid'], $_SESSION['cur_episode'])))
-			{
-				echo "<p class='lead'>Du bist dieser Episode nicht zugewiesen!</p>";
-				echo "</div";
-				echo "</div";
-				return;					
-			}
-			echo "<ul class='nav nav-pills mb-3' id='pills-tab' role='tablist'>";
-				echo " <li class='nav-item'>";
-					echo "<a class='btn btn-outline-secondary active btn-block' style='padding: 8px 16px 8px 16px' id='tab' data-toggle='pill' href='#pills-links' role='tab' aria-controls='pills-links' aria-selected='true'>Beiträge</a>";
-				echo "</li>";
-				echo "<li class='nav-item'>";
-					echo "<a class='btn btn-outline-secondary btn-block' style='margin-left: 5px; padding: 8px 16px 8px 16px' id='tab' data-toggle='pill' href='#pills-topics' role='tab' aria-controls='pills-topics' aria-selected='false'>Themen</a>";
-				echo "</li>";
-			echo "</ul>";
-		echo "</div>";
-	echo "</div>";
-
-	echo "<div class='tab-content' id='pills-tabContent'>";
-		echo "<div class='tab-pane show active' id='pills-links' role='tabpanel' aria-labelledby='pills-links-tab'>";
-			echo "<div class='tile' style='text-align:right; padding: 5px' id='filter'>";
-				echo "<div class='dropdown'>";
-					echo "<button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-						echo "<i class='fas fa-filter'></i>";
-					echo "</button>";
-					echo "<div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>";
-						echo "<div class='form-group form-check' style='margin-bottom: 0px'>";
-						$sql_get_cat = "SELECT * FROM ".DB_PREFIX."categories WHERE ALLOW_TOPICS = 0 AND ID_PODCAST =".$_SESSION['podcast'];
-						$sql_get_cat_result = mysqli_query($con, $sql_get_cat);
-						while($sql_get_cat_row = mysqli_fetch_assoc($sql_get_cat_result))
-							{
-								echo "<div class='dropdown-item' ><input type='checkbox' class='form-check-input' cat='cat".$sql_get_cat_row['ID']."'>";
-									echo "<label class='form-check-label'>".$sql_get_cat_row['DESCR']."</label>";
-								echo "</div>";					
-							}
-						echo "</div>";
-					echo "</div>";
-				echo "</div>";
-
-				echo "<script>
-					var checkboxes = $(\"#filter input:checkbox\");
-					checkboxes.prop('checked', true);	
-
-					$(checkboxes).on('click', function(){
-						var cat = $(this).attr('cat');
-						var rows = $(\"#links_user\").find(\".\"+cat);
-						$(rows).toggle();
-					});
-				</script>";
-			echo "</div>";
-
-			echo "<div class='row' id='links_user'>";
-			$sql_get_links = "SELECT ".DB_PREFIX."links.* FROM ".DB_PREFIX."links join ".DB_PREFIX."categories on ".DB_PREFIX."categories.ID = ".DB_PREFIX."links.ID_CATEGORY WHERE ID_USER = ".$id_user." AND ".DB_PREFIX."links.ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE=".$_SESSION['cur_episode']." ORDER BY ".DB_PREFIX."categories.REIHENF";
-			$sql_get_links_result = mysqli_query($con, $sql_get_links);
-			while ($sql_get_links_rows = mysqli_fetch_assoc($sql_get_links_result))
-				{
-					if($sql_get_links_rows['ID_TOPIC'] === NULL)
-						{
-							echo "<div class='col-xl-6 col-12 cat".$sql_get_links_rows['ID_CATEGORY']."' >";
-								if ($sql_get_links_rows['DONE'] == 1)
-									{
-										$btn = "btn-success";
-										$done = "";
-									}
-								else
-									{
-										$btn = "btn-outline-success";
-										$done = "";								
-									}
-									echo "<div class='tile'>";
-										echo "<div class='tile-title' style='overflow: hidden; text-overflow: ellipsis; -o-text-overflow: ellipsis; white-space: nowrap;'>";
-											echo "<i style='margin-left: 4px;' class='fas fa-pencil-alt fa-xs'></i> ";
-											echo "<a style='border: none; color:black; ' class='update' href='#' id='descr".$sql_get_links_rows['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung'>".$sql_get_links_rows['DESCR']."</a>";
-										echo "</div>";
-									echo "<hr>";
-									echo "<div class='tile-body' style='padding: 10px 20px 10px 20px'>";
-										echo "<div class='row'>";
-											echo "<div class='col-12' >";
-												echo "<div style='overflow: hidden; text-overflow: ellipsis; -o-text-overflow: ellipsis; white-space: nowrap; margin-bottom: 10px;'>";
-													echo "<i class='fas fa-pencil-alt fa-xs' data-toggle='tooltip' data-placement='top' title='".$sql_get_links_rows['URL']."'></i> ";
-													echo "<a style='border: none; color:black; ' class=' update' href='#' id='url".$sql_get_links_rows['ID']."' table='links' data-name='URL' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='URL'>".$sql_get_links_rows['URL']."</a>";
-												echo "</div>";
-											echo "</div>";
-											echo "<div class='col-12' style='margin-bottom: 10px;'>";
-												echo "<select data-url='inc/update.php' data-name='ID_CATEGORY' class='form-control update_cat' style='padding: 0px;' table='links' data-pk='".$sql_get_links_rows['ID']."' id='category'>";
-												$sql_get_cat = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ALLOW_TOPICS = 0 AND ID_EPISODE = ".$_SESSION['cur_episode']." AND EPISODE_ID_PODCAST = ".$_SESSION['podcast'];
-												$sql_get_cat_result = mysqli_query($con, $sql_get_cat);
-													while($sql_get_cat_rows = mysqli_fetch_assoc($sql_get_cat_result))
-													{
-														echo "<option ";
-														if ($sql_get_cat_rows['ID_CATEGORY'] === $sql_get_links_rows['ID_CATEGORY'])
-															{
-																echo "selected ";
-															}
-														echo "value=".$sql_get_cat_rows['ID_CATEGORY'].">"; 
-														echo $sql_get_cat_rows['DESCR'];
-														echo "</option>";
-													}	
-												echo "</select>";
-											echo "</div>";
-											echo "<div class='col-12' style='margin-bottom: 10px;'>";
-												echo "<div class='row' style='padding-left: 15px; padding-right: 15px;'>";
-												if($sql_get_links_rows['URL'] == NULL || $sql_get_links_rows['URL'] == '')
-													{
-														echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-															echo "<button disabled type='button' class='btn btn-warning btn-block'>";
-																echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-															echo "</button>";
-														echo "</div>";
-														echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-															echo "<button disabled class='btn btn-info btn-block'>";
-																echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-															echo "</button>";
-														echo "</div>";
-													}
-												else
-													{
-														$fund_url = $sql_get_links_rows['URL'];
-														$pos = "http";
-														if (strpos($fund_url, $pos) === false)
-															{
-																$base = "http://".$fund_url;
-															}
-														else
-															{
-																$base = $fund_url;
-															}
-														echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-															echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block'>";
-																echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-															echo "</button>";
-														echo "</div>";
-														echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-															echo "<div data-clipboard-text='".$sql_get_links_rows['URL']."' class='btn".$sql_get_links_rows['ID']." btn btn-info btn-block clipboard'>";
-																echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-															echo "</div>";
-														echo "</div>";
-														echo "<script>
-															var clip = new ClipboardJS('.btn".$sql_get_links_rows['ID']."');
-														</script>";
-													}	
-
-													echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-														echo "<button type='button' ".$done." class='btn ".$btn." btn-block check_link' id='check_links".$sql_get_links_rows['ID']."' onclick='check_link(".$sql_get_links_rows['ID'].", \"links\")' data-name='DONE' data-checked='".$sql_get_links_rows['DONE']."'>";
-															echo "<i class='far fa-check-circle'></i>";
-														echo "</button>";
-													echo "</div>";
-												echo "</div>";
-											echo "</div>";
-											echo "<div class='col-12' style='margin-bottom: 10px;'>";
-												if($sql_get_links_rows['INFO'] == NULL || $sql_get_links_rows['INFO'] == '')
-													{
-														$has_info = "-outline-";
-													}
-													else
-													{
-														$has_info = "-";											
-													}
-
-												echo "<button class='btn btn".$has_info."notice btn-block' type='button' data-toggle='collapse' data-target='#collapseExample".$sql_get_links_rows['ID']."' aria-expanded='false' aria-controls='collapseExample".$sql_get_links_rows['ID']."'>";
-													echo "Notizen";
-												echo "</button>";
-												echo "<div class='collapse' id='collapseExample".$sql_get_links_rows['ID']."'>";
-													echo "<div style='margin-top:10px'>";
-														echo "<textarea data-name='INFO' id='textarea_links".$sql_get_links_rows['ID']."' class='update_notizen' table='links' data-pk='".$sql_get_links_rows['ID']."' name='textarea_links".$sql_get_links_rows['ID']."'>";
-															echo $sql_get_links_rows['INFO'];
-														echo "</textarea>";
-													echo "</div>";
-													echo "<div style='margin-top:10px'>";	
-														echo "<button class='btn btn-outline-success btn-block' id='update_notizen_links".$sql_get_links_rows['ID']."' type='button' ><i class='fas fa-save'></i> Notizen Speichern</button>";
-														echo "<script>
-															CKEDITOR.replace( 'textarea_links".$sql_get_links_rows['ID']."');
-															$('#update_notizen_links".$sql_get_links_rows['ID']."').on('click', function(e) {
-																var pk = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-pk\")
-																var name = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-name\")
-																var table = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"table\")
-																var value= CKEDITOR.instances['textarea_links".$sql_get_links_rows['ID']."'].getData();	
-																$.ajax({
-																	url: 'inc/update.php',
-																	type: 'POST',
-																	data: {name:name, pk:pk, value:value, table:table},
-																	success: function(data){
-																	$.ajax({
-																		url: 'inc/update.php',
-																		type: 'POST',
-																		data: {name:name, pk:pk, value:value, table:table},
-																		success: function(data){
-																		console.log(data);
-																		$.gritter.add({
-																			title: 'Bearbeiten ok!',
-																			text: 'Die Änderungen wurden gespeichert!',
-																			image: '../images/confirm.png',
-																			time: '1000'
-																		});		
-																		}
-																	});
-																	console.log(data);
-																	}
-																});
-															});
-														</script>";					
-													echo "</div>";
-												echo "</div>";
-											echo "</div>";
-											echo "<div class='col-12'>";
-												echo "<button class='btn btn-danger btn-block delete_entry' id='delete_link".$sql_get_links_rows['ID']."' table='links' option='link' data-pk='".$sql_get_links_rows['ID']."'><i class='far fa-times-circle fa-fw'></i> Beitrag löschen</button>";
-											echo "</div>";
-										echo "</div>";
-									echo "</div>";
-								echo "</div>";
-							echo "</div>";
-						}
-				}
-			echo "</div>";
-		echo "</div>";
-
-		echo "<div class='tab-pane' id='pills-topics' role='tabpanel' aria-labelledby='pills-topics-tab'>";
-			echo "<div class='tile' style='text-align:right; padding: 5px' id='filter_topics'>";
-				echo "<div class='dropdown'>";
-					echo "<button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-						echo "<i class='fas fa-filter'></i>";
-					echo "</button>";
-					echo "<div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>";
-						echo "<div class='form-group form-check' style='margin-bottom: 0px'>";
-						$sql_get_cat = "SELECT * FROM ".DB_PREFIX."categories WHERE ALLOW_TOPICS = 1 AND ID_PODCAST =".$_SESSION['podcast'];
-						$sql_get_cat_result = mysqli_query($con, $sql_get_cat);
-						while($sql_get_cat_row = mysqli_fetch_assoc($sql_get_cat_result))
-							{
-								echo "<div class='dropdown-item' ><input type='checkbox' class='form-check-input' cat='cat".$sql_get_cat_row['ID']."'>";
-									echo "<label class='form-check-label'>".$sql_get_cat_row['DESCR']."</label>";
-								echo "</div>";					
-							}				
-						echo "</div>";
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";
-			echo "<script>
-			var checkboxes_topics = $(\"#filter_topics input:checkbox\");
-			checkboxes_topics.prop('checked', true);	
-			$(checkboxes_topics).on('click', function(){
-				var cat_topics = $(this).attr('cat');
-				var rows_topics = $(\"#topics_user\").find(\".\"+cat_topics);
-				$(rows_topics).toggle();
-			});
-
-			</script>";
-			echo "<div class='row' id='topics_user'>";
-				echo "<div class='col-md-12'>";
-					$sql_get_topics = "SELECT * FROM ".DB_PREFIX."topics WHERE (ID_USER = ".$id_user." OR ID_USER IS NULL) AND ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode'];
-					$sql_get_topics_result = mysqli_query($con, $sql_get_topics);
-					while ($sql_get_topics_rows = mysqli_fetch_assoc($sql_get_topics_result))
-						{
-							if ($sql_get_topics_rows['DONE'] == 1)
-								{
-									$btn = "btn-success";
-									$done = "";
-								}
-							else
-								{
-									$btn = "btn-outline-success";
-									$done = "";								
-								}
-							echo "<div class='tile cat".$sql_get_topics_rows['ID_CATEGORY']."' >";
-								echo "<div class='tile-title'>";
-									echo "<div class='row'>";
-										echo "<div class='col-md-8 col-sm-12' style='overflow: hidden; text-overflow: ellipsis; -o-text-overflow: ellipsis; white-space: nowrap;'>";
-											echo "<i style='margin-left: 4px;' class='fas fa-pencil-alt fa-xs'></i> ";
-											echo "<a style='border: none; color:black; ' class='update' href='#' id='descr".$sql_get_topics_rows['ID']."' table='topics' data-name='DESCR' data-type='text' data-pk='".$sql_get_topics_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung'>".$sql_get_topics_rows['DESCR']."</a>";
-									echo "</div>";
-									echo "<div class='col-md-4 col-sm-12 '>";
-										if($sql_get_topics_rows['INFO'] == NULL || $sql_get_topics_rows['INFO'] == '')
-											{
-												$has_info = "-outline-";
-											}
-										else
-											{
-												$has_info = "-";											
-											}
-										echo "<button class='btn btn".$has_info."notice btn-block' type='button' data-toggle='collapse' data-target='#collapseExample_topics".$sql_get_topics_rows['ID']."' aria-expanded='false' aria-controls='collapseExample_topics".$sql_get_topics_rows['ID']."'>";
-											echo "Notizen";
-										echo "</button>";			
-									echo "</div>";
-									echo "<div class='col-12'>";
-										echo "<div class='collapse' id='collapseExample_topics".$sql_get_topics_rows['ID']."'>";
-											echo "<div style='margin-top:10px;'>";
-												echo "<textarea data-name='INFO' id='notizen_topics".$sql_get_topics_rows['ID']."' class='update_notizen' table='topics' data-pk='".$sql_get_topics_rows['ID']."' name='notizen_topics".$sql_get_topics_rows['ID']."'>";
-													echo $sql_get_topics_rows['INFO'];
-												echo "</textarea>";
-											echo "</div>";
-											echo "<div style='margin-top:10px'>";	
-												echo "<button class='btn btn-outline-success btn-block' id='update_notizen_topics".$sql_get_topics_rows['ID']."' type='button' ><i class='fas fa-save'></i> Notizen Speichern</button>";
-												echo "<script>
-													CKEDITOR.replace( 'notizen_topics".$sql_get_topics_rows['ID']."');
-													$('#update_notizen_topics".$sql_get_topics_rows['ID']."').on('click', function(e) {
-														var pk = $(\"#notizen_topics".$sql_get_topics_rows['ID']."\").attr(\"data-pk\")
-														var name = $(\"#notizen_topics".$sql_get_topics_rows['ID']."\").attr(\"data-name\")
-														var table = $(\"#notizen_topics".$sql_get_topics_rows['ID']."\").attr(\"table\")
-														var value= CKEDITOR.instances['notizen_topics".$sql_get_topics_rows['ID']."'].getData();	
-														var collapse_info = $(\"#collapseExample_topics".$sql_get_topics_rows['ID']."\")
-														$.ajax({
-															url: 'inc/update.php',
-															type: 'POST',
-															data: {name:name, pk:pk, value:value, table:table},
-															success: function(data){
-															console.log(data);
-															$.gritter.add({
-																title: 'Bearbeiten ok!',
-																text: 'Die Änderungen wurden gespeichert!',
-																image: '../images/confirm.png',
-																time: '1000'
-															});		
-															}
-														});
-													});
-												</script>";				
-											echo "</div>";
-										echo "</div>";
-									echo "</div>";
-								echo "</div>";
-							echo "</div>";
-							echo "<hr>";
-							echo "<div class='tile-body' style='padding: 10px; border-radius: 10px; background-color: rgba(150, 150, 150,0.1)' id='topic_entries".$sql_get_topics_rows['ID']."'>";
-							$sql_get_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_get_topics_rows['ID']." AND ID_PODCAST = ".$_SESSION['podcast']." AND ID_USER = ".$id_user." AND ID_EPISODE = ".$_SESSION['cur_episode'];
-							$sql_get_topic_links_result = mysqli_query($con, $sql_get_topic_links);
-							while ($sql_get_topic_links_rows = mysqli_fetch_assoc($sql_get_topic_links_result))
-								{
-									if(empty($sql_get_topic_links_rows['DONE'] ))
-										{	
-											$disabled = "";
-										}
-									else
-										{
-											$disabled = "disabled";
-										}
-									echo "<div class='row'>";
-										echo "<div class='col-lg-5 col-sm-12' style='overflow: hidden; text-overflow: ellipsis; -o-text-overflow: ellipsis; white-space: nowrap;'>";
-											echo "<i style='margin-left: 4px;' class='fas fa-pencil-alt fa-xs'></i> ";
-											echo "<a style='border: none; color:black; ' class='update' href='#' id='descr".$sql_get_topic_links_rows['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_get_topic_links_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung'>".$sql_get_topic_links_rows['DESCR']."</a>";
-											echo "<p></p>";
-											echo "<i style='margin-left: 4px;' class='fas fa-pencil-alt fa-xs'></i> ";
-											echo "<a style='border: none; color:black; ' class=' update' href='#' id='url".$sql_get_topic_links_rows['ID']."' table='links' data-name='URL' data-type='text' data-pk='".$sql_get_topic_links_rows['ID']."' data-url='inc/update.php' beschr='URL'>".$sql_get_topic_links_rows['URL']."</a>";
-										echo "</div>";
-										echo "<div class='col-lg-4 col-sm-12'>";
-											echo "<div class='form-group'>";
-												echo "<select ".$disabled." data-url='inc/update.php' data-name='ID_TOPIC' class='form-control update_cat' table='links' style='padding: 0px;' data-pk='".$sql_get_topic_links_rows['ID']."' id='category'>";
-												$sql_get_cat_topic_links = "SELECT DISTINCT * FROM ".DB_PREFIX."view_topics WHERE (TOPICS_ID_USER = ".$id_user." OR CATEGORIES_VISIBLE = 1) AND EPISODEN_ID = ".$_SESSION['cur_episode'];
-												$sql_get_cat_topic_links_result = mysqli_query($con, $sql_get_cat_topic_links);
-												while($sql_get_cat_topic_links_rows = mysqli_fetch_assoc($sql_get_cat_topic_links_result))
-													{
-														echo "<option ";
-														if ($sql_get_topic_links_rows['ID_TOPIC'] === $sql_get_cat_topic_links_rows['TOPICS_ID'])
-															{
-																echo "selected ";
-															}
-														echo "value=".$sql_get_cat_topic_links_rows['TOPICS_ID'].">"; 
-															echo $sql_get_cat_topic_links_rows['TOPICS_DESCR'];
-														echo "</option>";
-													}	
-												echo "</select>";
-											echo "</div>";
-										echo "</div>";
-										echo "<div class='col-lg-3 col-sm-12'>";
-											echo "<div class='row' style='padding: 0px 14px 5px 14px'>";
-											if($sql_get_topic_links_rows['URL'] == NULL || $sql_get_topic_links_rows['URL'] == '')
-												{
-													echo "<div class='col-6' style='padding:1px'>";
-														echo "<button disabled type='button' class='btn btn-warning btn-block'>";
-															echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-														echo "</button>";
-													echo "</div>";
-													echo "<div class='col-6' style='padding:1px'>";
-														echo "<button disabled class='btn btn-info btn-block'>";
-															echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-														echo "</button>";
-													echo "</div>";
-												}
-											else
-												{
-													$fund_url = $sql_get_topic_links_rows['URL'];
-													$pos = "http";
-													if (strpos($fund_url, $pos) === false)
-														{
-															$base = "http://".$fund_url;
-														}
-													else
-														{
-															$base = $fund_url;
-														}
-
-													echo "<div class='col-6' style='padding:1px'>";
-														echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block'>";
-															echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-														echo "</button>";
-													echo "</div>";
-													echo "<div class='col-6' style='padding:1px'>";
-														echo "<div data-clipboard-text='".$sql_get_topic_links_rows['URL']."' class='btn".$sql_get_links_rows['ID']." btn btn-info btn-block clipboard'>";
-															echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-														echo "</div>";
-													echo "</div>";
-													echo "<script>
-														var clip = new ClipboardJS('.btn".$sql_get_topic_links_rows['ID']."');
-													</script>";
-												}													
-											echo "</div>";
-											echo "<div class='row'>";
-												echo "<div class='col-12'>";
-													echo "<button class='btn btn-danger btn-block delete_entry' id='delete_topic_link".$sql_get_topic_links_rows['ID']."' table='links' option='link' data-pk='".$sql_get_topic_links_rows['ID']."'><i class='far fa-times-circle fa-fw'></i> Beitrag löschen</button>";
-												echo "</div>";
-											echo "</div>";
-										echo "</div>";
-									echo "</div>";
-									echo "<hr>";
-								}	
-							echo "</div>";
-
-							echo "<div class='tile-footer' style='border:none'>";
-								echo "<div class='row' style='padding-left: 15px; padding-right: 15px;'>";
-									echo "<div class='col-md-4 col-sm-12' style='padding: 1px'>";
-										echo "<div class='form-group'>";
-											echo "<select data-url='inc/update.php' data-name='ID_CATEGORY' class='form-control update_cat' style='padding: 0px;' table='topics' data-pk='".$sql_get_topics_rows['ID']."' id='category'>";
-												$sql_get_cat = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ALLOW_TOPICS = 1 AND CATEGORIES_ID_PODCAST = ".$_SESSION['podcast']." AND EPISODE_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode'];
-												$sql_get_cat_result = mysqli_query($con, $sql_get_cat);
-												while($sql_get_cat_rows = mysqli_fetch_assoc($sql_get_cat_result))
-													{
-														echo "<option ";
-														if ($sql_get_cat_rows['ID_CATEGORY'] === $sql_get_topics_rows['ID_CATEGORY'])
-															{
-																echo "selected ";
-															}
-														echo "value=".$sql_get_cat_rows['ID_CATEGORY'].">"; 
-															echo $sql_get_cat_rows['DESCR'];
-														echo "</option>";
-													}	
-											echo "</select>";
-										echo "</div>";
-									echo "</div>";
-									echo "<div class='col-md-4 col-sm-12' style='padding: 1px'>";
-										echo "<button type='button' ".$done." class='btn ".$btn." btn-block check_link' id='check_topics".$sql_get_topics_rows['ID']."' onclick='check_link(".$sql_get_topics_rows['ID'].", \"topics\")' data-name='DONE' data-checked='".$sql_get_topics_rows['DONE']."'>";
-											echo "<i class='far fa-check-circle'></i>";
-										echo "</button>";
-									echo "</div>";
-									echo "<div class='col-md-4 col-sm-12' style='padding: 1px'>";
-										echo "<button class='btn btn-danger btn-block delete_entry' id='delete_topic".$sql_get_topics_rows['ID']."' table='topics' option='topic' data-pk='".$sql_get_topics_rows['ID']."'><i class='far fa-times-circle fa-fw'></i> Thema löschen</button>";
-									echo "</div>";		
-								echo "</div>";
-								echo "<p>";
-							echo "</div>";
-							echo "</div>";
-						}
-						echo "<SCRIPT>
-							$(\".delete_entry\").on('click', function(){
-								var pk = $(this).attr(\"data-pk\");
-								var table = $(this).attr(\"table\");
-								var option = $(this).attr(\"option\");
-
-								if(table == 'topics')
-									{
-										var content = 'Das Thema und alle enthaltenen Beiträge werden gelöscht!';
-									}
-								else
-									{
-										var content = 'Der Beitrag wird gelöscht!';
-									}
-								$.confirm({
-									title: 'Wirklich löschen?',
-									content: content,
-									type: 'red',
-									buttons: {   
-									ok: {
-										text: \"ok!\",
-										btnClass: 'btn-primary',
-										keys: ['enter'],
-										action: function(){
-											jQuery.ajax({
-												url: \"inc/delete.php?del_\"+option+\"=1\",
-												data: {	\"pk\":pk,
-														\"table\":table
-													},
-												type: \"POST\",
-												success:function(data){
-													console.log(data);
-													location.reload();
-													},
-												error:function ()
-													{
-													}
-												});
-											}
-										},
-									cancel:	
-										{
-											text: \"abbrechen!\",
-											action: function(){}
-										}
-									}
-								});	
-							});	
-						</SCRIPT>"; 
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";
-		echo "</div>";
-}	 */
 
 //Profil bearbeiten
 function profil_edit(){

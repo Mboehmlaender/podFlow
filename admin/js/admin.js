@@ -601,7 +601,7 @@ $(document).ready(function(){
 		{
 			$("#export_cat_options_"+pk).toggle("slow");
 		}
-
+		
 		if($(this).attr('type') == 'checkbox')
 			{
 				if($(this).is(':checked'))

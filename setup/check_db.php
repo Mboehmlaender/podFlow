@@ -10,6 +10,23 @@ function clearStoredResults(){
         } while ($con->more_results() && $con->next_result());
 }
 
+if(isset($_GET['update_to_101'])){
+	require('../config/dbconnect.php');
+	echo "Setze Versionsnummer";
+	$set_version = $_POST['set_version'];
+	$query_version = "UPDATE ".DB_PREFIX."INI SET KEYVALUE = '".$set_version."' WHERE KEYWORD = 'PF_VERSION'";
+	$result = mysqli_multi_query($con,$query_version);
+		if(!$result)
+			{
+				echo " --> <span style='color:red'>FEHLER</span>";
+				printf(mysqli_error($con));
+				return;
+			}
+		else
+			{
+				echo " --> <span style='color:green'>OK!</span><br>";
+			}	
+}
 
 if(isset($_GET['check_connection'])){
 
@@ -428,7 +445,7 @@ if(isset($_GET['create_database'])){
 		echo "Befülle die INI-Tabelle";
 		
 		$query_ini= "INSERT INTO `".$database_prefix."ini` (`KEYWORD`, `SETTING`, `KEYVALUE`, `INFO`) VALUES
-			('PF_VERSION', '0', '1.0.0.', 'Alpaca'),
+			('PF_VERSION', '0', '1.0.1.', 'Alpaca'),
 			('CATEGORY_VISIBLE', '1', 'fas fa-eye', 'Sichtbar'),
 			('CATEGORY_VISIBLE', '0', 'fas fa-eye-slash', 'Nicht sichtbar'),
 			('ALLOW_TOPICS', '1', 'fas fa-bars', 'Themen'),
