@@ -264,7 +264,7 @@ function own_entries($userid){
 	echo "<div class='col-12'>";
 	echo "<div class='tile'>";
 	echo "<div class='row'>";
-	echo "<div class='col-4'>";
+	echo "<div class='col-12 col-md-6'>";
 			echo "<div class='form-group'>";
 				echo "<select class='form-control' id='set_podcast'>";
 					if(getPermission($_SESSION['userid']) !== 1)
@@ -285,7 +285,7 @@ function own_entries($userid){
 				echo "</select>";
 		echo "</div>";
 		echo "</div>";
-		echo "<div class='col-4'>";
+		echo "<div class='col-12 col-md-6'>";
 			echo "<div class='form-group'>";
 				echo "<select class='form-control' id='set_episode'>";
 					if(getPermission($_SESSION['userid']) == 1)
