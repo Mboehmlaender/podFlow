@@ -308,30 +308,32 @@ function own_entries($userid){
 		echo "</div>";
 	echo "</div>";
 	echo "<hr>";
-	echo "<div class='row'>";
-		echo "<div class='col-5 lead' style='font-weight: bold'>";
+/* 	echo "<div class='row'>";
+		echo "<div class='col-6 lead' style='font-weight: bold'>";
 			echo "Beitrag";
 		echo "</div>";
-		echo "<div class='col-2 lead' style='font-weight: bold'>";
-			echo "Podcast";
-		echo "</div>";
-		echo "<div class='col-5 lead' style='font-weight: bold'>";
+		echo "<div class='col-6 lead' style='font-weight: bold'>";
 			echo "Episode";
 		echo "</div>";
 	echo "</div>";
-	echo "<hr>";
-	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR,".DB_PREFIX."links.REIHENF FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
+	echo "<hr>"; */
+	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
 	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
 	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
 	{
 	echo "<div class='row lead episodes' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
-		echo "<div class='col-5'>";
+		if($sql_own_entries_row['DONE'] === '1')
+		{
+			$done = " style='color:green'";
+		}
+		else
+		{
+			$done = " style='color:red' ";
+		}
+		echo "<div class='col-md-6 col-12' ".$done.">";
 			echo $sql_own_entries_row['DESCR'];
 		echo "</div>";
-		echo "<div class='col-2'>";
-			echo $sql_own_entries_row['SHORT'];
-		echo "</div>";
-		echo "<div class='col-5'>";
+		echo "<div class='col-md-6 col-12'>";
 			echo "<div class='form-group'>";
 				echo "<select class='form-control' id='change_episode'>";
 					if(getPermission($_SESSION['userid']) !== 1)
@@ -358,7 +360,7 @@ function own_entries($userid){
 							{
 								echo "selected disabled";
 							}
-						echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
+						echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
 					}
 					
 				echo "</select>";
