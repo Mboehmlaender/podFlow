@@ -445,7 +445,7 @@ if(isset($_GET['create_database'])){
 		echo "Befülle die INI-Tabelle";
 		
 		$query_ini= "INSERT INTO `".$database_prefix."ini` (`KEYWORD`, `SETTING`, `KEYVALUE`, `INFO`) VALUES
-			('PF_VERSION', '0', '1.0.0.', 'Alpaca'),
+			('PF_VERSION', '0', '1.0.1.', 'Alpaca'),
 			('CATEGORY_VISIBLE', '1', 'fas fa-eye', 'Sichtbar'),
 			('CATEGORY_VISIBLE', '0', 'fas fa-eye-slash', 'Nicht sichtbar'),
 			('ALLOW_TOPICS', '1', 'fas fa-bars', 'Themen'),
