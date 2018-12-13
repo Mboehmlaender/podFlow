@@ -309,42 +309,56 @@ function own_entries($userid){
 	echo "</div>";
 	echo "<hr>";
 	echo "<div class='row'>";
-		echo "<div class='col-7 lead' style='font-weight: bold'>";
+		echo "<div class='col-5 lead' style='font-weight: bold'>";
 			echo "Beitrag";
+		echo "</div>";
+		echo "<div class='col-2 lead' style='font-weight: bold'>";
+			echo "Podcast";
 		echo "</div>";
 		echo "<div class='col-5 lead' style='font-weight: bold'>";
 			echo "Episode";
 		echo "</div>";
 	echo "</div>";
 	echo "<hr>";
-	$sql_own_entries = "SELECT ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR,".DB_PREFIX."links.REIHENF FROM ".DB_PREFIX."links WHERE ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF FROM ".DB_PREFIX."topics WHERE ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
+	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR,".DB_PREFIX."links.REIHENF FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
 	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
 	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
 	{
 	echo "<div class='row lead episodes' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
-		echo "<div class='col-7'>";
+		echo "<div class='col-5'>";
 			echo $sql_own_entries_row['DESCR'];
+		echo "</div>";
+		echo "<div class='col-2'>";
+			echo $sql_own_entries_row['SHORT'];
 		echo "</div>";
 		echo "<div class='col-5'>";
 			echo "<div class='form-group'>";
 				echo "<select class='form-control' id='change_episode'>";
 					if(getPermission($_SESSION['userid']) !== 1)
 					{
-						$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
+						$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
 					}
 					else
 					{
-						$sql_select_episodes2 = "SELECT ID, TITEL, DATE FROM ".DB_PREFIX."episoden";
+						$sql_select_episodes2 = "SELECT ID, TITEL, DATE, DONE FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
 					}
 					$sql_select_episodes_result2 = mysqli_query($con, $sql_select_episodes2);
 					while($sql_select_episodes_row2 = mysqli_fetch_assoc($sql_select_episodes_result2))
 					{
+						if($sql_select_episodes_row2['DONE'] == '1')
+						{
+							$done = " (abgeschlossen) ";
+						}
+						else
+						{
+							$done = "";
+						}
 						echo "<option ";
 							if($sql_select_episodes_row2['ID'] == $sql_own_entries_row['ID_EPISODE'])
 							{
 								echo "selected disabled";
 							}
-						echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE']))."</option>";
+						echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
 					}
 					
 				echo "</select>";
@@ -356,6 +370,7 @@ function own_entries($userid){
 	echo "</div>";
 	
 	echo "<script>
+	
 		$(\"#set_podcast\").on('change', function(){
 			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
 			$('#set_episode option:first').prop('selected', true);		
