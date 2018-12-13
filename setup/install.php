@@ -305,11 +305,11 @@
 								</div>
 								<div class="form-group">
 									<label for="password">Administrator-Passwort<span style="color:red">*</span></label>
-									<input type="password" class="form-control" id="admin_password" name="admin_password" size="30">
+									<input type="password" class="form-control" id="admin_password" name="admin_password" size="30" maxlength="15">
 								</div>					
 								<div class="form-group">
 									<label for="password">Administrator-Passwort wiederholen<span style="color:red">*</span></label>
-									<input type="password" class="form-control" id="admin_password_repeat" name="admin_password_repeat" size="30">
+									<input type="password" class="form-control" id="admin_password_repeat" name="admin_password_repeat" size="30" maxlength="15">
 								</div>				
 								<div class="form-group">
 									<label for="pc_short">Podcast-Kurzbezeichner<span style="color:red">*</span></label>
