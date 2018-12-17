@@ -329,11 +329,13 @@ function own_entries($userid){
 		{
 			$icon = "topic_icon";
 			$icon_symbol = "<i class='fas fa-bars fa-fw'></i>";
+			$table = "topics";
 		}
 		else
 		{
 			$icon = "link_icon";
 			$icon_symbol = "<i class='fas fa-link fa-fw'></i>";
+			$table = "links";
 		}
 		echo "<div class='col-md-6 col-12' style='margin-top:auto; margin-bottom:auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
 			echo "<div class='".$icon."'>".$icon_symbol."</div>".$sql_own_entries_row['DESCR'];
@@ -347,7 +349,7 @@ function own_entries($userid){
 				else
 				{
 					
-				echo "<select class='form-control' id='change_episode'>";
+				echo "<select table='".$table."' id_entry='".$sql_own_entries_row['ID']."' class='form-control change_episode'>";
 					if(getPermission($_SESSION['userid']) !== 1)
 					{
 						$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
@@ -389,6 +391,29 @@ function own_entries($userid){
 	
 	echo "<script>
 	
+		$(\".change_episode\").on('change', function(){
+			
+			var id_entry = $(this).attr('id_entry');
+			var episode_new = $(\"option:selected\", this).attr('id_episode');
+			var table = $(this).attr('table');
+							$.ajax({
+								url: \"inc/update.php?set_episode_new=1\",
+								type: \"POST\",
+								data: {	\"id_entry\":id_entry, 
+										\"table\":table, 
+										\"episode_new\":episode_new,
+									},								
+								success: function(data)
+									{
+										console.log(data);
+									},
+								}); 			
+			$(\"option:selected\", this).attr('disabled', true);
+			$(\"option:selected\", this).attr('selected', true);
+			$(\"option\", this).not(\":selected\").attr('disabled', false);
+			$(\"option\", this).not(\":selected\").attr('selected', false);
+		});
+		
 		$(\"#set_podcast\").on('change', function(){
 			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
 			$('#set_episode option:first').prop('selected', true);		

@@ -111,7 +111,27 @@ if(isset($_POST)){
 		mysqli_multi_query($con, $update);
 		echo $update;
 		return;
- 		}					
+ 		}		
+
+	//Episode eines Beitrags ändern
+	if(isset($_GET['set_episode_new'])){
+		$episode_new = $_POST['episode_new'];
+		$table = $_POST['table'];
+		$id_entry = $_POST['id_entry'];
+		
+		if($table == 'topics')
+		{
+			$update = "UPDATE ".DB_PREFIX."topics SET ID_EPISODE = '$episode_new' WHERE ID='$id_entry' ;";
+			$update .= "UPDATE ".DB_PREFIX."links SET ID_EPISODE = '$episode_new' WHERE ID_TOPIC='$id_entry' ";
+		}
+		else
+		{
+			$update = "UPDATE ".DB_PREFIX."links SET ID_EPISODE = '$episode_new' WHERE ID='$id_entry' ;";
+		}
+		mysqli_multi_query($con, $update);
+		echo $update;
+		return;
+ 		}			
 	
 	
 /* 	//Kategorien der Themen/Beuiträge ändern
