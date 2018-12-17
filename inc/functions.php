@@ -199,6 +199,13 @@ function dashboard(){
 				}
 		}
 	echo "<div class='".$col."'>";
+		echo "<a style='text-decoration: none' href='links.php'><div class='widget-small primary coloured-icon'><i class='icon fas fa-bookmark fa-3x fa-fw'></i>";
+			echo "<div class='info'>";
+				echo "<h4  style='text-transform: none'>Meine Beiträge</h4>";
+			echo "</div>";
+		echo "</div></a>";
+	echo "</div>";
+	echo "<div class='".$col."'>";
 		echo "<a style='text-decoration: none' href='profile.php'><div class='widget-small primary coloured-icon'><i class='icon fas fa-user fa-3x fa-fw'></i>";
 			echo "<div class='info'>";
 				echo "<h4  style='text-transform: none'>Mein Profil</h4>";
@@ -248,6 +255,7 @@ function sidebar(){
 							echo "<li><a class='app-menu__item' id='menu_export' href='export.php'><i class='app-menu__icon fas fa-upload'></i><span class='app-menu__label'>Export</span></a></li>";
 						}
 				}
+			echo "<li><a class='app-menu__item' id='menu_links' href='links.php'><i class='app-menu__icon fas fa-bookmark fa-lg'></i><span class='app-menu__label'>Meine Beiträge</span></a></li>";
 			echo "<li><a class='app-menu__item' id='menu_profile' href='profile.php'><i class='app-menu__icon fas fa-user'></i><span class='app-menu__label'>Mein Profil</span></a></li>";
 			if(getPermission($_SESSION['userid']) > 1)
 				{
