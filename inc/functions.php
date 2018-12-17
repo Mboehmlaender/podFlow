@@ -331,7 +331,7 @@ function own_entries($userid){
 	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
 	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
 	{
-	echo "<li class='topic_links_item episodes' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
+	echo "<li class='topic_links_item episodes active_content' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
 	echo "<div class='row lead'>";
 		if($sql_own_entries_row['IS_TOPIC'] == 1)
 		{
@@ -393,14 +393,47 @@ function own_entries($userid){
 	echo "<li>";
 	}
 		echo "</ul>";
-	echo "<ul id='pagin'>";
+	echo "<nav aria-label='Page navigation example'>";
+	echo "<ul class='pagination justify-content-center' id='pagin'>";
          
 	echo "</ul>";
+	echo "</nav>";
 	echo "</div>";
 	echo "</div>";
 	echo "</div>";
 	
 	echo "<script>
+
+	
+	pageSize = 15;
+	pageCountAll =  $(\".active_content\").length / pageSize;
+
+	function paginate(count){
+
+			for(var i = 0 ; i<count;i++){
+				
+			   $(\"#pagin\").append('<li class=\"page-item\"><a class=\"page-link\" href=\"#\">'+(i+1)+'</a></li></nav> ');
+			 }
+				$(\"#pagin li\").first().find(\"a\").addClass(\"current\")
+			showPage = function(page) {
+				$(\".active_content\").hide();
+				$(\".active_content\").each(function(n) {
+					if (n >= pageSize * (page - 1) && n < pageSize * page)
+						$(this).show();
+				});        
+			}
+			
+			showPage(1);
+
+			$(\"#pagin li a\").click(function() {
+				$(\"#pagin li a\").removeClass(\"current\");
+				$(this).addClass(\"current\");
+				showPage(parseInt($(this).text())) 
+			});
+	}		
+	paginate(pageCountAll);
+	
+		
 
 		$(\".change_episode\").on('change', function(){
 			
@@ -432,43 +465,69 @@ function own_entries($userid){
 		});
 		
 		$(\"#set_podcast\").on('change', function(){
+			$(\"#pagin\").empty();
 			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
 			$('#set_episode option:first').prop('selected', true);		
 			if($(\"option:selected\", this).attr('id_podcast') == 'all')
 			{
+				$(\".episodes\").addClass('active_content');
 				$(\"[id_podcast_menu]\").show();
 				$(\".episode_menu_all\").attr('id_podcast_menu', 'all');
 				$('.episodes').show(\"fast\");		
+				var pageCount =  $(\".active_content\").length / pageSize;
 			}
 			
 			else
 			{
+				$(\".episodes\").removeClass('active_content');
+				
 				$('.episode_menu').not(\"[id_podcast_menu='\"+id_podcast+\"']\").hide();
 				$(\"[id_podcast_menu='\"+id_podcast+\"']\").show();
 				$(\".episode_menu_all\").attr('id_podcast_menu', id_podcast);				
 
 				$('.episodes').not(\"[id_podcast_list='\"+id_podcast+\"']\").hide(\"fast\");
 				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
+				
+				$(\"[id_podcast_list='\"+id_podcast+\"']\").addClass('active_content');
+				var pageCount =  $(\".active_content\").length / pageSize;
+
+
 			}
+			 paginate(pageCount);
+	
 			
 		});
 		
 		$(\"#set_episode\").on('change', function(){
+			$(\"#pagin\").empty();
 			var id_podcast = $(\"option:selected\", this).attr('id_podcast_menu');
 			var id_episode = $(\"option:selected\", this).attr('id_episode');
 			if((id_episode === 'all') && (id_podcast ==='all'))
 			{
+				$(\".episodes\").addClass('active_content');
 				$(\"[id_podcast_list]\").show(\"fast\");
+				var pageCount =  $(\".active_content\").length / pageSize;
 			}
 			else if((id_episode === 'all') && (id_podcast !=='all'))
 			{
+				$(\".episodes\").removeClass('active_content');
 				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
+				$(\"[id_podcast_list='\"+id_podcast+\"']\").addClass('active_content');
+				var pageCount =  $(\".active_content\").length / pageSize;
 			}
 			else
 			{
+				$(\".episodes\").removeClass('active_content');
 				$('.episodes').not(\"[id_episode_list='\"+id_episode+\"']\").hide(\"fast\");
 				$(\"[id_episode_list='\"+id_episode+\"']\").show(\"fast\");
+				$(\"[id_episode_list='\"+id_episode+\"']\").addClass('active_content');
+				var pageCount =  $(\".active_content\").length / pageSize;
 			}
+			
+			 			 paginate(pageCount);
+
+			
+			
 		});
 	</script>";
 	
