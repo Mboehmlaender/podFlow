@@ -412,7 +412,7 @@ function own_entries($userid){
 
 			for(var i = 0 ; i<count;i++){
 				
-			   $(\"#pagin\").append('<li class=\"page-item\"><a class=\"page-link\" href=\"#\">'+(i+1)+'</a></li></nav> ');
+			   $(\"#pagin\").append('<li class=\"page-item\"><div class=\"page-link\" >'+(i+1)+'</div></li></nav> ');
 			 }
 				$(\"#pagin li\").first().find(\"a\").addClass(\"current\")
 			showPage = function(page) {
@@ -425,8 +425,8 @@ function own_entries($userid){
 			
 			showPage(1);
 
-			$(\"#pagin li a\").click(function() {
-				$(\"#pagin li a\").removeClass(\"current\");
+			$(\"#pagin li div\").click(function() {
+				$(\"#pagin li div\").removeClass(\"current\");
 				$(this).addClass(\"current\");
 				showPage(parseInt($(this).text())) 
 			});
