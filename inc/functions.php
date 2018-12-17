@@ -393,12 +393,15 @@ function own_entries($userid){
 	echo "<li>";
 	}
 		echo "</ul>";
+	echo "<ul id='pagin'>";
+         
+	echo "</ul>";
 	echo "</div>";
 	echo "</div>";
 	echo "</div>";
 	
 	echo "<script>
-	
+
 		$(\".change_episode\").on('change', function(){
 			
 			var id_entry = $(this).attr('id_entry');
