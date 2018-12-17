@@ -277,11 +277,11 @@ function own_entries($userid){
 				echo "<select class='form-control' id='set_podcast'>";
 					if(getPermission($_SESSION['userid']) !== 1)
 					{
-						$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX.".view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid;
+						$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX.".view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
 					}
 					else
 					{
-						$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast";
+						$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast ORDER BY ID";
 					}
 					$sql_select_podcast_result = mysqli_query($con, $sql_select_podcast);
 						echo "<option id_podcast='all' selected>Alle Podcasts</option>";
@@ -327,7 +327,7 @@ function own_entries($userid){
 	echo "<hr>"; */
 		echo "<ul class='topic_links'>";
 
-	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, 0 AS IS_TOPIC, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE (".DB_PREFIX."links.DONE IS NULL OR ".DB_PREFIX."links.DONE = '') AND ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE (".DB_PREFIX."topics.DONE IS NULL OR ".DB_PREFIX."topics.DONE = '') AND ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
+	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, 0 AS IS_TOPIC, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE (".DB_PREFIX."links.DONE IS NULL OR ".DB_PREFIX."links.DONE = '') AND ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE (".DB_PREFIX."topics.DONE IS NULL OR ".DB_PREFIX."topics.DONE = '') AND ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_PODCAST, ID_EPISODE, REIHENF";
 	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
 	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
 	{
@@ -414,6 +414,12 @@ function own_entries($userid){
 								success: function(data)
 									{
 										console.log(data);
+										$.gritter.add({
+											title: \"OK!\",
+											text: \"Beitrag wurde verschoben\",
+											image: \"../images/confirm.png\",
+											time: \"1000\"
+										});		
 									},
 								}); 			
 			$(\"option:selected\", this).attr('disabled', true);
