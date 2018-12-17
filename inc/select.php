@@ -113,11 +113,12 @@ if(isset($_GET['export_list'])){
 																	
 																	array_push($stringarray_2, $descr2);	
 																} 
- 															$descr .= implode($sep,$stringarray_2);
+ 															$descr .= implode(" | ",$stringarray_2);
  																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
+																		$count++;
 																		$descr .= "<sup>".$count."</sup>";
-																	$descr_notice = "<span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span>";
+																	$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
 																	} 
 																else
 																{
@@ -161,15 +162,16 @@ if(isset($_GET['export_list'])){
 																	$descr2 .= $data_type_close;
 																	array_push($stringarray_2, $descr2);	
 																} 
-															$descr .= implode($sep,$stringarray_2);
+															$descr .= implode(" | ",$stringarray_2);
 															$descr .= $close_type_close;
 
 															$descr .= $data_type_close;
 															
   																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
+																	{	
+																		$count++;
 																		$descr .= "<sup>".$count."</sup>";
-																	$descr_notice = "<span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span>";
+																	$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
 																	}  
 																else
 																{
@@ -199,8 +201,10 @@ if(isset($_GET['export_list'])){
 															}
   																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
 																	{
+																																				$count++;
+
 																		$descr .= "<sup>".$count."</sup>";
-																	$descr_notice = "<span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span>";
+																	$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
 																	}  
 																else
 																{
@@ -210,7 +214,6 @@ if(isset($_GET['export_list'])){
 																array_push($stringarray_notice, $descr_notice);	
 						
 													}
-													$count++;
 												}
 												else
 												{
@@ -340,7 +343,7 @@ if(isset($_GET['export_list'])){
 
 										echo implode($sep,$stringarray);
 										echo "";
-										echo implode("<p>",$stringarray_notice);
+										echo implode($stringarray_notice);
 										echo $close_type_close;
 										echo $cat_title_close;
 									}
