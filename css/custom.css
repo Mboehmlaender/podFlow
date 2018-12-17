@@ -104,6 +104,23 @@ li.topic_links_item {
 	float:left;
 	margin: 0 5px 0 0;
 }
+
+.topic_icon{
+	color: #fff;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 0.7em;
+    text-align: center;
+    background-color: #5bc0de ;
+    z-index: 100;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+	float:left;
+	margin: 0 5px 0 0;
+}
 .container{
 	width: 100%;
 	max-width:100%;

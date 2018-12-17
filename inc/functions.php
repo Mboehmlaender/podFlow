@@ -317,24 +317,36 @@ function own_entries($userid){
 		echo "</div>";
 	echo "</div>";
 	echo "<hr>"; */
-	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
+		echo "<ul class='topic_links'>";
+
+	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, 0 AS IS_TOPIC, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE (".DB_PREFIX."links.DONE IS NULL OR ".DB_PREFIX."links.DONE = '') AND ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE (".DB_PREFIX."topics.DONE IS NULL OR ".DB_PREFIX."topics.DONE = '') AND ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_EPISODE, REIHENF";
 	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
 	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
 	{
-	echo "<div class='row lead episodes' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
-		if($sql_own_entries_row['DONE'] === '1')
+	echo "<li class='topic_links_item episodes' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
+	echo "<div class='row lead'>";
+		if($sql_own_entries_row['IS_TOPIC'] == 1)
 		{
-			$done = " style='color:green'";
+			$icon = "topic_icon";
+			$icon_symbol = "<i class='fas fa-bars fa-fw'></i>";
 		}
 		else
 		{
-			$done = " style='color:red' ";
+			$icon = "link_icon";
+			$icon_symbol = "<i class='fas fa-link fa-fw'></i>";
 		}
-		echo "<div class='col-md-6 col-12' ".$done.">";
-			echo $sql_own_entries_row['DESCR'];
+		echo "<div class='col-md-6 col-12' style='margin-top:auto; margin-bottom:auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
+			echo "<div class='".$icon."'>".$icon_symbol."</div>".$sql_own_entries_row['DESCR'];
 		echo "</div>";
-		echo "<div class='col-md-6 col-12'>";
-			echo "<div class='form-group'>";
+		echo "<div class='col-md-6 col-12' style='margin-top:5px; margin-bottom:5px'>";
+			echo "<div style='margin-top:auto; margin-bottm:auto;'>";
+				if($sql_own_entries_row['DONE'] === '1')
+				{
+					echo "<span style='color:red'>Eintrag wurde bereits gecheckt!</span>";
+				}
+				else
+				{
+					
 				echo "<select class='form-control' id='change_episode'>";
 					if(getPermission($_SESSION['userid']) !== 1)
 					{
@@ -364,9 +376,13 @@ function own_entries($userid){
 					}
 					
 				echo "</select>";
-		echo "</div>";		echo "</div>";
+					}
+		echo "</div>";		
+		echo "</div>";
 	echo "</div>";
+	echo "<li>";
 	}
+		echo "</ul>";
 	echo "</div>";
 	echo "</div>";
 	echo "</div>";
@@ -380,7 +396,7 @@ function own_entries($userid){
 			{
 				$(\"[id_podcast_menu]\").show();
 				$(\".episode_menu_all\").attr('id_podcast_menu', 'all');
-				$('.episodes').show(\"slow\");		
+				$('.episodes').show(\"fast\");		
 			}
 			
 			else
@@ -389,8 +405,8 @@ function own_entries($userid){
 				$(\"[id_podcast_menu='\"+id_podcast+\"']\").show();
 				$(\".episode_menu_all\").attr('id_podcast_menu', id_podcast);				
 
-				$('.episodes').not(\"[id_podcast_list='\"+id_podcast+\"']\").hide(\"slow\");
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"slow\");
+				$('.episodes').not(\"[id_podcast_list='\"+id_podcast+\"']\").hide(\"fast\");
+				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
 			}
 			
 		});
@@ -400,16 +416,16 @@ function own_entries($userid){
 			var id_episode = $(\"option:selected\", this).attr('id_episode');
 			if((id_episode === 'all') && (id_podcast ==='all'))
 			{
-				$(\"[id_podcast_list]\").show(\"slow\");
+				$(\"[id_podcast_list]\").show(\"fast\");
 			}
 			else if((id_episode === 'all') && (id_podcast !=='all'))
 			{
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"slow\");
+				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
 			}
 			else
 			{
-				$('.episodes').not(\"[id_episode_list='\"+id_episode+\"']\").hide(\"slow\");
-				$(\"[id_episode_list='\"+id_episode+\"']\").show(\"slow\");
+				$('.episodes').not(\"[id_episode_list='\"+id_episode+\"']\").hide(\"fast\");
+				$(\"[id_episode_list='\"+id_episode+\"']\").show(\"fast\");
 			}
 		});
 	</script>";

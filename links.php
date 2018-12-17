@@ -25,7 +25,7 @@
      <div class="app-title">
        <div>
          <h1>Meine Beiträge</h1>
-         <p>Meine Beiträge der gewählten Episode</p>
+         <p>Alle nicht gecheckten Beiträge können hier einer anderen Episode zugewiesen werden</p>
        </div>
        <ul class="app-breadcrumb breadcrumb">
          <li class="breadcrumb-item"><i class="fas fa-bookmark fa-lg"></i></li>
