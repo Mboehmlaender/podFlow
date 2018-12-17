@@ -438,6 +438,7 @@ function own_entries($userid){
 		$(\".change_episode\").on('change', function(){
 			
 			var id_entry = $(this).attr('id_entry');
+			var episode_current = $(\"option:disabled\", this).attr('id_episode');
 			var episode_new = $(\"option:selected\", this).attr('id_episode');
 			var table = $(this).attr('table');
 							$.ajax({
@@ -453,7 +454,7 @@ function own_entries($userid){
 										$.gritter.add({
 											title: \"OK!\",
 											text: \"Beitrag wurde verschoben\",
-											image: \"../images/confirm.png\",
+											image: \"images/confirm.png\",
 											time: \"1000\"
 										});		
 									},
@@ -462,6 +463,15 @@ function own_entries($userid){
 			$(\"option:selected\", this).attr('selected', true);
 			$(\"option\", this).not(\":selected\").attr('disabled', false);
 			$(\"option\", this).not(\":selected\").attr('selected', false);
+			$(this).closest(\"li\").attr('id_episode_list', episode_new);
+			if(episode_current !== episode_new && $(\"#set_episode\").attr('id_episode') !== 'all')
+				{
+					$(this).closest(\"li\").removeClass('active_content');
+					$(this).closest(\"li\").hide(\"fast\");
+					$(\"#pagin\").empty();
+					var pageCount =  $(\".active_content\").length / pageSize;
+					paginate(pageCount)
+					}
 		});
 		
 		$(\"#set_podcast\").on('change', function(){
