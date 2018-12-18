@@ -65,7 +65,7 @@
 							function step_1(){ 
 							?>
 								<div class="tile-title">
-									Willkommen bei der Installation von podflow!
+									Willkommen bei der Installation von podflow v1.2!
 								</div>
 								<div class="tile-body">
 									<p class="lead">Im Folgenden wird geprüft, ob dein Server die Voraussetzungen für die Installation erfüllt.</p>

@@ -6,17 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2018-09-17
 ### Changed
-- Neues Feld "ID_PODCAST" in Tabelle "categories"
-- "view_episode_categories" um "CATEGORIES_ID_PODCAST" erweitert
-- In "view_episode_categories" "COLL" entfernt
-- In "view_episode_categories" "CATEGORIES_ALLOW_TOPICS" entfernt
-- "view_episode_categories" um "EXPORT_CAT" erweitert
-- "view_episode_categories" um "ID_EXPORT_OPTION" erweitert
-- "view_episode_categories" um "EXPORT_TITLE_CAT" erweitert
-- "view_episode_categories" um "EXPORT_URL_LINKS" erweitert
-- In "view_links" "CATEGORIES_ALLOW_TOPICS" entfernt
-- In "view_topics" "CATEGORIES_ALLOW_TOPICS" entfernt
 
+- Neues Feld "ID_PODCAST" in Tabelle "categories"
+ 
 - "categories" um "EXPORT_CAT" erweitert
 - "categories" um "EXPORT_TITLE_CAT" erweitert
 - "categories" um "EXPORT_TITLE_TOPICS" erweitert
@@ -24,6 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - "categories" um "EXPORT_NOTICE" erweitert
 - "categories" um "ID_EXPORT_OPTIONS" erweitert
 - In "categories" "COLL" entfernt
+
+- In "view_episode_categories" "COLL" entfernt
+- In "view_episode_categories" "CATEGORIES_ALLOW_TOPICS" entfernt
+
+
+- "view_episode_categories" um "CATEGORIES_ID_PODCAST" erweitert
+- "view_episode_categories" um "EXPORT_CAT" erweitert
+- "view_episode_categories" um "ID_EXPORT_OPTION" erweitert
+- "view_episode_categories" um "EXPORT_TITLE_CAT" erweitert
+- "view_episode_categories" um "EXPORT_URL_LINKS" erweitert
+
+- In "view_links" "CATEGORIES_ALLOW_TOPICS" entfernt
+
+- In "view_topics" "CATEGORIES_ALLOW_TOPICS" entfernt
 
 - Neue Tabelle "export_options" angelegt
 
