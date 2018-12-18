@@ -77,36 +77,75 @@
 							function update_step_2(){
 								?>
 							<div class="tile-title">
-								Versionsnummer setzen
+								podflow! Update
 							</div>
 							<div class="tile-body">
+								<p class="lead">Im Folgenden wird deine podflow-Instanz auf die neueste Version upgedatet.</p>
+								<p class="lead">Bitte mache vor dem Update eine komplette Sicherung deiner Podflow-Datenbank! </p>
+								<p class="lead" style="color:red; font-weight:bold">Die Datenbank wird im Updateprozess nicht gesichert!</p>
+								<hr>
+								<?php
+								require('../config/dbconnect.php');
+								$sql = "SELECT * FROM ".DB_PREFIX."ini WHERE KEYWORD = 'PF_VERSION' AND SETTING = '0'";
+								$res = mysqli_query($con, $sql);
+								$row = mysqli_fetch_row($res);
+								echo "Aktuell installiert: ".$row[3]." \"".$row[4]."\"</p>";
+								?>
 								<div class="form-group">
 									<div id="result_db_operation">
+									
 									</div>
 									<div class="tile-footer">
-									</div>
 									<div id="update_button">
-										<button class="btn btn-primary" type="button" id="submit" name="submit">Update!</button>
+										<button class="btn btn-primary" version="<?php echo $row[3] ?>" type="button" id="submit" name="submit">Update!</button>
+									</div>
 									</div>
 								</div>
 							</div>
 							  
 							<script>							
-								$("#submit").on("click", function(){	
-				
-									$.ajax({
-										url: 'check_db.php?update_to_120=1',
+								$("#submit").on("click", function(){									
+								var version = $(this).attr('version');
+									if((version == '1.0.0.') || (version == '1.0.1.'))
+									{
+										var url = 'check_db.php?update_101_to_120=1';
+									}
+ 									$.ajax({
+										url: url,
 										type: 'POST',
-										beforeSend: function() { $('#result_db_operation').html('<i class=\"fas fa-spinner fa-pulse\"></i> Datenbankoperationen werden ausgeführt'); },
+										beforeSend: function() { $('#result_db_operation').html('<i class=\"fas fa-spinner fa-pulse\"></i> Datenbankoperationen werden ausgeführt'); $("#submit").prop('disabled', true);},
 										data: {},
 												success: function(data)
 													{
 														$("#result_db_operation").html(data);
-														$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='../login.php'\" name='login'>Zum Log-In!</button>");
+														$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='update.php?update_step=3'\" name='login'>Weiter</button>");
 													},
-										}); 			
+										});  		
 								});
 							</script>
+							<?php
+							}
+							function update_step_3(){
+								?>
+							<div class="tile-title">
+								podflow! Update
+							</div>
+							<div class="tile-body">
+								<p class="lead">Im Folgenden wird deine podflow-Instanz auf die neueste Version upgedatet.</p>
+								<p class="lead">Bitte mache vor dem Update eine komplette Sicherung deiner Podflow-Datenbank! </p>
+								<p class="lead" style="color:red; font-weight:bold">Die Datenbank wird im Updateprozess nicht gesichert!</p>
+								<hr>
+								<div class="form-group">
+									<div id="result_db_operation">
+									
+									</div>
+									<div class="tile-footer">
+									<!-- <div id="update_button">
+										<button class="btn btn-primary" version="<?php echo $row[3] ?>" type="button" id="submit" name="submit">Update!</button>
+									</div> !-->
+									</div>
+								</div>
+							</div>
 							<?php
 							}
 							?>

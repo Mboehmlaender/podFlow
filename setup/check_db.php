@@ -29,7 +29,7 @@ if(isset($_GET['update_to_101'])){
 			}	
 }
 
-if(isset($_GET['update_to_120'])){
+if(isset($_GET['update_101_to_120'])){
 	require('../config/dbconnect.php');
     global $con;
 	echo "Erzeuge neue Tabellen";
@@ -291,8 +291,9 @@ if(isset($_GET['update_to_120'])){
 		
 		//Befüllen der INI-Tabelle
 				
-			$query_ini = "DELETE FROM `ini` WHERE `ini`.`KEYWORD` = 'COLL';";
-			$query_ini .= "DELETE FROM `ini` WHERE `ini`.`KEYWORD` = 'ALLOW_TOPICS';";
+			$query_ini = "DELETE FROM `".DB_PREFIX."ini` WHERE `ini`.`KEYWORD` = 'COLL';";
+			$query_ini .= "DELETE FROM `".DB_PREFIX."ini` WHERE `ini`.`KEYWORD` = 'ALLOW_TOPICS';";
+			$query_ini .= "UPDATE `".DB_PREFIX."ini` SET KEYVALUE = '1.2.0.', INFO='Barracuda' WHERE `".DB_PREFIX."ini`.`KEYWORD` = 'PF_VERSION';";
 
 			clearStoredResults();					
 			$result = mysqli_multi_query($con,$query_ini);
@@ -304,8 +305,11 @@ if(isset($_GET['update_to_120'])){
 				}
 			else
 				{
-					echo " --> <span style='color:green'>OK!</span><br>";
-				}					
+					echo " --> <span style='color:green'>OK!</span><p>";
+				}	
+
+	echo "<p class='lead' style='color:green'>Aktualisiert auf Version 1.2.0. \"Barracuda\"</p>";
+	echo "<p class='lead' >Bitte auf \"Weiter\" drücken, um die Konfiguration vorzunehmen</p>";
 }
 
 if(isset($_GET['check_connection'])){
