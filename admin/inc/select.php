@@ -36,6 +36,7 @@ if(isset($_GET['check_version']))
 		{
 			echo "<p style='color:red'>Eine neuere Version ist verfügbar!</p>";
 			echo "<a style='text-decoration: none;' href='https://podflow.de' target='_blank'>Download</a></p>";
+			echo "<p>Bitte beachte die Installationshinweise unter <a href='https://podflow.de/installation/' target='_blank'>https://podflow.de/installation/</a></p>";
 		}
 
 	return;
