@@ -93,14 +93,12 @@
 							  
 							<script>							
 								$("#submit").on("click", function(){	
-									var set_version = "1.0.1.";
 				
 									$.ajax({
-										url: 'check_db.php?update_to_101=1',
+										url: 'check_db.php?update_to_120=1',
 										type: 'POST',
 										beforeSend: function() { $('#result_db_operation').html('<i class=\"fas fa-spinner fa-pulse\"></i> Datenbankoperationen werden ausgeführt'); },
-										data: {	set_version:set_version,
-												},
+										data: {},
 												success: function(data)
 													{
 														$("#result_db_operation").html(data);
