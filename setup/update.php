@@ -48,6 +48,9 @@
 								case '2':
 								update_step_2();
 								break;
+								case '3':
+								update_step_3();
+								break;
 								default:
 								update_step_1();
 							}
@@ -131,10 +134,56 @@
 								podflow! Update
 							</div>
 							<div class="tile-body">
-								<p class="lead">Im Folgenden wird deine podflow-Instanz auf die neueste Version upgedatet.</p>
-								<p class="lead">Bitte mache vor dem Update eine komplette Sicherung deiner Podflow-Datenbank! </p>
-								<p class="lead" style="color:red; font-weight:bold">Die Datenbank wird im Updateprozess nicht gesichert!</p>
-								<hr>
+							<?php
+							require('../config/dbconnect.php');
+								$sql_select_categories = "SELECT * FROM ".DB_PREFIX."categories ORDER BY ID";
+								$sql_select_categories_result = mysqli_query($con, $sql_select_categories);
+								while($sql_select_categories_row = mysqli_fetch_assoc($sql_select_categories_result))
+								{
+									echo "<p style='font-weight:bold'>".$sql_select_categories_row['DESCR'];
+									
+									$sql_select_view_categories = "SELECT DISTINCT ".DB_PREFIX."podcast.SHORT AS SHORT, ".DB_PREFIX."podcast.ID FROM ".DB_PREFIX."view_episode_categories join ".DB_PREFIX."podcast on ".DB_PREFIX."podcast.ID = ".DB_PREFIX."view_episode_categories.EPISODE_ID_PODCAST WHERE ID_CATEGORY =".$sql_select_categories_row['ID'];
+									$sql_select_view_categories_result = mysqli_query($con, $sql_select_view_categories);
+									$sql_select_view_categories_num = mysqli_num_rows($sql_select_view_categories_result);
+									if($sql_select_view_categories_num > 1)
+									{
+										echo " <button class='btn btn-success btn-sm'>Kopieren</button>";
+										echo "<p><span class='lead' style='color:red'>Müsste kopiert werden!</span><p>";
+										$set_podcast_direct = 0;
+									}
+									else
+										
+										{
+										$set_podcast_direct = 1;
+										}
+									while($sql_select_view_categories_row = mysqli_fetch_assoc($sql_select_view_categories_result))
+									{
+										if($set_podcast_direct == 1)
+										{
+											echo " <button class='btn btn-success btn-sm set_podcast' id_cat='".$sql_select_categories_row['ID']."' id_podcast='".$sql_select_view_categories_row['ID']."'>Zuweisen</button>";
+										}
+										echo "<p>".$sql_select_view_categories_row['SHORT'];
+									}
+									
+									echo "<hr>";
+								}
+								echo "<script>
+									$(\".set_podcast\").on('click', function(){
+										var id_podcast = $(this).attr('id_podcast');
+										var id_cat = $(this).attr('id_cat');
+ 									$.ajax({
+										url: 'check_db.php?set_cat_direct=1',
+										type: 'POST',
+										data: {id_podcast:id_podcast, id_cat:id_cat},
+												success: function(data)
+													{
+														console.log(data);
+													},
+										}); 	
+										$(this).remove();
+									});
+								</script>";
+							?>
 								<div class="form-group">
 									<div id="result_db_operation">
 									
