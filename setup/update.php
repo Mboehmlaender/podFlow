@@ -134,8 +134,12 @@
 								podflow! Update
 							</div>
 							<div class="tile-body">
-							<?php
-								echo "<p><button class='btn btn-success copy'>Doppelte Zuweisungen bereinigen</button><p>";
+							<?
+									
+							echo "<p><button class='btn btn-success copy'>Doppelte Zuweisungen bereinigen</button><p>";
+							echo "<div id='result_db_operation'>";
+							echo "</div>";
+							echo "<div id='check_result'>";
 							require('../config/dbconnect.php');
 								$sql_select_categories = "SELECT * FROM ".DB_PREFIX."categories ORDER BY ID";
 								$sql_select_categories_result = mysqli_query($con, $sql_select_categories);
@@ -176,6 +180,7 @@
 									}
 									
 								}
+								echo "</div>";
 								echo "<script>
 									
 									$(\".copy\").on('click', function(){
@@ -186,39 +191,42 @@
 										var descr = $(this).attr('descr');
 										var pc = $(this).attr('id_podcast');
 										$.ajax({
+										beforeSend: function() { $(\"#result_db_operation\").html(\"<i class='fas fa-spinner fa-pulse'></i> Datenbankoperationen werden ausgeführt\"); },
 											url: 'check_db.php?copy_cat=1',
 											type: 'POST',
 											data: {descr:descr, pc:pc, id_podcast_cat:id_podcast_cat},
 													success: function(data)
 														{
 															console.log(data);
+															$(\"#result_db_operation\").html(\"<p class='lead'>Erledigt</p>\");
+															$(\"#next\").attr('disabled', false);
+															
 														},
 											}); 	
 																					
 										});
 											
+										$(\"#check_result\").remove();
 											
 											$(this).remove();
 										
 									});
-										$(\"#step4\").on(\"click\", function(){
-											window.location.href = \"update.php?update_step=4\";
-										});
 								</script>";
 							?>
 											
 
 								<div class="form-group">
 									<div id="footer" class="tile-footer">
-
+										<button class="btn btn-primary" id="next" disabled type="button" onclick='window.location.href="update.php?update_step=4"'>Weiter</button>
 									</div>
 								</div>
 								<script>
 									if($(".multiple_podcast_short").length == 0)
 									{
-										
+
+									$("#check_result").empty().html("<p class='lead'>Keine Anpassung an den Kategorien notwendig!</p>");
 									$(".copy").remove();
-									$(".tile-footer").append("<button class=\"btn btn-primary\" type=\"button\" onclick=\"window.location.href='update.php?update_step=4'\">Weiter</button>");
+									$("#next").attr('disabled', false);
 									
 										
 									}
