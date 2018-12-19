@@ -158,11 +158,13 @@
 										}
 									while($sql_select_view_categories_row = mysqli_fetch_assoc($sql_select_view_categories_result))
 									{
+										echo "<p>".$sql_select_view_categories_row['SHORT'];
 										if($set_podcast_direct == 1)
 										{
-											echo " <button class='btn btn-success btn-sm set_podcast' id_cat='".$sql_select_categories_row['ID']."' id_podcast='".$sql_select_view_categories_row['ID']."'>Zuweisen</button>";
+											$query_version = "UPDATE ".DB_PREFIX."categories SET ID_PODCAST = '".$sql_select_view_categories_row['ID']."' WHERE ID = '".$sql_select_categories_row['ID']."'";
+											$result = mysqli_multi_query($con,$query_version);										
+											echo " zugewiesen";
 										}
-										echo "<p>".$sql_select_view_categories_row['SHORT'];
 									}
 									
 									echo "<hr>";

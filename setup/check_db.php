@@ -29,16 +29,6 @@ if(isset($_GET['update_to_101'])){
 			}	
 }
 
-if(isset($_GET['set_cat_direct'])){
-	require('../config/dbconnect.php');
-
-	$id_cat = $_POST['id_cat'];
-	$id_podcast = $_POST['id_podcast'];
-	$query_version = "UPDATE ".DB_PREFIX."categories SET ID_PODCAST = '".$id_podcast."' WHERE ID = '".$id_cat."'";
-	echo $query_version;
- 	$result = mysqli_multi_query($con,$query_version);
-}
-
 if(isset($_GET['update_101_to_120'])){
 	require('../config/dbconnect.php');
     global $con;
