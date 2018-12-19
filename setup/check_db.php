@@ -29,6 +29,34 @@ if(isset($_GET['update_to_101'])){
 			}	
 }
 
+if(isset($_GET['copy_cat'])){
+	require('../config/dbconnect.php');
+    global $con;
+	$descr = $_POST['descr'];
+	$pc = $_POST['pc'];
+	$old_id = $_POST['id_podcast_cat'];
+	$get_descr = "SELECT DESCR FROM ".DB_PREFIX."categories WHERE DESCR = '".$descr."'";
+	$get_descr_result = mysqli_query($con, $get_descr);
+	$get_descr_num =  mysqli_num_rows($get_descr_result);	
+
+		$delete_old_cat = "DELETE FROM ".DB_PREFIX."categories WHERE ID= ".$old_id;
+ 		$result_delete_old_cat = mysqli_query($con,$delete_old_cat);
+
+		$query_copy_cat= "INSERT INTO ".DB_PREFIX."categories (DESCR, MAX_ENTRIES, VISIBLE, REIHENF, ID_PODCAST, EXPORT_CAT, EXPORT_TITLE_CAT, EXPORT_TITLE_TOPICS, EXPORT_URL_LINKS, EXPORT_NOTICE, ID_EXPORT_OPTION) VALUES ('".$descr."', '0', '1', '5', '".$pc."', '1', '1', '1', '1', '1', '1')";
+		$result_copy_cat = mysqli_query($con,$query_copy_cat);
+		
+		$update_epsiode_categories = "UPDATE ".DB_PREFIX."episode_categories SET ID_CATEGORY = ".$con->insert_id." WHERE ID_CATEGORY = ".$old_id." AND ID_EPISODE IN (SELECT ID FROM ".DB_PREFIX."episoden WHERE ID_PODCAST=".$pc.");";
+		$update_epsiode_categories .= "UPDATE ".DB_PREFIX."links SET ID_CATEGORY = ".$con->insert_id." WHERE ID_CATEGORY = ".$old_id." AND ID_PODCAST =".$pc.";";
+		$update_epsiode_categories .= "UPDATE ".DB_PREFIX."topics SET ID_CATEGORY = ".$con->insert_id." WHERE ID_CATEGORY = ".$old_id." AND ID_PODCAST =".$pc;
+ 		$result_update_epsiode_categories = mysqli_multi_query($con,$update_epsiode_categories);
+ 		
+		echo $update_epsiode_categories."<br>";
+		
+
+
+}
+
+
 if(isset($_GET['update_101_to_120'])){
 	require('../config/dbconnect.php');
     global $con;

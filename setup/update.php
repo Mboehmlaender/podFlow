@@ -135,11 +135,14 @@
 							</div>
 							<div class="tile-body">
 							<?php
+								echo "<p><button class='btn btn-success copy'>Doppelte Zuweisungen bereinigen</button><p>";
 							require('../config/dbconnect.php');
 								$sql_select_categories = "SELECT * FROM ".DB_PREFIX."categories ORDER BY ID";
 								$sql_select_categories_result = mysqli_query($con, $sql_select_categories);
+								$sql_select_categories_num =  mysqli_num_rows($sql_select_categories_result);
 								while($sql_select_categories_row = mysqli_fetch_assoc($sql_select_categories_result))
 								{
+								echo "<hr>";
 									echo "<p style='font-weight:bold'>".$sql_select_categories_row['DESCR'];
 									
 									$sql_select_view_categories = "SELECT DISTINCT ".DB_PREFIX."podcast.SHORT AS SHORT, ".DB_PREFIX."podcast.ID FROM ".DB_PREFIX."view_episode_categories join ".DB_PREFIX."podcast on ".DB_PREFIX."podcast.ID = ".DB_PREFIX."view_episode_categories.EPISODE_ID_PODCAST WHERE ID_CATEGORY =".$sql_select_categories_row['ID'];
@@ -147,8 +150,6 @@
 									$sql_select_view_categories_num = mysqli_num_rows($sql_select_view_categories_result);
 									if($sql_select_view_categories_num > 1)
 									{
-										echo " <button class='btn btn-success btn-sm'>Kopieren</button>";
-										echo "<p><span class='lead' style='color:red'>Müsste kopiert werden!</span><p>";
 										$set_podcast_direct = 0;
 									}
 									else
@@ -156,46 +157,72 @@
 										{
 										$set_podcast_direct = 1;
 										}
+
+									
 									while($sql_select_view_categories_row = mysqli_fetch_assoc($sql_select_view_categories_result))
 									{
-										echo "<p>".$sql_select_view_categories_row['SHORT'];
 										if($set_podcast_direct == 1)
 										{
-											$query_version = "UPDATE ".DB_PREFIX."categories SET ID_PODCAST = '".$sql_select_view_categories_row['ID']."' WHERE ID = '".$sql_select_categories_row['ID']."'";
-											$result = mysqli_multi_query($con,$query_version);										
+											echo "<p class='podcast_short' id_podcast='".$sql_select_view_categories_row['ID']."'>".$sql_select_view_categories_row['SHORT'];
+											$query_add_cat = "UPDATE ".DB_PREFIX."categories SET ID_PODCAST = '".$sql_select_view_categories_row['ID']."' WHERE ID = '".$sql_select_categories_row['ID']."'";
+											$result_add_cat = mysqli_multi_query($con,$query_add_cat);										
 											echo " zugewiesen";
 										}
+										else
+										{
+											echo "<p descr='".$sql_select_categories_row['DESCR']."' id_podcast_cat='".$sql_select_categories_row['ID']."' class='multiple_podcast_short' id_podcast='".$sql_select_view_categories_row['ID']."'>".$sql_select_view_categories_row['SHORT'];
+								
+										}										
 									}
 									
-									echo "<hr>";
 								}
 								echo "<script>
-									$(\".set_podcast\").on('click', function(){
-										var id_podcast = $(this).attr('id_podcast');
-										var id_cat = $(this).attr('id_cat');
- 									$.ajax({
-										url: 'check_db.php?set_cat_direct=1',
-										type: 'POST',
-										data: {id_podcast:id_podcast, id_cat:id_cat},
-												success: function(data)
-													{
-														console.log(data);
-													},
-										}); 	
-										$(this).remove();
+									
+									$(\".copy\").on('click', function(){
+										
+										
+									$(\".multiple_podcast_short\").each(function(){
+										var id_podcast_cat = $(this).attr('id_podcast_cat');
+										var descr = $(this).attr('descr');
+										var pc = $(this).attr('id_podcast');
+										$.ajax({
+											url: 'check_db.php?copy_cat=1',
+											type: 'POST',
+											data: {descr:descr, pc:pc, id_podcast_cat:id_podcast_cat},
+													success: function(data)
+														{
+															console.log(data);
+														},
+											}); 	
+																					
+										});
+											
+											
+											$(this).remove();
+										
 									});
+										$(\"#step4\").on(\"click\", function(){
+											window.location.href = \"update.php?update_step=4\";
+										});
 								</script>";
 							?>
+											
+
 								<div class="form-group">
-									<div id="result_db_operation">
-									
-									</div>
-									<div class="tile-footer">
-									<!-- <div id="update_button">
-										<button class="btn btn-primary" version="<?php echo $row[3] ?>" type="button" id="submit" name="submit">Update!</button>
-									</div> !-->
+									<div id="footer" class="tile-footer">
+
 									</div>
 								</div>
+								<script>
+									if($(".multiple_podcast_short").length == 0)
+									{
+										
+									$(".copy").remove();
+									$(".tile-footer").append("<button class=\"btn btn-primary\" type=\"button\" onclick=\"window.location.href='update.php?update_step=4'\">Weiter</button>");
+									
+										
+									}
+								</script>
 							</div>
 							<?php
 							}
