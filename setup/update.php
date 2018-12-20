@@ -114,6 +114,7 @@
 										url: 'check_db.php?check_version=1',
 										type: 'POST',
 										data: {},
+										beforeSend: function() { $('#result_db_operation').html('<i class=\"fas fa-spinner fa-pulse\"></i> Prüfe Version...'); $("#submit").prop('disabled', true);},
 												success: function(data)
 													{
 

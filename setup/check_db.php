@@ -10,9 +10,9 @@ function clearStoredResults(){
         } while ($con->more_results() && $con->next_result());
 }
 
-require('../config/dbconnect.php');
 if(isset($_GET['check_version']))
 {
+	require('../config/dbconnect.php');
 	$content=file_get_contents("https://podflow.de/api/data/read.php");
 	$data=json_decode($content, true);
 	foreach($data[0] as $test)
@@ -27,6 +27,7 @@ if(isset($_GET['check_version']))
 }
 
 if(isset($_GET['update_to_101'])){
+	require('../config/dbconnect.php');
 	echo "Setze Versionsnummer";
 
 	$set_version = $_POST['set_version'];
@@ -45,6 +46,7 @@ if(isset($_GET['update_to_101'])){
 }
 
 if(isset($_GET['copy_cat'])){
+	require('../config/dbconnect.php');
     global $con;
 	$descr = $_POST['descr'];
 	$pc = $_POST['pc'];
@@ -72,6 +74,7 @@ if(isset($_GET['copy_cat'])){
 
 
 if(isset($_GET['update_101_to_120'])){
+	require('../config/dbconnect.php');
     global $con;
 	echo "Erzeuge neue Tabellen";
 		
