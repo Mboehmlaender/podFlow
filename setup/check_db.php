@@ -354,19 +354,19 @@ if(isset($_GET['update_101_to_120'])){
 				
 	echo "Befülle die export_options-Tabelle";
 		
-		//Befüllen der INI-Tabelle
+		//Befüllen der export_options
 				
-			$query_ini = "INSERT INTO `".DB_PREFIX."export_options` (`DESCR`, `EXAMPLE`, `PH2`) VALUES
+			$query_export_options = "INSERT INTO `".DB_PREFIX."export_options` (`DESCR`, `EXAMPLE`, `PH2`) VALUES
 			('Liste (Bindestriche)', 'Link 1 - Link 2 - Link 3', NULL),
 			('Aufzählung (nummeriert)', '<ol>\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ol>', NULL),
 			('Aufzählung (bullets)', '<ul>\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ul>', NULL),
-			('Aufzählung (ohne Formatierung)', '<ul style=\"list-style-type:none\">\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ul>', NULL)";
+			('Aufzählung (ohne Formatierung)', '<ul style=\"list-style-type:none\">\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ul>', NULL);";
 			clearStoredResults();					
-			$result = mysqli_multi_query($con,$query_ini);
+			$result = mysqli_multi_query($con,$query_export_options);
 			if(!$result)
 				{
 					echo " --> <span style='color:red'>FEHLER</span>";
-					echo $query_ini;
+					echo $query_export_options;
 					return;
 				}
 			else
@@ -932,19 +932,19 @@ if(isset($_GET['create_database'])){
 
 	echo "Befülle die export_options-Tabelle";
 		
-		//Befüllen der INI-Tabelle
+		//Befüllen der export_options
 				
-			$query_ini = "INSERT INTO `".DB_PREFIX."export_options` (`DESCR`, `EXAMPLE`, `PH2`) VALUES
+			$query_export_options = "INSERT INTO `".$database_prefix."export_options` (`DESCR`, `EXAMPLE`, `PH2`) VALUES
 			('Liste (Bindestriche)', 'Link 1 - Link 2 - Link 3', NULL),
 			('Aufzählung (nummeriert)', '<ol>\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ol>', NULL),
 			('Aufzählung (bullets)', '<ul>\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ul>', NULL),
 			('Aufzählung (ohne Formatierung)', '<ul style=\"list-style-type:none\">\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ul>', NULL)";
 			clearStoredResults();					
-			$result = mysqli_multi_query($con,$query_ini);
+			$result = mysqli_multi_query($con,$query_export_options);
 			if(!$result)
 				{
 					echo " --> <span style='color:red'>FEHLER</span>";
-					echo $query_ini;
+					echo $query_export_options;
 					return;
 				}
 			else
