@@ -131,7 +131,7 @@ if(isset($_GET['export_list'])){
 														{
 															$descr = $data_type_open;
 															$descr .= $sql_select_content_1_row['DESCR'].": ";
-					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+					 											$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
 																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
 																$stringarray_2 = array();
 																$descr .= $list_type_open;
@@ -221,7 +221,7 @@ if(isset($_GET['export_list'])){
 													{
 														if($sql_select_row['EXPORT_TITLE_TOPICS'] == 0)
 														{
-					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+					 											$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
 																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
 																$stringarray_2 = array();
 																	$descr2 = $data_type_open;
@@ -267,7 +267,7 @@ if(isset($_GET['export_list'])){
 																	{
 																		$descr .= "<br><span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
 																	}
-					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+					 											$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
 																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
 																$stringarray_2 = array();
 																$descr .= $list_type_open;

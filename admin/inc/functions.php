@@ -804,7 +804,7 @@ function category_add(){
 			echo "</div>";
 		echo "</div>";
 	echo "</div>"; */
-	echo "<div class='row'>";
+	/* echo "<div class='row'>";
 		echo "<div class='col-9 lead'>";
 			echo "Kollaborative Kategorie";
 		echo "</div>";
@@ -816,7 +816,7 @@ function category_add(){
 				echo "</label>";
 			echo "</div>";
 		echo "</div>";
-	echo "</div>";
+	echo "</div>"; */
 	echo "<div class='row '>";
 		echo "<div class='col-9 lead'>";
 			echo "Maximale Beiträge";
@@ -1015,7 +1015,7 @@ function categories_edit_list(){
 								echo "<div class='col-7 col-md-3' style='text-align:right'>";
 									echo "<div class='form-group'>";
 										echo "<select class='form-control cat_up' id_cat='".$sql_get_categories_rows['ID']."' row='ID_EXPORT_OPTION'  table='categories' data-type='text' data-pk='".$sql_get_categories_rows['ID']."' data-url='inc/update.php' >";
-											$sql_select_cat_export_option = "SELECT * FROM export_options";
+											$sql_select_cat_export_option = "SELECT * FROM ".DB_PREFIX."export_options";
 											$sql_select_cat_export_option_result = mysqli_query($con, $sql_select_cat_export_option);
 											while($sql_select_cat_export_option_row = mysqli_fetch_assoc($sql_select_cat_export_option_result))
 												{

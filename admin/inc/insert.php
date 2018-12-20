@@ -26,7 +26,6 @@ if(isset($_POST)){
 		$cat_visible = mysqli_real_escape_string($con,$_POST['cat_visible']);
 		$cat_topics = mysqli_real_escape_string($con,$_POST['cat_topics']);
 		$cat_entries = mysqli_real_escape_string($con,$_POST['cat_entries']);
-		$cat_coll = mysqli_real_escape_string($con,$_POST['cat_coll']);
 		$podcast = mysqli_real_escape_string($con,$_POST['podcast']);
 		if(empty($cat_entries))
 			{

@@ -707,7 +707,6 @@ $(document).ready(function(){
 			data: {	"cat_name":cat_name_new,
 				"cat_visible":cat_visible_new,
 				"cat_topics":cat_topics_new,
-				"cat_coll":cat_coll_new,
 				"cat_entries":cat_entries_new,									
 				"podcast":podcast										
 				},

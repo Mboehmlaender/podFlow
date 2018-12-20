@@ -51,6 +51,9 @@
 								case '3':
 								update_step_3();
 								break;
+								case '4':
+								update_step_4();
+								break;
 								default:
 								update_step_1();
 							}
@@ -122,7 +125,7 @@
 														{
 															$("#content").remove();
 															$("#result_db_operation").html("<p class='lead' style='color:green'>Deine Version ist aktuell!</p>");
-															$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='../login.php'\" name='login'>Zum Login</button>");
+															$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='../login.php'\">Zum Login</button>");
 														}
 														else
 														{
@@ -146,7 +149,7 @@
 												success: function(data)
 													{
 														$("#result_db_operation").html(data);
-														$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='update.php?update_step=3'\" name='login'>Weiter</button>");
+														$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='update.php?update_step=3'\" >Weiter</button>");
 													},
 										});  		
 								});
@@ -259,6 +262,29 @@
 							</div>
 							<?php
 							}
+							function update_step_4(){ 
+							?>
+								<div class="tile-title">
+									podflow! Update
+								</div>
+								<div class="tile-body">
+									<p class="lead">Das Update wurde erfolgreich beendet.</p>
+									<p class="lead">Lösche die <strong>update.php</strong> und die <strong>install.php</strong> aus dem Ordner <strong>"setup"</strong>!</p>
+									<p class="lead">Vergiss nicht, die Zuweisungen der Kategorien in den Vorlagen neu einzutragen.</p>
+								</div>
+								
+								<div class="tile-footer">
+									<button type="button" id="login" class="btn btn-primary">Zum Login</button>
+									<script>
+										$("#login").on("click", function(){
+											window.location.href = "../login.php";
+										});
+											
+
+									</script>
+								</div>
+							<?php 
+							}	
 							?>
 						</div>
 					</div>

@@ -352,6 +352,28 @@ if(isset($_GET['update_101_to_120'])){
 					echo " --> <span style='color:green'>OK!</span><p>";
 				}	
 				
+	echo "Befülle die export_options-Tabelle";
+		
+		//Befüllen der INI-Tabelle
+				
+			$query_ini = "INSERT INTO `".DB_PREFIX."export_options` (`DESCR`, `EXAMPLE`, `PH2`) VALUES
+			('Liste (Bindestriche)', 'Link 1 - Link 2 - Link 3', NULL),
+			('Aufzählung (nummeriert)', '<ol>\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ol>', NULL),
+			('Aufzählung (bullets)', '<ul>\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ul>', NULL),
+			('Aufzählung (ohne Formatierung)', '<ul style=\"list-style-type:none\">\r\n<li>Link 1</li>\r\n<li>Link 2</li>\r\n<li>Link 3 </li>\r\n</ul>', NULL)";
+			clearStoredResults();					
+			$result = mysqli_multi_query($con,$query_ini);
+			if(!$result)
+				{
+					echo " --> <span style='color:red'>FEHLER</span>";
+					echo $query_ini;
+					return;
+				}
+			else
+				{
+					echo " --> <span style='color:green'>OK!</span><p>";
+				}	
+				
 	echo "Entferne die Kategorien in den Templates";
 		
 		//Befüllen der INI-Tabelle
