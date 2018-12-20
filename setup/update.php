@@ -198,6 +198,7 @@
 											echo "<p class='podcast_short' id_podcast='".$sql_select_view_categories_row['ID']."'>".$sql_select_view_categories_row['SHORT'];
 											$query_add_cat = "UPDATE ".DB_PREFIX."categories SET ID_PODCAST = '".$sql_select_view_categories_row['ID']."' WHERE ID = '".$sql_select_categories_row['ID']."'";
 											$result_add_cat = mysqli_multi_query($con,$query_add_cat);										
+
 											echo " zugewiesen";
 										}
 										else
@@ -245,19 +246,29 @@
 
 								<div class="form-group">
 									<div id="footer" class="tile-footer">
-										<button class="btn btn-primary" id="next" disabled type="button" onclick='window.location.href="update.php?update_step=4"'>Weiter</button>
+										<button class="btn btn-primary" id="next" disabled type="button">Weiter</button>
 									</div>
 								</div>
 								<script>
-									if($(".multiple_podcast_short").length == 0)
+ 									if($(".multiple_podcast_short").length == 0)
 									{
 
 									$("#check_result").empty().html("<p class='lead'>Keine Anpassung an den Kategorien notwendig!</p>");
 									$(".copy").remove();
 									$("#next").attr('disabled', false);
 									
-										
-									}
+									} 
+									$("#next").on("click", function(){
+										$.ajax({
+											url: 'check_db.php?delete_not_used_cat=1',
+											type: 'POST',
+											data: {},
+													success: function(data)
+														{
+														},
+											});
+ 											window.location.href="update.php?update_step=4";
+ 								});
 								</script>
 							</div>
 							<?php

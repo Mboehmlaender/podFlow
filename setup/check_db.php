@@ -10,6 +10,16 @@ function clearStoredResults(){
         } while ($con->more_results() && $con->next_result());
 }
 
+if(isset($_GET['delete_not_used_cat']))
+	{
+		require('../config/dbconnect.php');
+		$delete_not_used_cat = "DELETE FROM ".DB_PREFIX."categories WHERE ID_PODCAST = 0";
+		$result_delete_not_used_cat = mysqli_multi_query($con,$delete_not_used_cat);	
+		echo $delete_not_used_cat;
+		return;
+
+	}
+	
 if(isset($_GET['check_version']))
 {
 	require('../config/dbconnect.php');
