@@ -83,6 +83,7 @@
 								podflow! Update
 							</div>
 							<div class="tile-body">
+								<div id="content" style="display:none">
 								<p class="lead">Im Folgenden wird deine podflow-Instanz auf die neueste Version upgedatet.</p>
 								<p class="lead">Bitte mache vor dem Update eine komplette Sicherung deiner Podflow-Datenbank! </p>
 								<p class="lead" style="color:red; font-weight:bold">Die Datenbank wird im Updateprozess nicht gesichert!</p>
@@ -94,6 +95,7 @@
 								$row = mysqli_fetch_row($res);
 								echo "Aktuell installiert: ".$row[3]." \"".$row[4]."\"</p>";
 								?>
+								</div>
 								<div class="form-group">
 									<div id="result_db_operation">
 									
@@ -105,8 +107,30 @@
 									</div>
 								</div>
 							</div>
-							  
-							<script>							
+							  <script>
+								$( document ).ready(function() {
+									var version = $("#submit").attr('version');
+ 									$.ajax({
+										url: 'check_db.php?check_version=1',
+										type: 'POST',
+										data: {},
+												success: function(data)
+													{
+
+ 														if(data == version)
+														{
+															$("#content").remove();
+															$("#result_db_operation").html("<p class='lead' style='color:green'>Deine Version ist aktuell!</p>");
+															$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='../login.php'\" name='login'>Zum Login</button>");
+														}
+														else
+														{
+															$("#content").show("slow");
+														} 
+													},
+										}); 
+								});
+								
 								$("#submit").on("click", function(){									
 								var version = $(this).attr('version');
 									if((version == '1.0.0.') || (version == '1.0.1.'))
