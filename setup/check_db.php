@@ -335,6 +335,25 @@ if(isset($_GET['update_101_to_120'])){
 				{
 					echo " --> <span style='color:green'>OK!</span><p>";
 				}	
+				
+	echo "Entferne die Kategorien in den Templates";
+		
+		//Befüllen der INI-Tabelle
+				
+			$query_templates = "UPDATE `".DB_PREFIX."episode_templates` SET CATEGORIES = NULL";
+
+			clearStoredResults();					
+			$result = mysqli_multi_query($con,$query_templates);
+			if(!$result)
+				{
+					echo " --> <span style='color:red'>FEHLER</span>";
+					echo $query_ini;
+					return;
+				}
+			else
+				{
+					echo " --> <span style='color:green'>OK!</span><p>";
+				}	
 
 	echo "<p class='lead' style='color:green'>Aktualisiert auf Version 1.2.0. \"Barracuda\"</p>";
 	echo "<p class='lead' >Bitte auf \"Weiter\" drücken, um die Konfiguration vorzunehmen</p>";

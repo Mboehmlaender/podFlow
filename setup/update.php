@@ -135,7 +135,7 @@
 							</div>
 							<div class="tile-body">
 							<?
-									
+							echo "<p class='lead' style='color:red; font-weight:bold'>Durch die neue Tabellenstruktur müssen nach Abschluss der Installation die Kategorien in den Vorlagen im Backend neu zugeordnet werden!</p>";
 							echo "<p><button class='btn btn-success copy'>Doppelte Zuweisungen bereinigen</button><p>";
 							echo "<div id='result_db_operation'>";
 							echo "</div>";
