@@ -83,7 +83,7 @@
 								podflow! Update
 							</div>
 							<div class="tile-body">
-								<div id="content" style="display:none">
+								<div id="content" style="display">
 								<p class="lead">Im Folgenden wird deine podflow-Instanz auf die neueste Version upgedatet.</p>
 								<p class="lead">Bitte mache vor dem Update eine komplette Sicherung deiner Podflow-Datenbank! </p>
 								<p class="lead" style="color:red; font-weight:bold">Die Datenbank wird im Updateprozess nicht gesichert!</p>
@@ -108,7 +108,7 @@
 								</div>
 							</div>
 							  <script>
-								$( document ).ready(function() {
+/* 								$( document ).ready(function() {
 									var version = $("#submit").attr('version');
  									$.ajax({
 										url: 'check_db.php?check_version=1',
@@ -130,7 +130,7 @@
 														} 
 													},
 										}); 
-								});
+								}); */
 								
 								$("#submit").on("click", function(){									
 								var version = $(this).attr('version');
