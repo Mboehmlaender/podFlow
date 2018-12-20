@@ -78,7 +78,7 @@ if(isset($_GET['update_101_to_120'])){
     global $con;
 	echo "Erzeuge neue Tabellen";
 		
-		//Tabellenstruktur für Tabelle `export_options`
+ 		//Tabellenstruktur für Tabelle `export_options`
 	
 		$query = "CREATE TABLE `".DB_PREFIX."export_options` (
 		  `ID` int(11) NOT NULL,
@@ -98,7 +98,7 @@ if(isset($_GET['update_101_to_120'])){
 		else
 			{
 				echo " --> <span style='color:green'>OK!</span><br>";
-			}	
+			}	 
 
 		
 	echo "Aktualisiere Tabellenstruktur";
@@ -106,21 +106,22 @@ if(isset($_GET['update_101_to_120'])){
 		//Tabellenstruktur aktualisieren
 		
 		//Struktur der Tabelle `categories`
-		$query_alter = "ALTER TABLE `categories` ADD `ID_PODCAST` INT(11) NOT NULL AFTER `REIHENF`;";	
-		$query_alter .= "ALTER TABLE `categories` ADD `EXPORT_CAT` TINYINT(1) NOT NULL DEFAULT '1';";	
-		$query_alter .= "ALTER TABLE `categories` ADD `EXPORT_TITLE_CAT` TINYINT(1) NOT NULL DEFAULT '1';";	
-		$query_alter .= "ALTER TABLE `categories` ADD `EXPORT_TITLE_TOPICS` TINYINT(1) NOT NULL DEFAULT '1';";	
-		$query_alter .= "ALTER TABLE `categories` ADD `EXPORT_URL_LINKS` TINYINT(1) NOT NULL DEFAULT '1';";	
-		$query_alter .= "ALTER TABLE `categories` ADD `EXPORT_NOTICE` TINYINT(1) NOT NULL DEFAULT '1';";	
-		$query_alter .= "ALTER TABLE `categories` ADD `ID_EXPORT_OPTION` INT(11) NOT NULL DEFAULT '1';";	
-		$query_alter .= "ALTER TABLE `categories` DROP `COLL`;";	
-		$query_alter .= "ALTER TABLE `categories` DROP `ALLOW_TOPICS`;";	
+		$query_alter = "ALTER TABLE `".DB_PREFIX."categories` ADD `ID_PODCAST` INT(11) NOT NULL AFTER `REIHENF`;";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` ADD `EXPORT_CAT` TINYINT(1) NOT NULL DEFAULT '1';";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` ADD `EXPORT_TITLE_CAT` TINYINT(1) NOT NULL DEFAULT '1';";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` ADD `EXPORT_TITLE_TOPICS` TINYINT(1) NOT NULL DEFAULT '1';";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` ADD `EXPORT_URL_LINKS` TINYINT(1) NOT NULL DEFAULT '1';";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` ADD `EXPORT_NOTICE` TINYINT(1) NOT NULL DEFAULT '1';";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` ADD `ID_EXPORT_OPTION` INT(11) NOT NULL DEFAULT '1';";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` DROP `COLL`;";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."categories` DROP `ALLOW_TOPICS`;";	
 		
 		clearStoredResults();
 		$result = mysqli_multi_query($con,$query_alter);
 		if(!$result)
 			{
 				echo " --> <span style='color:red'>FEHLER</span>";
+				echo $query_alter;
 				return;
 			}
 		
@@ -330,13 +331,13 @@ if(isset($_GET['update_101_to_120'])){
 					{
 						echo " --> <span style='color:green'>OK!</span><br>";
 					}	
-					
+					 
 	echo "Befülle die INI-Tabelle";
 		
 		//Befüllen der INI-Tabelle
 				
-			$query_ini = "DELETE FROM `".DB_PREFIX."ini` WHERE `ini`.`KEYWORD` = 'COLL';";
-			$query_ini .= "DELETE FROM `".DB_PREFIX."ini` WHERE `ini`.`KEYWORD` = 'ALLOW_TOPICS';";
+			$query_ini = "DELETE FROM `".DB_PREFIX."ini` WHERE `".DB_PREFIX."ini`.`KEYWORD` = 'COLL';";
+			$query_ini .= "DELETE FROM `".DB_PREFIX."ini` WHERE `".DB_PREFIX."ini`.`KEYWORD` = 'ALLOW_TOPICS';";
 			$query_ini .= "UPDATE `".DB_PREFIX."ini` SET KEYVALUE = '1.2.0.', INFO='Barracuda' WHERE `".DB_PREFIX."ini`.`KEYWORD` = 'PF_VERSION';";
 
 			clearStoredResults();					
