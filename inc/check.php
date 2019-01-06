@@ -424,6 +424,7 @@ if(isset($_POST)){
 								$(\"#newentry\").modal('hide');
 								console.log(data);
 								window.location.reload(true);						
+
 							},
 						error:function ()
 							{
