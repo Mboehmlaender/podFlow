@@ -52,8 +52,8 @@ if(isset($_POST)){
 
 	//Podcast löschen
 	if(isset($_GET['delete_podcast'])){
-		$sql_delete_podcast = "DELETE FROM ".DB_PREFIX."episode_categories WHERE ID_EPISODE IN (SELECT ID_PODCAST FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = ".$_POST['podcast_id'].");";
-		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."episode_users WHERE ID_EPISODE IN (SELECT ID_PODCAST FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = ".$_POST['podcast_id'].");";
+		$sql_delete_podcast = "DELETE FROM ".DB_PREFIX."episode_categories WHERE ID_EPISODE IN (SELECT ID FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = ".$_POST['podcast_id'].");";
+		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."episode_users WHERE ID_EPISODE IN (SELECT ID FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = ".$_POST['podcast_id'].");";
 		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = ".$_POST['podcast_id'].";";
 		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."episode_templates WHERE ID_PODCAST = ".$_POST['podcast_id'].";";
 
