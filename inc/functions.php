@@ -277,7 +277,7 @@ function own_entries($userid){
 				echo "<select class='form-control' id='set_podcast'>";
 					if(getPermission($_SESSION['userid']) !== 1)
 					{
-						$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX.".view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
+						$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
 					}
 					else
 					{
