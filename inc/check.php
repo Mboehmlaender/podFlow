@@ -140,7 +140,7 @@ if(isset($_POST)){
 		$cat_id =  mysqli_real_escape_string($con,$_POST['cat_id']);
 		$max_entries =  mysqli_real_escape_string($con,$_POST['max_entries']);
 
-				$sql_modal_cat_topic = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID_CATEGORY =".$cat_id;
+				$sql_modal_cat_topic = "SELECT * FROM ".DB_PREFIX."view_topics WHERE TOPICS_ID_CATEGORY =".$cat_id." AND EPISODEN_ID = ".$_SESSION['cur_episode']." AND TOPICS_ID_PODCAST = ".$_SESSION['podcast'];
 				$sql_modal_cat_topic_result = mysqli_query($con, $sql_modal_cat_topic);
 				
 				$cur_entries_links = linksincat($_SESSION['cur_episode'], $cat_id); 
