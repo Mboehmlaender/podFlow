@@ -65,7 +65,7 @@ if(isset($_POST)){
 		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."links WHERE ID_PODCAST = ".$_POST['podcast_id'].";";
 
 		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."podcast_users WHERE ID_PODCAST = ".$_POST['podcast_id'].";";
-		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."podcast WHERE ID = ".$_POST['podcast_id'];
+		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."podcast WHERE ID = ".$_POST['podcast_id'].";";
 		
 		$sql_delete_podcast .= "DELETE FROM ".DB_PREFIX."categories WHERE ID_PODCAST = ".$_POST['podcast_id'].";";
 
