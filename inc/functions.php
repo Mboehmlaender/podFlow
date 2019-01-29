@@ -262,6 +262,12 @@ function sidebar(){
 					echo "<li><a class='app-menu__item' id='menu_backend' href='admin/index.php'><i class='app-menu__icon fas fa-chevron-circle-right'></i><span class='app-menu__label'>Backend</span></a></li>";
 				}
 		echo "</ul>";
+		echo "<ul class='app-menu' style='position: relative;'>";
+			echo "<li style='opacity: 0.3'><a class='app-menu__item' href='https://podflow.de' target='_blank'><i class='app-menu__icon fas fa-home fa-lg'></i><span class='app-menu__label'>podflow!</span></a></li>";
+			echo "<li style='opacity: 0.3'><a class='app-menu__item' href='https://www.facebook.com/streamlinedbypodflow' target='_blank'><i class='app-menu__icon fab fa-facebook-square fa-lg'></i><span class='app-menu__label'>podflow! bei facebook</span></a></li>";
+			echo "<li style='opacity: 0.3'><a class='app-menu__item' href='https://github.com/Mboehmlaender/podflow' target='_blank'><i class='app-menu__icon fab fa-github fa-lg'></i><span class='app-menu__label'>podflow! bei github</span></a></li>";
+			echo "<li style='opacity: 0.3'><a class='app-menu__item' href='https://bugs.podflow.de/' target='_blank'><i class='app-menu__icon fas fa-bug fa-lg'></i><span class='app-menu__label'>Fehler melden</span></a></li>";
+		echo "</ul>";
 	echo "</aside>";
 }
 
