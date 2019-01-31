@@ -1004,40 +1004,6 @@ echo "</div>";
 				$(\"#entry_buttons_\" + type + entry_id).toggle(\"slow\");
 			
 			});
-			$(\"#edit_cat_link\").on(\"click\", function(){
-				$('[own=\"0\"]').toggle(\"slow\"); 
-					$(\".cat_number_all\").toggle(\"fast\");
-					$(\".cat_number_user\").toggle(\"fast\");
-				if($(this).hasClass(\"edit_mode\"))
-				{
-					$(\".timeline\").removeClass(\"timeline_move\");
-					$(\"#text_test\").text(\"\");
-					$(this).removeClass(\"fa-user\");
-					$(this).addClass(\"fa-users\");					
-					$(this).removeClass(\"edit_mode\");
-					$( \".kanban_sortable\" ).sortable({ 
-						connectWith: '',				
-						});					
-				}
-				else
-				{
-					$.gritter.add({
-						title: \"OK\",
-						text: \"Kategorienübergreifendes Verschieben möglich!\",
-						image: \"images/confirm.png\",
-						time: \"2000\"
-					});				
-					$(\".timeline\").addClass(\"timeline_move\");
-
-					$(this).addClass(\"edit_mode\");
-					$(this).removeClass(\"fa-users\");
-					$(this).addClass(\"fa-user\");
-					$( \".kanban_sortable\" ).sortable({ 
-						connectWith: '.kanban_sortable',				
-						});
-					
-				}
-			});
 						
 			$( \".kanban_sortable\" ).sortable({ 
 				handle: '.timeline-handle',

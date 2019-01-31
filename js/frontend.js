@@ -348,6 +348,59 @@ $(document).ready(function(){
 			}		}
 		
 	});
+
+
+	//Nur eigene Beiträge einblenden
+	if(Cookies.get("toggle_own"))
+	{
+		$("[own='0']").toggle("slow"); 
+			$(".cat_number_all").hide();
+			$(".cat_number_user").show();
+			$("#edit_cat_link").removeClass("fa-users");
+			$("#edit_cat_link").addClass("edit_mode");
+			$("#edit_cat_link").addClass("fa-user");
+			$( ".kanban_sortable" ).sortable({ 
+				connectWith: '.kanban_sortable',				
+				});
+	}
+	
+	$("#edit_cat_link").on("click", function(){
+		$("[own='0']").toggle("slow"); 
+			$(".cat_number_all").toggle("fast");
+			$(".cat_number_user").toggle("fast");
+		if($(this).hasClass("edit_mode"))
+		{
+			Cookies.remove("toggle_own");	
+			$(".timeline").removeClass("timeline_move");
+			$("#text_test").text("");
+			$(this).removeClass("fa-user");
+			$(this).addClass("fa-users");					
+			$(this).removeClass("edit_mode");
+			$( ".kanban_sortable" ).sortable({ 
+				connectWith: '',				
+				});					
+		}
+		else
+		{
+			Cookies.set("toggle_own", "toggle_own");
+			$.gritter.add({
+				title: "OK",
+				text: "Kategorienübergreifendes Verschieben möglich!",
+				image: "images/confirm.png",
+				time: "2000"
+			});				
+			$(".timeline").addClass("timeline_move");
+
+			$(this).addClass("edit_mode");
+			$(this).removeClass("fa-users");
+			$(this).addClass("fa-user");
+			$( ".kanban_sortable" ).sortable({ 
+				connectWith: '.kanban_sortable',				
+				});
+		}
+			
+	});
+
 	
 	//Link/Beitrag löschen
 
