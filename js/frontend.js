@@ -514,11 +514,13 @@ $(document).ready(function(){
 
 	//Export ausführen
 	$("#export_list").on("click", function(){
+		var order_by = $('.export_check:checked').val();
 		var id_episode = $(this).attr("export_episode_id");
 		$.ajax({
 			url: "inc/select.php?export_list=1",
 			type: "POST",
-			data: {	"id_episode":id_episode, 
+			data: {	"id_episode":id_episode,
+					"order_by":order_by,
 				},
 			success: function(data)
 				{

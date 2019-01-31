@@ -12,6 +12,7 @@ if(!isset($_SESSION['userid']))
 
 if(isset($_GET['export_list'])){
 	$id_episode = $_POST['id_episode'];
+	$order_by = $_POST['order_by'];
 							echo "<div class='tab-content' id='pills-tabContent'>";
 								echo "<div class='tab-pane fade show active lead' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
 							 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE=".$id_episode." AND EXPORT_CAT = 1 ORDER BY REIHENF ASC";
@@ -68,7 +69,7 @@ if(isset($_GET['export_list'])){
 											}
 											
 											echo $cat_title_open;
-											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY `REIHENF` ASC";											
+											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY ".$order_by." ASC";											
 											$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
 											$stringarray = array();
 											$stringarray_notice = array();
