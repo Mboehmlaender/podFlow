@@ -362,6 +362,8 @@ $(document).ready(function(){
 			$( ".kanban_sortable" ).sortable({ 
 				connectWith: '.kanban_sortable',				
 				});
+			$(".timeline").addClass("timeline_move");
+
 	}
 	
 	$("#edit_cat_link").on("click", function(){
