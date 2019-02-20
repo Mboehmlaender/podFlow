@@ -304,7 +304,7 @@ function own_entries($userid){
 				echo "<select class='form-control' id='set_episode'>";
 					if(getPermission($_SESSION['userid']) == 1)
 					{
-						$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX.".episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX.".view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
+						$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
 					}
 					else
 					{
@@ -620,7 +620,7 @@ function kanban(){
 			return;
 		}
 		global $con;
-		$sql_categories_list = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE CATEGORIES_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode']." ORDER BY REIHENF, DESCR";
+		$sql_categories_list = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE EPISODE_ID_PODCAST = ".$_SESSION['podcast']." AND ID_EPISODE = ".$_SESSION['cur_episode']." ORDER BY REIHENF, DESCR";
 		$sql_categories_list_result = mysqli_query($con, $sql_categories_list);
 
 		if(mysqli_num_rows($sql_categories_list_result) == 0)
