@@ -129,8 +129,9 @@ if(isset($_GET['edit_user'])){
 						echo "<label for='Username_Show'>E-Mail</label>";
 						echo "<input type='email' value='".htmlspecialchars($sql_select_user_row['EMAIL'])."' name='User_Mail' type='text' class='form-control' id='User_Mail' aria-describedby='emailHelp' >";
 					echo "</div>";	
-					if($_SESSION['userid'] == $sql_select_user_row['ID'])
+						if(($_SESSION['userid'] == $sql_select_user_row['ID']) || ((getPermission($_SESSION['userid']) == 2) && ($sql_select_user_row['LEVEL_ID'] == 3)))
 						{
+							
 						}
 					else
 						{
@@ -138,14 +139,15 @@ if(isset($_GET['edit_user'])){
 								echo "<label for='Username_Show'>Benutzer-Ebene</label>";
 								echo "<select name='level' class='form-control' id='level'>";
 									echo "<option disabled>Benutzer-Ebene wählen</option>";		
-									if(getPermission($_SESSION['userid']) != 3)
-										{
-											$where = "WHERE LEVEL <> 3";
-										}							
-									else 
+									if(getPermission($_SESSION['userid']) == 3)
 										{
 											$where = "";
-										}
+										}							
+
+									else
+									{
+											$where = "WHERE LEVEL <> 3";
+									}
 									$sql_levels = "SELECT * FROM ".DB_PREFIX."usergroups ".$where;
 									$sql_levels_result = mysqli_query($con, $sql_levels);
 									while ($sql_levels_row = mysqli_fetch_assoc($sql_levels_result))
