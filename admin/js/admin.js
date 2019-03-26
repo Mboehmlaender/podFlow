@@ -36,7 +36,7 @@ function delete_user(user_id){
 		boxWidth: "50%",
 		useBootstrap: false,	
 		title: "Benutzer löschen?",
-		content: "Der Benutzer und alle von ihm erstellten Links, Themen und Zuordnungen werden gelöscht!",
+		content: "Der Benutzer und alle von ihm erstellten Links und Themen sowie Zuordnungen zu Podcasts, Episoden und Vorlagen werden gelöscht!",
 		type: "red",
 		buttons: 
 			{   
@@ -285,7 +285,7 @@ function delete_category(cat_id){
 		title: "Kategorie löschen?",
 		boxWidth: "50%",
 		useBootstrap: false,	
-		content: "Die Kategorie und alle Links und Themen dieser Kategorie werden gelöscht!",
+		content: "Die Kategorie und alle Links und Themen dieser Kategorie sowie die Zuordnungen zu Vorlagen werden gelöscht!",
 		type: "red",
 		buttons: 
 			{   
