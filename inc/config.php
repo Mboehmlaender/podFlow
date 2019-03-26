@@ -63,6 +63,23 @@ function userinfos($user_id, $row){
 	return $user_info_row[0];
 }
 
+//Episode/Podcast am Benutzer speichern
+function last_podcast()
+{
+	if(userinfos($_SESSION['userid'], 'SAVE_PODCAST') == 1)
+	{
+		$_SESSION['podcast'] = userinfos($_SESSION['userid'], 'LAST_PODCAST');
+	}
+}
+//Episode/Podcast am Benutzer speichern
+function last_episode()
+{
+	if(userinfos($_SESSION['userid'], 'SAVE_EPISODE') == 1)
+	{
+		$_SESSION['cur_episode'] = userinfos($_SESSION['userid'], 'LAST_EPISODE');
+	}
+}
+
 //Prüfen, ob Benutzer der Episode zugewiesen ist
 function userInEpisode($user_id, $id_episode){
 	global $con;

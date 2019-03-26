@@ -100,7 +100,9 @@ function select_podcast(){
 	
 	if(empty($_SESSION['podcast']))
 		{
-			global $con;
+			last_podcast();
+			last_episode();
+			/* global $con;
 			if(getPermission($_SESSION['userid']) < 2)
 				{
 					$login_podcast_select = "SELECT PODCASTS_USERS_ID_PODCAST AS ID FROM ".DB_PREFIX."view_podcasts_users WHERE PODCASTS_USERS_ID_USER = ".$_SESSION['userid'];
@@ -115,7 +117,13 @@ function select_podcast(){
 					$id = mysqli_fetch_assoc($login_podcast_result);
 					$_SESSION['podcast'] = $id['ID'];
 					return;
-				}
+				} */
+		return;
+		}
+	if(empty($_SESSION['cur_episode']))
+		{
+			last_episode();
+			
 		return;
 		}
 }
