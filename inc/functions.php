@@ -1133,6 +1133,41 @@ function profil_edit(){
 					echo "<label for='PasswordRepeat'>Neues Passwort wiederholen</label>";
 					echo "<input name='password2' type='password' class='form-control' id='PasswordRepeat' >";
 				echo "</div>";
+				echo "<hr>";
+				echo "<div class='form-group'>";
+					echo "<div style='text-align:left'>";
+						echo "<div class='toggle lg'>";
+							echo "<label class='switch'>";
+								echo "<input class='form-check-input' ";
+									if($rows_profil['SAVE_PODCAST'] ==1)
+									{
+										echo "checked";
+									}
+								echo " type='checkbox' name='save_podcast' id='save_podcast' data-type='text' >";
+								echo "<span class='button-indecator'>";
+									echo "Podcast-Auswahl speichern";
+								echo "</span>";
+							echo "</label>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
+				echo "<div class='form-group'>";
+					echo "<div style='text-align:left'>";
+						echo "<div class='toggle lg'>";
+							echo "<label class='switch'>";
+								echo "<input class='form-check-input' ";
+								if($rows_profil['SAVE_EPISODE'] ==1)
+									{
+										echo "checked";
+									}
+								echo " type='checkbox' name='save_episode' id='save_episode' data-type='text'>";
+								echo "<span class='button-indecator'>";
+									echo "Episoden-Auswahl speichern";
+								echo "</span>";
+							echo "</label>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
 			}			
 		echo "<br><button type='button' name='update_profile' user_id = '".$_SESSION['userid']."' id='save_profile' class='btn btn-outline-primary'><i class='fas fa-save'></i> Speichern</button>";
 		echo "</div>";

@@ -171,6 +171,8 @@ if(isset($_POST)){
 		$name_show = mysqli_real_escape_string($con,$_POST['name_show']);
 		$email = mysqli_real_escape_string($con,$_POST['email']);
 		$User_Id = mysqli_real_escape_string($con,$_POST['user_id']);
+		$save_podcast = mysqli_real_escape_string($con,$_POST['save_podcast']);
+		$save_episode = mysqli_real_escape_string($con,$_POST['save_episode']);
 		$passwort_hash = password_hash($password, PASSWORD_DEFAULT);
 		
 		if(!empty($password))
@@ -181,7 +183,7 @@ if(isset($_POST)){
 		{
 			$password_set = "";
 		}
-			$sql_update_user = "UPDATE ".DB_PREFIX."users SET".$password_set." EMAIL = '".$email."', NAME_SHOW ='".$name_show."' WHERE ID = ".$User_Id;
+			$sql_update_user = "UPDATE ".DB_PREFIX."users SET".$password_set." EMAIL = '".$email."', NAME_SHOW ='".$name_show."', SAVE_PODCAST = ".$save_podcast.", SAVE_EPISODE = ".$save_episode." WHERE ID = ".$User_Id;
 			mysqli_query($con, $sql_update_user);
 			echo $sql_update_user;
 			return;

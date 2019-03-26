@@ -609,6 +609,24 @@ $(document).ready(function(){
 		var password_new = $("#Password").val();
 		var password_new_repeat = $("#PasswordRepeat").val();
 
+		if($('#save_podcast').is(':checked'))
+		{
+			var save_podcast = 1;
+		}
+		else
+		{
+			var save_podcast = "NULL";
+		}
+		if($('#save_episode').is(':checked'))
+		{
+			var save_episode = 1;
+		}
+		else
+		{
+			var save_episode = "NULL";
+		}		
+
+
 		if(password_new !== password_new_repeat)
 			{
 				$.gritter.add({
@@ -626,7 +644,9 @@ $(document).ready(function(){
 					"name_show":name_show, 
 					"email":email, 
 					"password_new":password_new, 
-					"password_new_repeat":password_new_repeat
+					"password_new_repeat":password_new_repeat,
+					"save_podcast":save_podcast,
+					"save_episode":save_episode
 				},
 			success: function(data)
 				{
