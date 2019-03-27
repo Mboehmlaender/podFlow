@@ -29,6 +29,23 @@ if(isset($_GET['remove'])){
 	$sql_delete = "DELETE FROM ".DB_PREFIX.$table." WHERE ".$column." = ".$id." AND ".$row." = ".$episode;
 	$sql_delete_result = mysqli_query($con, $sql_delete);
 	echo $sql_delete;					   
+	
+	if ($table == 'podcast_users')
+	{
+	$sql_select_templates = "SELECT * FROM ".DB_PREFIX."episode_templates";
+			$sql_select_templates_result = mysqli_query($con, $sql_select_templates);
+			while($sql_select_templates_row = mysqli_fetch_assoc($sql_select_templates_result))
+			{
+				$array = explode(',', $sql_select_templates_row['USERS']);
+				$array = array_diff($array, [$id]);
+				$array_new = implode(',', $array);
+				
+				$sql_update_template = "UPDATE ".DB_PREFIX."episode_templates SET USERS = '".$array_new."' WHERE ID = ".$sql_select_templates_row['ID'];
+				mysqli_query($con, $sql_update_template);
+				echo $sql_update_template;
+			}
+	}
+		
 	exit;
 }
 
