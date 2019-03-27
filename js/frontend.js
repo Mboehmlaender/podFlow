@@ -662,6 +662,25 @@ $(document).ready(function(){
 				},
 			});	
 		});
+		
+	//Save Podcast/Episoden prüfen
+	$("#save_episode").on("click", function(){
+		if(!$('#save_podcast').is(':checked'))
+		{
+			$('#save_podcast').prop('checked', true);
+		}
+
+	});
+	
+ 	$("#save_podcast").on("click", function(){
+		if( (!$("#save_podcast").is(':checked')) && ($("#save_episode").is(':checked')) )
+		{
+			$('#save_episode').prop('checked', false);
+		}
+	}); 
+	
+
+	
 
 	//Editable
 		$.fn.editable.defaults.mode = "inline";
