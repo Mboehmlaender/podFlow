@@ -140,6 +140,26 @@ if(isset($_GET['update_101_to_120'])){
 				echo " --> <span style='color:green'>OK!</span><br>";
 			}	
 			
+		//Struktur der Tabelle `users`
+		$query_alter = "ALTER TABLE `".DB_PREFIX."users` ADD `SAVE_PODCAST` TINYINT(1) DEFAULT NULL AFTER `AVATAR`;";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."users` ADD `LAST_PODCAST` INT(10) DEFAULT NULL;";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."users` ADD `SAVE_EPISODE` TINYINT(1) DEFAULT NULL;";	
+		$query_alter .= "ALTER TABLE `".DB_PREFIX."users` ADD `LAST_EPISODE` INT(10) DEFAULT NULL;";		
+		
+		clearStoredResults();
+		$result = mysqli_multi_query($con,$query_alter);
+		if(!$result)
+			{
+				echo " --> <span style='color:red'>FEHLER</span>";
+				echo $query_alter;
+				return;
+			}
+		
+		else
+			{
+				echo " --> <span style='color:green'>OK!</span><br>";
+			}
+			
 			
 			
 	echo "Erzeuge Views";
@@ -616,7 +636,11 @@ if(isset($_GET['create_database'])){
 		  `PASSWORD` varchar(255) NOT NULL,
 		  `LEVEL_ID` int(11) NOT NULL,
 		  `ACTIVE` int(1) DEFAULT '1',
-		  `AVATAR` varchar(100)
+		  `AVATAR` varchar(100),
+		  `SAVE_PODCAST` tinyint(1) DEFAULT NULL,
+		  `LAST_PODCAST` int(10) DEFAULT NULL,
+		  `SAVE_EPISODE` tinyint(1) DEFAULT NULL,
+		  `LAST_EPISODE` int(10) DEFAULT NULL
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		
 		clearStoredResults();
