@@ -68,7 +68,32 @@ function last_podcast()
 {
 	if(userinfos($_SESSION['userid'], 'SAVE_PODCAST') == 1)
 	{
-		$_SESSION['podcast'] = userinfos($_SESSION['userid'], 'LAST_PODCAST');
+
+			if(getPermission($_SESSION['userid']) < 2)
+				{	global $con;
+					if(empty(userinfos($_SESSION['userid'], 'LAST_PODCAST')))
+					{
+						return;
+					}
+					$login_podcast_select = "SELECT * FROM ".DB_PREFIX."podcast_users WHERE ID_PODCAST = ".userinfos($_SESSION['userid'], 'LAST_PODCAST')."  AND ID_USER = ".$_SESSION['userid'];
+					$login_podcast_result = mysqli_query($con, $login_podcast_select);
+					if(mysqli_num_rows($login_podcast_result) == 1)
+					{
+						$_SESSION['podcast'] = userinfos($_SESSION['userid'], 'LAST_PODCAST');						
+					}
+					else
+					{
+						$sql_update_user = "UPDATE ".DB_PREFIX."users SET LAST_PODCAST = NULL, LAST_EPISODE = NULL WHERE ID = ". $_SESSION['userid'];
+						mysqli_query($con, $sql_update_user);
+						return;	
+					}
+					
+				}
+			else
+				{
+						$_SESSION['podcast'] = userinfos($_SESSION['userid'], 'LAST_PODCAST');						
+				}
+				
 	}
 }
 //Episode/Podcast am Benutzer speichern
@@ -76,7 +101,32 @@ function last_episode()
 {
 	if(userinfos($_SESSION['userid'], 'SAVE_EPISODE') == 1)
 	{
-		$_SESSION['cur_episode'] = userinfos($_SESSION['userid'], 'LAST_EPISODE');
+
+			if(getPermission($_SESSION['userid']) < 2)
+				{	global $con;
+					if(empty(userinfos($_SESSION['userid'], 'LAST_EPISODE')))
+					{
+						return;
+					}
+					$login_podcast_select = "SELECT * FROM ".DB_PREFIX." view_episode_users WHERE EPISODE_USERS_ID_EPISODE = ".userinfos($_SESSION['userid'], 'LAST_EPISODE')."  AND EPISODE_USERS_ID_USER = ".$_SESSION['userid']." AND EPISODE_DONE = 0";
+					$login_podcast_result = mysqli_query($con, $login_podcast_select);
+					if(mysqli_num_rows($login_podcast_result) == 1)
+					{
+						$_SESSION['cur_episode'] = userinfos($_SESSION['userid'], 'LAST_EPISODE');						
+					}
+					else
+					{
+						$sql_update_user = "UPDATE ".DB_PREFIX."users SET LAST_EPISODE = NULL WHERE ID = ". $_SESSION['userid'];
+						mysqli_query($con, $sql_update_user);
+						return;	
+					}
+					
+				}
+			else
+				{
+						$_SESSION['cur_episode'] = userinfos($_SESSION['userid'], 'LAST_EPISODE');						
+				}
+				
 	}
 }
 

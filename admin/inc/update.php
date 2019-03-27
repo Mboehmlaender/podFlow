@@ -7,11 +7,12 @@ global $con;
 if(isset($_POST)){
 
 	//Podcast-Session setzen
-	if(isset($_GET['set_session_podcast']))
-	{
-		$_SESSION['podcast'] = $_POST['podcast'];
-		$_SESSION['cur_episode'] = "";
-		return;
+	if(isset($_GET['set_session_podcast'])){
+			$_SESSION['podcast'] = $_POST['podcast'];
+			$_SESSION['cur_episode'] = "";
+			$sql_update_user = "UPDATE ".DB_PREFIX."users SET LAST_PODCAST = ".$_SESSION['podcast'].", LAST_EPISODE = NULL WHERE ID = ". $_SESSION['userid'];
+			mysqli_query($con, $sql_update_user);
+			return;
 	}
 
 /* 	if(isset($_GET['update_links'])){

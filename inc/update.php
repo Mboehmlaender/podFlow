@@ -14,18 +14,24 @@ if(isset($_POST)){
 	if(isset($_GET['set_session_podcast'])){
 			$_SESSION['podcast'] = $_POST['podcast'];
 			$_SESSION['cur_episode'] = "";
+			$sql_update_user = "UPDATE ".DB_PREFIX."users SET LAST_PODCAST = ".$_SESSION['podcast'].", LAST_EPISODE = NULL WHERE ID = ". $_SESSION['userid'];
+			mysqli_query($con, $sql_update_user);
 			return;
 	}
 
 	//Episoden-Session setzen
 	if(isset($_GET['set_session_episode'])){
 			$_SESSION['cur_episode'] = $_POST['episode'];
+			$sql_update_user = "UPDATE ".DB_PREFIX."users SET LAST_EPISODE = ".$_POST['episode']." WHERE ID = ". $_SESSION['userid'];
+			mysqli_query($con, $sql_update_user);
 			return;
 	}
 
 	//Episoden-Session setzen --> prüfen, wo genutzt
 	if(isset($_GET['update_cur_episode'])){
 			$_SESSION['cur_episode'] = $_POST['episode'];
+			$sql_update_user = "UPDATE ".DB_PREFIX."users SET LAST_EPISODE = ".$_POST['episode']." WHERE ID = ". $_SESSION['userid'];
+			mysqli_query($con, $sql_update_user);
 			return;
 	}
 			
@@ -179,6 +185,10 @@ if(isset($_POST)){
 		{
 			$set_podcast = ", LAST_PODCAST = ".$_SESSION['podcast'];
 		}	
+		else if((empty($_SESSION['podcast']) && ($save_podcast == 1)) || ($save_podcast == 0))
+		{
+			$set_podcast = ", LAST_PODCAST = NULL";
+		}			
 		else
 		{
 			$set_podcast = "";
@@ -187,6 +197,10 @@ if(isset($_POST)){
 		if((!empty($_SESSION['cur_episode']) && ($save_episode == 1)))
 		{
 			$set_episode = ", LAST_EPISODE = ".$_SESSION['cur_episode'];
+		}	
+		else if((empty($_SESSION['cur_episode']) && ($save_episode == 1)) || ($save_episode == 0))
+		{
+			$set_episode = ", LAST_EPISODE = NULL";
 		}	
 		else
 		{

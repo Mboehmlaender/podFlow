@@ -101,7 +101,6 @@ function select_podcast(){
 	if(empty($_SESSION['podcast']))
 		{
 			last_podcast();
-			last_episode();
 			/* global $con;
 			if(getPermission($_SESSION['userid']) < 2)
 				{
@@ -118,9 +117,8 @@ function select_podcast(){
 					$_SESSION['podcast'] = $id['ID'];
 					return;
 				} */
-		return;
 		}
-	if(empty($_SESSION['cur_episode']))
+	if((!empty($_SESSION['podcast'])) && (empty($_SESSION['cur_episode'])))
 		{
 			last_episode();
 			
