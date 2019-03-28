@@ -281,196 +281,184 @@ function sidebar(){
 function own_entries($userid){
 	global $con;
 	echo "<div class='row'>";
-	echo "<div class='col-12'>";
-	echo "<div class='tile'>";
-	echo "<div class='row'>";
-	echo "<div class='col-12 col-md-6'>";
-			echo "<div class='form-group'>";
-				echo "<select class='form-control' id='set_podcast'>";
-					if(getPermission($_SESSION['userid']) !== 1)
-					{
-						$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
-					}
-					else
-					{
-						$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast ORDER BY ID";
-					}
-					$sql_select_podcast_result = mysqli_query($con, $sql_select_podcast);
-						echo "<option id_podcast='all' selected>Alle Podcasts</option>";
-					while($sql_select_podcast_row = mysqli_fetch_assoc($sql_select_podcast_result))
-					{
-						echo "<option id_podcast='".$sql_select_podcast_row['ID']."'>".$sql_select_podcast_row['PODCAST_SHORT']."</option>";
-					}
-					
-				echo "</select>";
-		echo "</div>";
-		echo "</div>";
-		echo "<div class='col-12 col-md-6'>";
-			echo "<div class='form-group'>";
-				echo "<select class='form-control' id='set_episode'>";
-					if(getPermission($_SESSION['userid']) == 1)
-					{
-						$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
-					}
-					else
-					{
-						$sql_select_episodes = "SELECT ID, ID_PODCAST, TITEL, DATE FROM ".DB_PREFIX."episoden";
-					}
-					$sql_select_episodes_result = mysqli_query($con, $sql_select_episodes);
-						echo "<option class='episode_menu_all' id_episode='all' id_podcast_menu='all' selected>Alle Episoden</option>";
-					while($sql_select_episodes_row = mysqli_fetch_assoc($sql_select_episodes_result))
-					{
-						echo "<option class='episode_menu' id_episode='".$sql_select_episodes_row['ID']."' id_podcast_menu='".$sql_select_episodes_row['ID_PODCAST']."'>".$sql_select_episodes_row['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row['DATE']))."</option>";
-					}
-					
-				echo "</select>";
-		echo "</div>";
-		echo "</div>";
-	echo "</div>";
-	echo "<hr>";
-/* 	echo "<div class='row'>";
-		echo "<div class='col-6 lead' style='font-weight: bold'>";
-			echo "Beitrag";
-		echo "</div>";
-		echo "<div class='col-6 lead' style='font-weight: bold'>";
-			echo "Episode";
-		echo "</div>";
-	echo "</div>";
-	echo "<hr>"; */
-		echo "<ul class='topic_links'>";
-
-	$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, 0 AS IS_TOPIC, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE (".DB_PREFIX."links.DONE IS NULL OR ".DB_PREFIX."links.DONE = '') AND ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE (".DB_PREFIX."topics.DONE IS NULL OR ".DB_PREFIX."topics.DONE = '') AND ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_PODCAST, ID_EPISODE, REIHENF";
-	$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
-	while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
-	{
-	echo "<li class='topic_links_item episodes active_content' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
-	echo "<div class='row lead'>";
-		if($sql_own_entries_row['IS_TOPIC'] == 1)
-		{
-			$icon = "topic_icon";
-			$icon_symbol = "<i class='fas fa-bars fa-fw'></i>";
-			$table = "topics";
-		}
-		else
-		{
-			$icon = "link_icon";
-			$icon_symbol = "<i class='fas fa-link fa-fw'></i>";
-			$table = "links";
-		}
-		echo "<div class='col-md-6 col-12' style='margin-top:auto; margin-bottom:auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
-			echo "<div class='".$icon."'>".$icon_symbol."</div>".$sql_own_entries_row['DESCR'];
-		echo "</div>";
-		echo "<div class='col-md-6 col-12' style='margin-top:5px; margin-bottom:5px'>";
-			echo "<div style='margin-top:auto; margin-bottm:auto;'>";
-				if($sql_own_entries_row['DONE'] === '1')
-				{
-					echo "<span style='color:red'>Eintrag wurde bereits gecheckt!</span>";
-				}
-				else
-				{
-					
-				echo "<select table='".$table."' id_entry='".$sql_own_entries_row['ID']."' class='form-control change_episode'>";
-					if(getPermission($_SESSION['userid']) !== 1)
-					{
-						$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
-					}
-					else
-					{
-						$sql_select_episodes2 = "SELECT ID, TITEL, DATE, DONE FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
-					}
-					$sql_select_episodes_result2 = mysqli_query($con, $sql_select_episodes2);
-					while($sql_select_episodes_row2 = mysqli_fetch_assoc($sql_select_episodes_result2))
-					{
-						if($sql_select_episodes_row2['DONE'] == '1')
+		echo "<div class='col-12'>";
+			echo "<div class='tile'>";
+				echo "<div class='row'>";
+					echo "<div class='col-12 col-md-6'>";
+						echo "<div class='form-group'>";
+							echo "<select class='form-control' id='set_podcast'>";
+								if(getPermission($_SESSION['userid']) !== 1)
+								{
+									$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
+								}
+								else
+								{
+									$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast ORDER BY ID";
+								}
+								$sql_select_podcast_result = mysqli_query($con, $sql_select_podcast);
+								echo "<option id_podcast='all' selected>Alle Podcasts</option>";
+								while($sql_select_podcast_row = mysqli_fetch_assoc($sql_select_podcast_result))
+									{
+										echo "<option id_podcast='".$sql_select_podcast_row['ID']."'>".$sql_select_podcast_row['PODCAST_SHORT']."</option>";
+									}
+							echo "</select>";
+						echo "</div>";
+					echo "</div>";
+					echo "<div class='col-12 col-md-6'>";
+						echo "<div class='form-group'>";
+							echo "<select class='form-control' id='set_episode'>";
+								if(getPermission($_SESSION['userid']) == 1)
+								{
+									$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
+								}
+								else
+								{
+									$sql_select_episodes = "SELECT ID, ID_PODCAST, TITEL, DATE FROM ".DB_PREFIX."episoden";
+								}
+								$sql_select_episodes_result = mysqli_query($con, $sql_select_episodes);
+								echo "<option class='episode_menu_all' id_episode='all' id_podcast_menu='all' selected>Alle Episoden</option>";
+								while($sql_select_episodes_row = mysqli_fetch_assoc($sql_select_episodes_result))
+									{
+										echo "<option class='episode_menu' id_episode='".$sql_select_episodes_row['ID']."' id_podcast_menu='".$sql_select_episodes_row['ID_PODCAST']."'>".$sql_select_episodes_row['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row['DATE']))."</option>";
+									}
+							echo "</select>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
+				echo "<hr>";
+			/* 	echo "<div class='row'>";
+					echo "<div class='col-6 lead' style='font-weight: bold'>";
+						echo "Beitrag";
+					echo "</div>";
+					echo "<div class='col-6 lead' style='font-weight: bold'>";
+						echo "Episode";
+					echo "</div>";
+				echo "</div>";
+				echo "<hr>"; */
+				echo "<ul class='topic_links'>";
+					$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, 0 AS IS_TOPIC, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE (".DB_PREFIX."links.DONE IS NULL OR ".DB_PREFIX."links.DONE = '') AND ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE (".DB_PREFIX."topics.DONE IS NULL OR ".DB_PREFIX."topics.DONE = '') AND ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_PODCAST, ID_EPISODE, REIHENF";
+					$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
+					while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
 						{
-							$done = " (abgeschlossen) ";
+							echo "<li class='topic_links_item episodes active_content' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
+								echo "<div class='row lead'>";
+								if($sql_own_entries_row['IS_TOPIC'] == 1)
+									{
+										$icon = "topic_icon";
+										$icon_symbol = "<i class='fas fa-bars fa-fw'></i>";
+										$table = "topics";
+									}
+								else
+									{
+										$icon = "link_icon";
+										$icon_symbol = "<i class='fas fa-link fa-fw'></i>";
+										$table = "links";
+									}
+									echo "<div class='col-md-6 col-12' style='margin-top:auto; margin-bottom:auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
+										echo "<div class='".$icon."'>".$icon_symbol."</div>".$sql_own_entries_row['DESCR'];
+										echo "</div>";
+										echo "<div class='col-md-6 col-12' style='margin-top:5px; margin-bottom:5px'>";
+											echo "<div style='margin-top:auto; margin-bottm:auto;'>";
+											if($sql_own_entries_row['DONE'] === '1')
+												{
+													echo "<span style='color:red'>Eintrag wurde bereits gecheckt!</span>";
+												}
+											else
+												{	
+													echo "<select table='".$table."' id_entry='".$sql_own_entries_row['ID']."' class='form-control change_episode'>";
+														if(getPermission($_SESSION['userid']) !== 1)
+															{
+																$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
+															}
+														else
+															{
+																$sql_select_episodes2 = "SELECT ID, TITEL, DATE, DONE FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
+															}
+														$sql_select_episodes_result2 = mysqli_query($con, $sql_select_episodes2);
+														while($sql_select_episodes_row2 = mysqli_fetch_assoc($sql_select_episodes_result2))
+														{
+															if($sql_select_episodes_row2['DONE'] == '1')
+															{
+																$done = " (abgeschlossen) ";
+															}
+															else
+															{
+																$done = "";
+															}
+															echo "<option ";
+																if($sql_select_episodes_row2['ID'] == $sql_own_entries_row['ID_EPISODE'])
+																{
+																	echo "selected disabled";
+																}
+															echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
+														}
+													echo "</select>";
+												}
+										echo "</div>";		
+									echo "</div>";
+								echo "</div>";
+							echo "</li>";
 						}
-						else
-						{
-							$done = "";
-						}
-						echo "<option ";
-							if($sql_select_episodes_row2['ID'] == $sql_own_entries_row['ID_EPISODE'])
-							{
-								echo "selected disabled";
-							}
-						echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
-					}
-					
-				echo "</select>";
-					}
-		echo "</div>";		
+				echo "</ul>";
+				echo "<nav aria-label='Page navigation example'>";
+					echo "<ul class='pagination justify-content-center' id='pagin'>";	 
+					echo "</ul>";
+				echo "</nav>";
+			echo "</div>";
 		echo "</div>";
-	echo "</div>";
-	echo "<li>";
-	}
-		echo "</ul>";
-	echo "<nav aria-label='Page navigation example'>";
-	echo "<ul class='pagination justify-content-center' id='pagin'>";
-         
-	echo "</ul>";
-	echo "</nav>";
-	echo "</div>";
-	echo "</div>";
 	echo "</div>";
 	
 	echo "<script>
-
-	
 	pageSize = 15;
 	pageCountAll =  $(\".active_content\").length / pageSize;
 
 	function paginate(count){
+		for(var i = 0 ; i<count;i++){
+		   $(\"#pagin\").append('<li class=\"page-item\"><div class=\"page-link\" >'+(i+1)+'</div></li></nav> ');
+		}
+		$(\"#pagin li\").first().find(\"a\").addClass(\"current\")
+		showPage = function(page) {
+			$(\".active_content\").hide();
+			$(\".active_content\").each(function(n) {
+				if (n >= pageSize * (page - 1) && n < pageSize * page)
+					$(this).show();
+			});        
+		}
+		
+		showPage(1);
 
-			for(var i = 0 ; i<count;i++){
-				
-			   $(\"#pagin\").append('<li class=\"page-item\"><div class=\"page-link\" >'+(i+1)+'</div></li></nav> ');
-			 }
-				$(\"#pagin li\").first().find(\"a\").addClass(\"current\")
-			showPage = function(page) {
-				$(\".active_content\").hide();
-				$(\".active_content\").each(function(n) {
-					if (n >= pageSize * (page - 1) && n < pageSize * page)
-						$(this).show();
-				});        
-			}
-			
-			showPage(1);
-
-			$(\"#pagin li div\").click(function() {
-				$(\"#pagin li div\").removeClass(\"current\");
-				$(this).addClass(\"current\");
-				showPage(parseInt($(this).text())) 
-			});
+		$(\"#pagin li div\").click(function() {
+			$(\"#pagin li div\").removeClass(\"current\");
+			$(this).addClass(\"current\");
+			showPage(parseInt($(this).text())) 
+		});
 	}		
 	paginate(pageCountAll);
-	
-		
-
 		$(\".change_episode\").on('change', function(){
 			
 			var id_entry = $(this).attr('id_entry');
 			var episode_current = $(\"option:disabled\", this).attr('id_episode');
 			var episode_new = $(\"option:selected\", this).attr('id_episode');
 			var table = $(this).attr('table');
-							$.ajax({
-								url: \"inc/update.php?set_episode_new=1\",
-								type: \"POST\",
-								data: {	\"id_entry\":id_entry, 
-										\"table\":table, 
-										\"episode_new\":episode_new,
-									},								
-								success: function(data)
-									{
-										console.log(data);
-										$.gritter.add({
-											title: \"OK!\",
-											text: \"Beitrag wurde verschoben\",
-											image: \"images/confirm.png\",
-											time: \"1000\"
-										});		
-									},
-								}); 			
+			$.ajax({
+				url: \"inc/update.php?set_episode_new=1\",
+				type: \"POST\",
+				data: {	\"id_entry\":id_entry, 
+						\"table\":table, 
+						\"episode_new\":episode_new,
+					},								
+				success: function(data)
+					{
+						console.log(data);
+						$.gritter.add({
+							title: \"OK!\",
+							text: \"Beitrag wurde verschoben\",
+							image: \"images/confirm.png\",
+							time: \"1000\"
+						});		
+					},
+				}); 
+				
 			$(\"option:selected\", this).attr('disabled', true);
 			$(\"option:selected\", this).attr('selected', true);
 			$(\"option\", this).not(\":selected\").attr('disabled', false);
@@ -512,12 +500,9 @@ function own_entries($userid){
 				
 				$(\"[id_podcast_list='\"+id_podcast+\"']\").addClass('active_content');
 				var pageCount =  $(\".active_content\").length / pageSize;
-
-
 			}
 			 paginate(pageCount);
-	
-			
+
 		});
 		
 		$(\"#set_episode\").on('change', function(){
@@ -546,13 +531,10 @@ function own_entries($userid){
 				var pageCount =  $(\".active_content\").length / pageSize;
 			}
 			
-			 			 paginate(pageCount);
+			paginate(pageCount);
 
-			
-			
 		});
-	</script>";
-	
+	</script>";	
 }
 
 //Episode exportieren
@@ -581,27 +563,27 @@ function export(){
 			echo "</div>";		
 			echo "<hr>";
 			echo "<h3>Shownotes sortieren</h3>";
+				echo "<div class='form-check'>";
+					echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios1' value='REIHENF' checked>";
+					echo "<label class='form-check-label' for='exampleRadios1'>";
+						echo "Nach der Reihenfolge in der Timeline";
+					echo "</label>";
+				echo "</div>";
 			echo "<div class='form-check'>";
-			  echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios1' value='REIHENF' checked>";
-			  echo "<label class='form-check-label' for='exampleRadios1'>";
-				echo "Nach der Reihenfolge in der Timeline";
-			  echo "</label>";
-			echo "</div>";
-			echo "<div class='form-check'>";
-			  echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios2' value='DONE_TS'>";
-			  echo "<label class='form-check-label' for='exampleRadios2'>";
-				echo "Nach Zeitpunk des Abhakens";
-			  echo "</label>";
+				echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios2' value='DONE_TS'>";
+				echo "<label class='form-check-label' for='exampleRadios2'>";
+					echo "Nach Zeitpunk des Abhakens";
+				echo "</label>";
 			echo "</div>";
 			echo "<div class='form-check export_check'>";
-			  echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios3' value='DESCR'>";
-			  echo "<label class='form-check-label' for='exampleRadios3'>";
-				echo "Alphabetisch nach Titel (A-Z)";
-			  echo "</label>";
+				echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios3' value='DESCR'>";
+				echo "<label class='form-check-label' for='exampleRadios3'>";
+					echo "Alphabetisch nach Titel (A-Z)";
+				echo "</label>";
 			echo "</div>";	
 			echo "<div style='margin-top: 10px'>";
-			echo "<button type='button' id='export_list' class='btn btn-outline-primary btn-block' export_episode_id='".$_SESSION['cur_episode']."'><i class='fas fa-upload fa-fw'></i> Liste exportieren</button>";
-			echo "<button type='button' id='clean_episode' class='btn btn-outline-tertiary btn-block clean_episode' change_value='".$_SESSION['cur_episode']."'><i class='fas fa-broom fa-fw'></i> Episode bereinigen</button>";		
+				echo "<button type='button' id='export_list' class='btn btn-outline-primary btn-block' export_episode_id='".$_SESSION['cur_episode']."'><i class='fas fa-upload fa-fw'></i> Liste exportieren</button>";
+				echo "<button type='button' id='clean_episode' class='btn btn-outline-tertiary btn-block clean_episode' change_value='".$_SESSION['cur_episode']."'><i class='fas fa-broom fa-fw'></i> Episode bereinigen</button>";		
 			echo "</div>";							
 		}
 }
@@ -669,16 +651,13 @@ function kanban(){
 					echo "</div>";
 				echo "</div>";
 			echo "<hr class='seperator'>";		
-		echo "<div class='collapse collapse-outer' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
-		
-		echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-bottom: 0px'>";
-		global $con;
-		$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."links.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."topics.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
-		$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
- 		while($sql_kanban_entries_row = mysqli_fetch_assoc($sql_kanban_entries_result))
- 		{
-							
-						
+			echo "<div class='collapse collapse-outer' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
+				echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-bottom: 0px'>";
+				global $con;
+				$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."links.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."topics.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
+				$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
+				while($sql_kanban_entries_row = mysqli_fetch_assoc($sql_kanban_entries_result))
+					{
 						if ($sql_kanban_entries_row['DONE'] == 1  && $sql_kanban_entries_row['EPISODE_DONE'] == 0)
 							{
 								$done_ind = "entry_done";
@@ -719,258 +698,254 @@ function kanban(){
 							{
 								$edit = "";
 							}
-							
-			if(empty($sql_kanban_entries_row['NAME_SHOW']))
-			{
-				$user = $sql_kanban_entries_row['USERNAME'];
-			}
-			else
-			{
-				$user = $sql_kanban_entries_row['NAME_SHOW'];
-			}
-			if($sql_kanban_entries_row['ID_USER'] == $_SESSION['userid'])
-			{
-				$editable = "edit_topic_".$sql_kanban_entries_row['ID'];
-				$own = "1";
-			}
-			else
-			{
-				$editable = "";
-				$own = "0";
-			}
-			if($sql_kanban_entries_row['IS_TOPIC'] == 1)
-				{
-					$class = "class='kanban_entry timeline-inverted' cat=".$sql_kanban_entries_row['ID_CATEGORY']." own='".$own."' id='item-t".$sql_kanban_entries_row['ID']."'";
-					$icon = "<i class='fas fa-bars fa-fw'></i>";
-					$icon_color = " info";
-					$title = "<div class='timeline-heading'>";
-					$title .= "<h6 class='".$editable." timeline-title' table='topics' data-name='DESCR' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
-					$title .= "</div>";
-					$type="topics";
-				}
-			else
-				{
-					$class = "class='kanban_entry' cat=".$sql_kanban_entries_row['ID_CATEGORY']." own='".$own."'id='item-l".$sql_kanban_entries_row['ID']."'";
-					$icon = "<i class='fas fa-link fa-fw'></i>";
-					$icon_color = " warning";
-					$title = "";
-					$type="links";
-				}
-			
-      echo "<li ".$class." table='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'>";
-        echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
-        echo "<div class='timeline-panel ".$done_ind."' id='panel_".$type."_".$sql_kanban_entries_row['ID']."'>";
-		echo "<div id='entry_buttons_".$type.$sql_kanban_entries_row['ID']."' style='display:none'>";
-								echo "<div class='row' style='margin: 0px;'>";
-									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry btn-sm' cat='".$sql_kanban_entries_row['ID_CATEGORY']."' id='delete_".$type.$sql_kanban_entries_row['ID']."' table='".$type."' option='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
-									echo "</div>"; 
- 									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' edit_type='".$type."' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry btn-sm' id='".$type."_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
-									echo "</div>";
-									echo "<div class='col-4' style='padding:1px'>";
-										echo "<button type='button' ".$edit." ".$done." class='btn ".$btn." btn-block check_link btn-sm' id='check_".$type."".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"".$type."\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
-											echo "<i class='far fa-check-circle'></i>";
-										echo "</button>";									
-									echo "</div>";
-								echo "</div>";
-								echo "<hr>";
-		echo "</div>";
-				echo " <small class='text-muted'>".$user."</small><span style='margin-left: 10px; color: green' class='check_icon_".$type."_".$sql_kanban_entries_row['ID']."'>".$entry_done."</span>";;
-				if($sql_kanban_entries_row['ID_USER'] != $_SESSION['userid'])
-				{
-					$actions = "";
-				}
-				else
-				{ 
-					$actions = "<a class='toggle_entry_buttons rotate-arrow' id='toggle_entry_buttons_".$type."_".$sql_kanban_entries_row['ID']."' entry_id='".$sql_kanban_entries_row['ID']."' style='float:right; cursor:pointer' type='".$type."'>";
-					$actions .= "<i class='fas fa-angle-double-left fa-2x'></i>";
-					$actions .= "</a>";
-				}
-				echo $actions;
-				
-				if((getSettingCat('VISIBLE', $sql_categories_list_rows['ID_CATEGORY']) == 0) && ($sql_kanban_entries_row['ID_USER'] != $_SESSION['userid']) && ($sql_kanban_entries_row['DONE'] != 1))
-					{
-						echo "<div class='timeline-heading'>";
-							echo "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>Gesperrt</h6>";
-						echo "</div>";		
-					}
-					else{
-				echo $title;
-          echo "<div class='timeline-body'>";
-			if(!empty($sql_kanban_entries_row['INFO']))
-				{
-					$notice_vis = "";
-				}
-			else
-				{
-					$notice_vis = "display: none";
-				}
-					$notice = "<hr>";
-					$notice .= "<div style='text-align:right;'>";
-					$notice .= "<i id_entry='".$sql_kanban_entries_row['ID']."' id='notice_toggle_".$type."_".$sql_kanban_entries_row['ID']."' type='".$type."' style='cursor:pointer; color: #6c3600; ".$notice_vis."' class='rotate-arrow far fa-sticky-note fa-2x toggle_notice'></i>";
-					$notice .= "</div>";
-		  if($sql_kanban_entries_row['IS_TOPIC'] == 1)
-		  {
-			echo "<div class='collapse-inner' style='cursor:pointer; color:#009688; text-align: right' id_topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "<i class='rotate-arrow fas fa-angle-double-left fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
-			echo "</div>";
-				echo "<div class='collapse collapse-inner-content' style='margin-top:10px' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
-				echo "<ul class='topic_links' >";
-			$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
-			$select_topic_links_result = mysqli_query($con, $select_topic_links);
-			while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
-			{
-				echo "<li class='topic_links_item' id='item-l".$select_topic_links_rows['ID']."'>";
-				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
-					echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
-						echo "<div class='link_icon topic_link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
-							echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR']."</div>";
-					echo "</div>";
-					echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='links' data-pk='".$select_topic_links_rows['ID']."'>";
-					
-					echo "</div>";
-					echo "<div class='col-12 col-xl-8 links_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display: none'>";
-						echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' beschr='URL' table='links' data-name='URL' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['URL']."</div>";
-					echo "</div>";
-					
-					
-								if($select_topic_links_rows['URL'] == NULL || $select_topic_links_rows['URL'] == '')
-									{
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$select_topic_links_rows['ID']."'>";
-											echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm' disabled><i class='fas fa-external-link-alt fa-fw'></i></button>";
-										echo "</div>";
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$select_topic_links_rows['ID']."'>";
-											echo "<button type='button' class='btn btn-outline-info btn-block btn-sm' disabled><i class='far fa-copy fa-fw fa-fw'></i></button>";
-										echo "</div>";
-									}
-								else
-									{
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$select_topic_links_rows['ID']."'>";
-											$fund_url = $select_topic_links_rows['URL'];
-											if (substr($fund_url, 0,4) !== "http")
-												{
-													$base = "http://".$fund_url;
-												}
-												else
-												{
-													$base = $fund_url;
-												}
-											echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block btn-sm'>";
-												echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-											echo "</button>";
-										echo "</div>";
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$select_topic_links_rows['ID']."'>";
-											echo "<button data-clipboard-text='".$base."' onclick='copy_link()' class='btn".$select_topic_links_rows['ID']." btn btn-info btn-block clipboard btn-sm'>";
-												echo "<i class='far fa-copy fa-fw'></i>";
-											echo "</button>";
-										echo "</div>";
 										
-										echo "<script>
-											var clip = new ClipboardJS('.btn".$select_topic_links_rows['ID']."');
-										</script>";
-									}	
-									
-									
-				echo "</div>";
-				echo "</li>";
-			}
-				echo "</ul>";
-
-				echo "</div>";
-		  echo $notice;
-		  echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
-			echo "<div class='lead' id='".$type."_notice_edit_".$sql_kanban_entries_row['ID']."' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
-			echo "<div id='savebutton".$type.$sql_kanban_entries_row['ID']."'></div>";
-		  echo "</div>";
-		  }
-		  else
-		  {
-			echo "<div class='row' style='padding: 0px 14px 0px 14px; margin-top: 15px'>";
-				echo "<ul class='topic_links'>";
-				echo "<li class='topic_links_item'>";
-				echo "<div class='row centered-items' style='padding: 0px 14px;'>";
-					echo "<div class='col-12 col-xl-8 link_title' style='padding:1px;'>";
-						echo "<div class='link_icon link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div><p class='lead edit_link_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</p>";
-					echo "</div>";
-					echo "<div class='col-12 col-xl-8' id='".$type."_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display:none'>";
-						echo "<p class='lead edit_link_".$sql_kanban_entries_row['ID']."' beschr='URL' table='links' data-name='URL' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['URL']."</p>";
-					echo "</div>";
-								if($sql_kanban_entries_row['URL'] == NULL || $sql_kanban_entries_row['URL'] == '')
-									{
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$sql_kanban_entries_row['ID']."'>";
-											echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm' disabled><i class='fas fa-external-link-alt fa-fw'></i></button>";
-										echo "</div>";
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$sql_kanban_entries_row['ID']."'>";
-											echo "<button type='button' class='btn btn-outline-info btn-block btn-sm' disabled><i class='far fa-copy fa-fw fa-fw'></i></button>";
-										echo "</div>";
-									}
-								else
-									{
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$sql_kanban_entries_row['ID']."'>";
-											$fund_url = $sql_kanban_entries_row['URL'];
-											if (substr($fund_url, 0,4) !== "http")
-												{
-													$base = "http://".$fund_url;
-												}
-												else
-												{
-													$base = $fund_url;
-												}
-											echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block btn-sm'>";
-												echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-											echo "</button>";
-										echo "</div>";
-										echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$sql_kanban_entries_row['ID']."'>";
-											echo "<div data-clipboard-text='".$base."' onclick='copy_link()' class='btn".$sql_kanban_entries_row['ID']." btn btn-info btn-block clipboard btn-sm'>";
-												echo "<i class='far fa-copy fa-fw'></i>";
+						if(empty($sql_kanban_entries_row['NAME_SHOW']))
+							{
+								$user = $sql_kanban_entries_row['USERNAME'];
+							}
+						else
+							{
+								$user = $sql_kanban_entries_row['NAME_SHOW'];
+							}
+						if($sql_kanban_entries_row['ID_USER'] == $_SESSION['userid'])
+							{
+								$editable = "edit_topic_".$sql_kanban_entries_row['ID'];
+								$own = "1";
+							}
+						else
+							{
+								$editable = "";
+								$own = "0";
+							}
+							
+						if($sql_kanban_entries_row['IS_TOPIC'] == 1)
+							{
+								$class = "class='kanban_entry timeline-inverted' cat=".$sql_kanban_entries_row['ID_CATEGORY']." own='".$own."' id='item-t".$sql_kanban_entries_row['ID']."'";
+								$icon = "<i class='fas fa-bars fa-fw'></i>";
+								$icon_color = " info";
+								$title = "<div class='timeline-heading'>";
+								$title .= "<h6 class='".$editable." timeline-title' table='topics' data-name='DESCR' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</h6>";
+								$title .= "</div>";
+								$type="topics";
+							}
+						else
+							{
+								$class = "class='kanban_entry' cat=".$sql_kanban_entries_row['ID_CATEGORY']." own='".$own."'id='item-l".$sql_kanban_entries_row['ID']."'";
+								$icon = "<i class='fas fa-link fa-fw'></i>";
+								$icon_color = " warning";
+								$title = "";
+								$type="links";
+							}
+						
+						echo "<li ".$class." table='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'>";
+							echo "<div class='timeline-badge timeline-handle".$icon_color."'>".$icon."</div>";
+								echo "<div class='timeline-panel ".$done_ind."' id='panel_".$type."_".$sql_kanban_entries_row['ID']."'>";
+									echo "<div id='entry_buttons_".$type.$sql_kanban_entries_row['ID']."' style='display:none'>";
+										echo "<div class='row' style='margin: 0px;'>";
+											echo "<div class='col-4' style='padding:1px'>";
+												echo "<button type='button' class='btn btn-outline-danger btn-block delete_entry btn-sm' cat='".$sql_kanban_entries_row['ID_CATEGORY']."' id='delete_".$type.$sql_kanban_entries_row['ID']."' table='".$type."' option='".$type."' data-pk='".$sql_kanban_entries_row['ID']."'><i class='far fa-times-circle fa-fw'></i></button>";
+											echo "</div>"; 
+											echo "<div class='col-4' style='padding:1px'>";
+												echo "<button type='button' edit_type='".$type."' edit_id='".$sql_kanban_entries_row['ID']."' class='btn btn-outline-tertiary btn-block edit_entry btn-sm' id='".$type."_edit_button_".$sql_kanban_entries_row['ID']."'><i class='fas fa-edit fa-fw'></i></button>";
+											echo "</div>";
+											echo "<div class='col-4' style='padding:1px'>";
+												echo "<button type='button' ".$edit." ".$done." class='btn ".$btn." btn-block check_link btn-sm' id='check_".$type."".$sql_kanban_entries_row['ID']."' onclick='check_link(".$sql_kanban_entries_row['ID'].", \"".$type."\")' data-name='DONE' data-checked='".$sql_kanban_entries_row['DONE']."'>";
+													echo "<i class='far fa-check-circle'></i>";
+												echo "</button>";									
 											echo "</div>";
 										echo "</div>";
-										
-										echo "<script>
-											var clip = new ClipboardJS('.btn".$sql_kanban_entries_row['ID']."');
-										</script>";
-									}	
-				echo "</div>";
-				echo "</li>";
+										echo "<hr>";
+									echo "</div>";
+									echo " <small class='text-muted'>".$user."</small><span style='margin-left: 10px; color: green' class='check_icon_".$type."_".$sql_kanban_entries_row['ID']."'>".$entry_done."</span>";;
+									if($sql_kanban_entries_row['ID_USER'] != $_SESSION['userid'])
+									{
+										$actions = "";
+									}
+									else
+									{ 
+										$actions = "<a class='toggle_entry_buttons rotate-arrow' id='toggle_entry_buttons_".$type."_".$sql_kanban_entries_row['ID']."' entry_id='".$sql_kanban_entries_row['ID']."' style='float:right; cursor:pointer' type='".$type."'>";
+										$actions .= "<i class='fas fa-angle-double-left fa-2x'></i>";
+										$actions .= "</a>";
+									}
+									echo $actions;
+							
+									if((getSettingCat('VISIBLE', $sql_categories_list_rows['ID_CATEGORY']) == 0) && ($sql_kanban_entries_row['ID_USER'] != $_SESSION['userid']) && ($sql_kanban_entries_row['DONE'] != 1))
+										{
+											echo "<div class='timeline-heading'>";
+												echo "<h6 class='timeline-title' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>Gesperrt</h6>";
+											echo "</div>";		
+										}
+									else
+										{
+											echo $title;
+												echo "<div class='timeline-body'>";
+												if(!empty($sql_kanban_entries_row['INFO']))
+													{
+														$notice_vis = "";
+													}
+												else
+													{
+														$notice_vis = "display: none";
+													}
+														$notice = "<hr>";
+														$notice .= "<div style='text-align:right;'>";
+														$notice .= "<i id_entry='".$sql_kanban_entries_row['ID']."' id='notice_toggle_".$type."_".$sql_kanban_entries_row['ID']."' type='".$type."' style='cursor:pointer; color: #6c3600; ".$notice_vis."' class='rotate-arrow far fa-sticky-note fa-2x toggle_notice'></i>";
+														$notice .= "</div>";
+												if($sql_kanban_entries_row['IS_TOPIC'] == 1)
+													{
+														echo "<div class='collapse-inner' style='cursor:pointer; color:#009688; text-align: right' id_topic='".$sql_kanban_entries_row['ID']."'>";
+															echo "<i class='rotate-arrow fas fa-angle-double-left fa-2x expand_icon_".$sql_kanban_entries_row['ID']."'></i>";
+														echo "</div>";
+														echo "<div class='collapse collapse-inner-content' style='margin-top:10px' id='collapse_topic_".$sql_kanban_entries_row['ID']."' topic='".$sql_kanban_entries_row['ID']."'>";
+															echo "<ul class='topic_links' >";
+															$select_topic_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_kanban_entries_row['ID'];
+															$select_topic_links_result = mysqli_query($con, $select_topic_links);
+															while($select_topic_links_rows = mysqli_fetch_assoc($select_topic_links_result))
+																{
+																	echo "<li class='topic_links_item' id='item-l".$select_topic_links_rows['ID']."'>";
+																		echo "<div class='row centered-items' style='padding: 0px 14px;'>";
+																			echo "<div class='col-12 col-xl-8' style='padding:1px;'>";
+																				echo "<div class='link_icon topic_link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'><i class='fas fa-link fa-fw'></i></div>";
+																					echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['DESCR'];
+																					echo "</div>";
+																				echo "</div>";
+																				echo "<div class='link_topic_delete_".$sql_kanban_entries_row['ID']." delete_entry' table='links' option='links' data-pk='".$select_topic_links_rows['ID']."'>";
+																				echo "</div>";
+																				echo "<div class='col-12 col-xl-8 links_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display: none'>";
+																					echo "<div class='lead link_topic_".$sql_kanban_entries_row['ID']."' beschr='URL' table='links' data-name='URL' data-type='text' data-pk='".$select_topic_links_rows['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$select_topic_links_rows['URL']."</div>";
+																				echo "</div>";																	
+																				if($select_topic_links_rows['URL'] == NULL || $select_topic_links_rows['URL'] == '')
+																					{
+																						echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$select_topic_links_rows['ID']."'>";
+																							echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm' disabled><i class='fas fa-external-link-alt fa-fw'></i></button>";
+																						echo "</div>";
+																						echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$select_topic_links_rows['ID']."'>";
+																							echo "<button type='button' class='btn btn-outline-info btn-block btn-sm' disabled><i class='far fa-copy fa-fw fa-fw'></i></button>";
+																						echo "</div>";
+																					}
+																				else
+																					{
+																						echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$select_topic_links_rows['ID']."'>";
+																							$fund_url = $select_topic_links_rows['URL'];
+																							if (substr($fund_url, 0,4) !== "http")
+																								{
+																									$base = "http://".$fund_url;
+																								}
+																								else
+																								{
+																									$base = $fund_url;
+																								}
+																							echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block btn-sm'>";
+																								echo "<i class='fas fa-external-link-alt fa-fw'></i>";
+																							echo "</button>";
+																						echo "</div>";
+																						echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$select_topic_links_rows['ID']."'>";
+																							echo "<button data-clipboard-text='".$base."' onclick='copy_link()' class='btn".$select_topic_links_rows['ID']." btn btn-info btn-block clipboard btn-sm'>";
+																								echo "<i class='far fa-copy fa-fw'></i>";
+																							echo "</button>";
+																						echo "</div>";
+																						
+																						echo "<script>
+																							var clip = new ClipboardJS('.btn".$select_topic_links_rows['ID']."');
+																						</script>";
+																					}		
+																		echo "</div>";
+																	echo "</li>";
+																}
+															echo "</ul>";
+														echo "</div>";
+														echo $notice;
+														echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
+															echo "<div class='lead' id='".$type."_notice_edit_".$sql_kanban_entries_row['ID']."' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+															echo "<div id='savebutton".$type.$sql_kanban_entries_row['ID']."'></div>";
+														echo "</div>";
+													}
+												else
+													{
+														echo "<div class='row' style='padding: 0px 14px 0px 14px; margin-top: 15px'>";
+															echo "<ul class='topic_links'>";
+																echo "<li class='topic_links_item'>";
+																	echo "<div class='row centered-items' style='padding: 0px 14px;'>";
+																		echo "<div class='col-12 col-xl-8 link_title' style='padding:1px;'>";
+																			echo "<div class='link_icon link_icon_".$sql_kanban_entries_row['ID']."' id='".$type."_".$sql_kanban_entries_row['ID']."'>";
+																				echo "<i class='fas fa-link fa-fw'></i>";
+																			echo "</div>";
+																			echo "<p class='lead edit_link_".$sql_kanban_entries_row['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['DESCR']."</p>";
+																		echo "</div>";
+																		echo "<div class='col-12 col-xl-8' id='".$type."_url_".$sql_kanban_entries_row['ID']."' style='padding:1px; display:none'>";
+																			echo "<p class='lead edit_link_".$sql_kanban_entries_row['ID']."' beschr='URL' table='links' data-name='URL' data-type='text' data-pk='".$sql_kanban_entries_row['ID']."' style='margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>".$sql_kanban_entries_row['URL']."</p>";
+																		echo "</div>";
+																		if($sql_kanban_entries_row['URL'] == NULL || $sql_kanban_entries_row['URL'] == '')
+																			{
+																				echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$sql_kanban_entries_row['ID']."'>";
+																					echo "<button type='button' class='btn btn-outline-warning btn-block btn-sm' disabled><i class='fas fa-external-link-alt fa-fw'></i></button>";
+																				echo "</div>";
+																				echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$sql_kanban_entries_row['ID']."'>";
+																					echo "<button type='button' class='btn btn-outline-info btn-block btn-sm' disabled><i class='far fa-copy fa-fw fa-fw'></i></button>";
+																				echo "</div>";
+																			}
+																		else
+																			{
+																				echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_open_".$sql_kanban_entries_row['ID']."'>";
+																					$fund_url = $sql_kanban_entries_row['URL'];
+																					if (substr($fund_url, 0,4) !== "http")
+																						{
+																							$base = "http://".$fund_url;
+																						}
+																						else
+																						{
+																							$base = $fund_url;
+																						}
+																					echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block btn-sm'>";
+																						echo "<i class='fas fa-external-link-alt fa-fw'></i>";
+																					echo "</button>";
+																				echo "</div>";
+																				echo "<div class='col-6 col-xl-2' style='padding:1px' id='buttons_link_copy_".$sql_kanban_entries_row['ID']."'>";
+																					echo "<div data-clipboard-text='".$base."' onclick='copy_link()' class='btn".$sql_kanban_entries_row['ID']." btn btn-info btn-block clipboard btn-sm'>";
+																						echo "<i class='far fa-copy fa-fw'></i>";
+																					echo "</div>";
+																				echo "</div>";
+																				
+																				echo "<script>
+																					var clip = new ClipboardJS('.btn".$sql_kanban_entries_row['ID']."');
+																				</script>";
+																			}	
+																	echo "</div>";
+																echo "</li>";
+															echo "</ul>";
+														echo "</div>";
+														echo $notice;
+															echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
+																echo "<div class='lead' id='".$type."_notice_edit_".$sql_kanban_entries_row['ID']."' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
+																echo "<div id='savebutton".$type.$sql_kanban_entries_row['ID']."'></div>";
+															echo "</div>";
+													}
+												echo "</div>";
+											echo "</div>";
+										echo "</li>";
+										}
+					}   
 				echo "</ul>";
+				if(!empty($_SESSION['cur_episode']))
+					{
+						if ((getPermission($_SESSION['userid']) > 1 && !userInEpisode($_SESSION['userid'], $_SESSION['cur_episode'])) || episodeclosed($_SESSION['cur_episode']) == 1)
+							{
+							}
+						else
+						{
+							echo "<ul class='timeline' style='margin-bottom: 20px'>";
+								echo "<li>";
+										echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
+								echo "</li>"; 
+							echo "</ul>"; 
+						}
+					}
+				echo "<hr>";
 			echo "</div>";
-		  echo $notice;
-		  echo "<div style='display:none' id ='".$type."_notice_".$sql_kanban_entries_row['ID']."'>";
-			echo "<div class='lead' id='".$type."_notice_edit_".$sql_kanban_entries_row['ID']."' style='font-size: 0.9rem'>".$sql_kanban_entries_row['INFO']."</div>";
-			echo "<div id='savebutton".$type.$sql_kanban_entries_row['ID']."'></div>";
-		  echo "</div>";
-		  }
-          echo "</div>";
-        echo "</div>";
-      echo "</li>";
 		}
-		}  
-		
-    
-echo "</ul>";
-			if(!empty($_SESSION['cur_episode']))
-				{
-					if ((getPermission($_SESSION['userid']) > 1 && !userInEpisode($_SESSION['userid'], $_SESSION['cur_episode'])) || episodeclosed($_SESSION['cur_episode']) == 1)
-						{
-						}
-					else
-						{
-		echo "<ul class='timeline' style='margin-bottom: 20px'>";
- 		    echo "<li>";
-				    echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
-			echo "</li>"; 
-			echo "</ul>"; 
-						}
-				}
-echo "<hr>";
-echo "</div>";
-		}
-echo "</div>";
+	echo "</div>";
 	echo "<script>
 			$(document).ready(function(){
-			
-			
 			$(\".toggle_notice\").on(\"click\", function(){
 				var type = $(this).attr(\"type\");
 				var id_entry = $(this).attr(\"id_entry\");
@@ -981,7 +956,6 @@ echo "</div>";
 				$(this).removeClass('fas');
 				$(this).addClass('far');
 					$(this).removeClass(\"show\");
-
 				}
 				else
 				{
@@ -989,80 +963,73 @@ echo "</div>";
 				$(this).addClass('fas');
 					$(this).addClass(\"show\");
 				}
-	
 			});
+			
 			$(\".toggle_entry_buttons\").on(\"click\", function(){
 				var type = $(this).attr(\"type\");
 				var entry_id = $(this).attr(\"entry_id\");
-				
 					if($(\"#entry_buttons_\" + type + entry_id).css('display') == 'none')
 					{
 						var angle = 90;
 					}
-					
 					else
 					{
 						var angle = 0;
-						
 					}
 					$(this).attr('angle', angle);	
 					$(this).css({'transform': 'rotate(' + angle + 'deg)'});	
-				$(\"#entry_buttons_\" + type + entry_id).toggle(\"slow\");
-			
+					$(\"#entry_buttons_\" + type + entry_id).toggle(\"slow\");
 			});
 						
 			$( \".kanban_sortable\" ).sortable({ 
 				handle: '.timeline-handle',
 				receive: function( event, ui){
-							var cat_id_receiver = event.target.getAttribute('cat_id');
-							var cat_id_current = ui.item.attr(\"cat\");
-							
-							var old_anzahl = $(\"#cat_\" + cat_id_receiver + \"_number_user\").text();
-							var old_anzahl_old = $(\"#cat_\" + cat_id_current + \"_number_user\").text();							
-							
-							var old_anzahl_gesamt = $(\"#cat_\" + cat_id_receiver + \"_number_all\").text();
-							var old_anzahl_old_gesamt = $(\"#cat_\" + cat_id_current + \"_number_all\").text();
-							
-							var new_anzahl_receiver = parseInt(old_anzahl)+1;
-							var new_anzahl_current = parseInt(old_anzahl_old)-1;							
-							
-							var new_anzahl_receiver_gesamt = parseInt(old_anzahl_gesamt)+1;
-							var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
-							
-							var pk = ui.item.attr(\"data-pk\");
-							var table = ui.item.attr(\"table\");
-							$.ajax({
-								url: \"inc/update.php?set_category_sortable=1\",
-								type: \"POST\",
-								data: {	\"cat_id\":cat_id_receiver, 
-										\"table\":table, 
-										\"pk\":pk 
-									},								
-								success: function(data)
-									{
-										console.log(data);
-										$(\"#cat_\" + cat_id_receiver + \"_number_user\").text(new_anzahl_receiver);
-										$(\"#cat_\" + cat_id_current + \"_number_user\").text(new_anzahl_current);										
-										
-										$(\"#cat_\" + cat_id_receiver + \"_number_all\").text(new_anzahl_receiver_gesamt);
-										$(\"#cat_\" + cat_id_current + \"_number_all\").text(new_anzahl_current_gesamt);
-										ui.item.attr(\"cat\", cat_id_receiver)
+					var cat_id_receiver = event.target.getAttribute('cat_id');
+					var cat_id_current = ui.item.attr(\"cat\");
+					
+					var old_anzahl = $(\"#cat_\" + cat_id_receiver + \"_number_user\").text();
+					var old_anzahl_old = $(\"#cat_\" + cat_id_current + \"_number_user\").text();							
+					
+					var old_anzahl_gesamt = $(\"#cat_\" + cat_id_receiver + \"_number_all\").text();
+					var old_anzahl_old_gesamt = $(\"#cat_\" + cat_id_current + \"_number_all\").text();
+					
+					var new_anzahl_receiver = parseInt(old_anzahl)+1;
+					var new_anzahl_current = parseInt(old_anzahl_old)-1;							
+					
+					var new_anzahl_receiver_gesamt = parseInt(old_anzahl_gesamt)+1;
+					var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
+					
+					var pk = ui.item.attr(\"data-pk\");
+					var table = ui.item.attr(\"table\");
+					$.ajax({
+						url: \"inc/update.php?set_category_sortable=1\",
+						type: \"POST\",
+						data: {	\"cat_id\":cat_id_receiver, 
+								\"table\":table, 
+								\"pk\":pk 
+							},								
+						success: function(data)
+							{
+								console.log(data);
+								$(\"#cat_\" + cat_id_receiver + \"_number_user\").text(new_anzahl_receiver);
+								$(\"#cat_\" + cat_id_current + \"_number_user\").text(new_anzahl_current);										
+								
+								$(\"#cat_\" + cat_id_receiver + \"_number_all\").text(new_anzahl_receiver_gesamt);
+								$(\"#cat_\" + cat_id_current + \"_number_all\").text(new_anzahl_current_gesamt);
+								ui.item.attr(\"cat\", cat_id_receiver)
 
-									},
-								}); 
+							},
+						}); 
 					},
 				update: function( event, ui){
 					var id = $(this).attr('id');
 							save_order_kanban(id);
 					},						
-				
 				});					
-		
-
-		  } );		
+		  });		
 	</script>";	
+}
 
-	}
 //Episode abschließen
 function close_episode(){
 	global $today;

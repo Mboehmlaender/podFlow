@@ -35,7 +35,7 @@ if(isset($_POST)){
 			return;
 	}
 			
-	//Nicht abgehakte Themen/Beuträge in eine andere Episode verschieben
+	//Nicht abgehakte Themen/Beiträge in eine andere Episode verschieben
 	if(isset($_GET['move_unchecked_content'])){
 			$episode_id_current = mysqli_real_escape_string($con,$_POST['episode_id_current']);
 			$episode_id_new = mysqli_real_escape_string($con,$_POST['episode_id_new']);
@@ -182,30 +182,30 @@ if(isset($_POST)){
 		$passwort_hash = password_hash($password, PASSWORD_DEFAULT);
 		
 		if((!empty($_SESSION['podcast']) && ($save_podcast == 1)))
-		{
-			$set_podcast = ", LAST_PODCAST = ".$_SESSION['podcast'];
-		}	
+			{
+				$set_podcast = ", LAST_PODCAST = ".$_SESSION['podcast'];
+			}	
 		else if((empty($_SESSION['podcast']) && ($save_podcast == 1)) || ($save_podcast == 0))
-		{
-			$set_podcast = ", LAST_PODCAST = NULL";
-		}			
+			{
+				$set_podcast = ", LAST_PODCAST = NULL";
+			}			
 		else
-		{
-			$set_podcast = "";
-		}
+			{
+				$set_podcast = "";
+			}
 
 		if((!empty($_SESSION['cur_episode']) && ($save_episode == 1)))
-		{
-			$set_episode = ", LAST_EPISODE = ".$_SESSION['cur_episode'];
-		}	
+			{
+				$set_episode = ", LAST_EPISODE = ".$_SESSION['cur_episode'];
+			}	
 		else if((empty($_SESSION['cur_episode']) && ($save_episode == 1)) || ($save_episode == 0))
-		{
-			$set_episode = ", LAST_EPISODE = NULL";
-		}	
+			{
+				$set_episode = ", LAST_EPISODE = NULL";
+			}	
 		else
-		{
-			$set_episode = "";
-		}		
+			{
+				$set_episode = "";
+			}		
 		
 		if(!empty($password))
 		{

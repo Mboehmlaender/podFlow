@@ -11,362 +11,357 @@ if(!isset($_SESSION['userid']))
 //Export: Liste
 
 if(isset($_GET['export_list'])){
-	$id_episode = $_POST['id_episode'];
-	$order_by = $_POST['order_by'];
-							echo "<div class='tab-content' id='pills-tabContent'>";
-								echo "<div class='tab-pane fade show active lead' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
-							 		$sql_select = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE=".$id_episode." AND EXPORT_CAT = 1 ORDER BY REIHENF ASC";
-									$sql_select_result = mysqli_query($con, $sql_select);
-									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
-									{	
-										if($sql_select_row['ID_EXPORT_OPTION'] == 2)
+$id_episode = $_POST['id_episode'];
+$order_by = $_POST['order_by'];
+	echo "<div class='tab-content' id='pills-tabContent'>";
+		echo "<div class='tab-pane fade show active lead' id='HTML-list' role='tabpanel' aria-labelledby='pills-home-tab'>";
+		$sql_select = "SELECT * FROM ".DB_PREFIX."view_episode_categories WHERE ID_EPISODE=".$id_episode." AND EXPORT_CAT = 1 ORDER BY REIHENF ASC";
+		$sql_select_result = mysqli_query($con, $sql_select);
+			while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
+			{	
+				if($sql_select_row['ID_EXPORT_OPTION'] == 2)
+					{
+						$list_type_open = "<ol>";
+						$close_type_close = "</ol>";
+						$data_type_open = "<li>";
+						$data_type_close = "</li>";
+						$sep = "";
+					}
+
+				else if($sql_select_row['ID_EXPORT_OPTION'] == 3)
+					{
+						$list_type_open = "<ul>";
+						$close_type_close = "</ul>";
+						$data_type_open = "<li>";
+						$data_type_close = "</li>";											
+						$sep = "";
+					}
+				else if($sql_select_row['ID_EXPORT_OPTION'] == 1)
+					{
+						$list_type_open = "";
+						$close_type_close = "";
+						$data_type_open = "";
+						$data_type_close = "";											
+						$sep = " - ";
+					}
+				else
+					{
+						$list_type_open = "<ul style='list-style-type: none; padding-left: 0px'>";
+						$close_type_close = "</ul>";
+						$data_type_open = "<li style='list-style-type: none; padding-left: 0px'>";
+						$data_type_close = "</li>";											
+						$sep = "";
+					}
+					
+				if($sql_select_row['EXPORT_TITLE_CAT'] == 1)
+					{
+						$cat_title_open = "<ul style='list-style-type:none; padding-left: 0px'>";
+						$cat_title_open .= $sql_select_row['DESCR'];
+						$cat_title_open .= "<li>";
+						$cat_title_close = "</li>";
+						$cat_title_close .= "</ul>";
+					}
+				else
+					{
+						$cat_title_open = "";
+						$cat_title_close = "";
+				}
+
+				echo $cat_title_open;
+				$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY ".$order_by." ASC";											
+				$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
+				$stringarray = array();
+				$stringarray_notice = array();
+				$count = 0;
+				echo $list_type_open;
+				while ($sql_select_content_1_row = mysqli_fetch_assoc($sql_select_content_1_result))
+					{	
+						if($sql_select_row['ID_EXPORT_OPTION'] == 1)
+							{
+								if($sql_select_content_1_row['IS_TOPIC'] == 1)
+								{
+									if($sql_select_row['EXPORT_TITLE_TOPICS'] == 0)
 										{
-											$list_type_open = "<ol>";
-											$close_type_close = "</ol>";
-											$data_type_open = "<li>";
-											$data_type_close = "</li>";
-											$sep = "";
-										}
-										
-										else if($sql_select_row['ID_EXPORT_OPTION'] == 3)
-										{
-											$list_type_open = "<ul>";
-											$close_type_close = "</ul>";
-											$data_type_open = "<li>";
-											$data_type_close = "</li>";											
-											$sep = "";
-										}
-										else if($sql_select_row['ID_EXPORT_OPTION'] == 1)
-										{
-											$list_type_open = "";
-											$close_type_close = "";
-											$data_type_open = "";
-											$data_type_close = "";											
-											$sep = " - ";
+											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+											$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
+											$stringarray_2 = array();
+											while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
+												{	
+													$descr2 = $data_type_open;
+													if($sql_select_row['EXPORT_URL_LINKS'] == 0)
+														{
+															$fund_url = "";
+														}
+													else
+														{
+															$fund_url = $sql_select_content_2_row['URL'];
+														}
+													$pos = "http";
+													
+													if(empty($fund_url))
+														{
+															$descr2 .= $sql_select_content_2_row['DESCR'];
+														}
+													else if (strpos($fund_url, $pos) === false)
+														{
+															$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+														}
+													else
+														{
+															$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+														}																	
+													$descr2 .= $data_type_close;
+
+													array_push($stringarray_2, $descr2);	
+												} 
+											$descr .= implode(" | ",$stringarray_2);
+											if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+												{
+													$count++;
+													$descr .= "<sup>".$count."</sup>";
+													$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
+												} 
+											else
+												{
+												$descr_notice = "";
+												}																	
+											array_push($stringarray, $descr);
+											array_push($stringarray_notice, $descr_notice);
 										}
 										else
-										{
-											$list_type_open = "<ul style='list-style-type: none; padding-left: 0px'>";
-											$close_type_close = "</ul>";
-											$data_type_open = "<li style='list-style-type: none; padding-left: 0px'>";
-											$data_type_close = "</li>";											
-											$sep = "";
-										}
-									if($sql_select_row['EXPORT_TITLE_CAT'] == 1)
 											{
-											$cat_title_open = "<ul style='list-style-type:none; padding-left: 0px'>";
-											$cat_title_open .= $sql_select_row['DESCR'];
-											$cat_title_open .= "<li>";
-											
-											$cat_title_close = "</li>";
-											$cat_title_close .= "</ul>";
+												$descr = $data_type_open;
+												$descr .= $sql_select_content_1_row['DESCR'].": ";
+												$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+												$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
+												$stringarray_2 = array();
+												$descr .= $list_type_open;
+												while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
+													{	
+														$descr2 = $data_type_open;
+														if($sql_select_row['EXPORT_URL_LINKS'] == 0)
+															{
+																$fund_url = "";
+															}
+														else
+															{
+																$fund_url = $sql_select_content_2_row['URL'];
+															}																	
+														$pos = "http";
+														if(empty($fund_url))
+															{
+																$descr2 .= $sql_select_content_2_row['DESCR'];
+															}
+														else if (strpos($fund_url, $pos) === false)
+															{
+																$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+															}
+														else
+															{
+																$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+															}
+														$descr2 .= $data_type_close;
+														array_push($stringarray_2, $descr2);	
+													} 
+												$descr .= implode(" | ",$stringarray_2);
+												$descr .= $close_type_close;
+												$descr .= $data_type_close;
+
+												if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+													{	
+														$count++;
+														$descr .= "<sup>".$count."</sup>";
+														$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
+													}  
+												else
+													{
+														$descr_notice = "";
+													}
+
+												array_push($stringarray, $descr);	
+												array_push($stringarray_notice, $descr_notice);	
+											}
+								}
+								else
+									{
+										$fund_url = $sql_select_content_1_row['URL'];
+										$pos = "http";
+										if(empty($fund_url))
+											{
+												$descr = "<a href='#' >".$sql_select_content_1_row['DESCR']."</a>";
+												array_push($stringarray, $descr);	
+											}
+										else if (strpos($fund_url, $pos) === false)
+											{
+												$descr = "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
 											}
 											else
 											{
-											$cat_title_open = "";
-											
-											$cat_title_close = "";
+												$descr = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
 											}
 											
-											echo $cat_title_open;
-											$sql_select_content_1 = "SELECT ID, ID_EPISODE, DESCR, INFO, URL, NULL AS IS_TOPIC, NULL AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."links WHERE ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_TOPIC IS NULL AND DONE = 1 UNION ALL SELECT ID, ID_EPISODE, DESCR, INFO, NULL AS URL, 1 AS IS_TOPIC, ID AS ID_TOPIC, REIHENF, DONE, DONE_TS from ".DB_PREFIX."topics where ID_CATEGORY = ".$sql_select_row['ID_CATEGORY']." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND DONE = 1 ORDER BY ".$order_by." ASC";											
-											$sql_select_content_1_result = mysqli_query($con, $sql_select_content_1);	
-											$stringarray = array();
-											$stringarray_notice = array();
-											$count = 0;
-											echo $list_type_open;
-											while ($sql_select_content_1_row = mysqli_fetch_assoc($sql_select_content_1_result))
-											{	
-												if($sql_select_row['ID_EXPORT_OPTION'] == 1)
-												{
-													if($sql_select_content_1_row['IS_TOPIC'] == 1)
-													{
-														if($sql_select_row['EXPORT_TITLE_TOPICS'] == 0)
-														{
-					 											$sql_select_content_2 = "SELECT * FROM links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
-																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
-																$stringarray_2 = array();
-																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
-																{	
-																	$descr2 = $data_type_open;
-																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
-																	{
-																		$fund_url = "";
-																	}
-																	else
-																	{
-																		$fund_url = $sql_select_content_2_row['URL'];
-																	}
-																	$pos = "http";
-																	if(empty($fund_url))
-																		{
-																			$descr2 .= $sql_select_content_2_row['DESCR'];
-																		}
-																	else if (strpos($fund_url, $pos) === false)
-																		{
-																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
-																		}
-																	else
-																		{
-																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
-																		}																	
-																	$descr2 .= $data_type_close;
-																	
-																	array_push($stringarray_2, $descr2);	
-																} 
- 															$descr .= implode(" | ",$stringarray_2);
- 																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																		$count++;
-																		$descr .= "<sup>".$count."</sup>";
-																	$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
-																	} 
-																else
-																{
-																	$descr_notice = "";
-																}																	
-															array_push($stringarray, $descr);
-															array_push($stringarray_notice, $descr_notice);
-														}
-														else
-														{
-															$descr = $data_type_open;
-															$descr .= $sql_select_content_1_row['DESCR'].": ";
-					 											$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
-																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
-																$stringarray_2 = array();
-																$descr .= $list_type_open;
-																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
-																{	
-																	$descr2 = $data_type_open;
-																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
-																	{
-																		$fund_url = "";
-																	}
-																	else
-																	{
-																		$fund_url = $sql_select_content_2_row['URL'];
-																	}																	
-																	$pos = "http";
-																	if(empty($fund_url))
-																		{
-																			$descr2 .= $sql_select_content_2_row['DESCR'];
-																		}
-																	else if (strpos($fund_url, $pos) === false)
-																		{
-																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
-																		}
-																	else
-																		{
-																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
-																		}
-																	$descr2 .= $data_type_close;
-																	array_push($stringarray_2, $descr2);	
-																} 
-															$descr .= implode(" | ",$stringarray_2);
-															$descr .= $close_type_close;
-
-															$descr .= $data_type_close;
-															
-  																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{	
-																		$count++;
-																		$descr .= "<sup>".$count."</sup>";
-																	$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
-																	}  
-																else
-																{
-																	$descr_notice = "";
-																}
-																	
-															array_push($stringarray, $descr);	
-															array_push($stringarray_notice, $descr_notice);	
-														}
-													}
-													else
-													{
-														$fund_url = $sql_select_content_1_row['URL'];
-														$pos = "http";
-														if(empty($fund_url))
-															{
-																$descr = "<a href='#' >".$sql_select_content_1_row['DESCR']."</a>";
-																array_push($stringarray, $descr);	
-															}
-														else if (strpos($fund_url, $pos) === false)
-															{
-																$descr = "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
-															}
-														else
-															{
-																$descr = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>";
-															}
-  																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																																				$count++;
-
-																		$descr .= "<sup>".$count."</sup>";
-																	$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
-																	}  
-																else
-																{
-																	$descr_notice = "";
-																}
-																array_push($stringarray, $descr);	
-																array_push($stringarray_notice, $descr_notice);	
-						
-													}
-												}
-												else
-												{
-													if($sql_select_content_1_row['IS_TOPIC'] == 1)
-													{
-														if($sql_select_row['EXPORT_TITLE_TOPICS'] == 0)
-														{
-					 											$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
-																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
-																$stringarray_2 = array();
-																	$descr2 = $data_type_open;
-																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
-																{	
-																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
-																	{
-																		$fund_url = "";
-																	}
-																	else
-																	{
-																		$fund_url = $sql_select_content_2_row['URL'];
-																	}
-																	$pos = "http";
-																	if(empty($fund_url))
-																		{
-																			$descr2 .= $sql_select_content_2_row['DESCR']."<br>";
-																		}
-																	else if (strpos($fund_url, $pos) === false)
-																		{
-																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a><br>";
-																		}
-																	else
-																		{
-																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a><br>";
-																		}																	
-																	
-																} 
-																	$descr2 .= $data_type_close;
-																	array_push($stringarray_2, $descr2);	
-															$descr = implode($sep,$stringarray_2);
-																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}
-															array_push($stringarray, $descr);
-														}
-														else
-														{
-															$descr = $data_type_open;
-															$descr .= $sql_select_content_1_row['DESCR'];
-																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																		$descr .= "<br><span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}
-					 											$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
-																$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
-																$stringarray_2 = array();
-																$descr .= $list_type_open;
-																while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
-																{	
-																	$descr2 = $data_type_open;
-																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
-																	{
-																		$fund_url = "";
-																	}
-																	else
-																	{
-																		$fund_url = $sql_select_content_2_row['URL'];
-																	}																	
-																	$pos = "http";
-																	if(empty($fund_url))
-																		{
-																			$descr2 .= $sql_select_content_2_row['DESCR'];
-																		}
-																	else if (strpos($fund_url, $pos) === false)
-																		{
-																			$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
-																		}
-																	else
-																		{
-																			$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
-																		}
-																	$descr2 .= $data_type_close;
-																	array_push($stringarray_2, $descr2);	
-																} 
-															$descr .= implode($sep,$stringarray_2);
-															$descr .= $close_type_close;
-
-															$descr .= $data_type_close;
-															
-																	
-															array_push($stringarray, $descr);	
-														}
-													}
-													else
-													{
-																	if($sql_select_row['EXPORT_URL_LINKS'] == 0)
-																	{
-																		$fund_url = "";
-																	}
-																	else
-																	{
-																		$fund_url = $sql_select_content_1_row['URL'];
-																	}				
-														$pos = "http";
-														if(empty($fund_url))
-															{
-																$descr = $data_type_open.$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
-															}
-														else if (strpos($fund_url, $pos) === false)
-															{
-																$descr = $data_type_open."<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
-															}
-														else
-															{
-																$descr = $data_type_open."<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
-															}
-																if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
-																	{
-																		$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
-																	}
-																array_push($stringarray, $descr);	
-						
-													}
-												
-												}
+										if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+											{
+												$count++;
+												$descr .= "<sup>".$count."</sup>";
+												$descr_notice = "<p><span style='font-size:80%'><sup>".$count."</sup> ".$sql_select_content_1_row['INFO']."</span></p>";
+											}  
+										else
+											{
+												$descr_notice = "";
 											}
-
-										echo implode($sep,$stringarray);
-										echo "";
-										echo implode($stringarray_notice);
-										echo $close_type_close;
-										echo $cat_title_close;
+											
+										array_push($stringarray, $descr);	
+										array_push($stringarray_notice, $descr_notice);	
 									}
-								echo "</div>";
-								echo "<hr>";
-								  echo "<div class='form-group'>";
-									echo "<label for='html_export'>HTML-Code:</label>";
-									echo "<textarea class='form-control' id='html_export' rows='3'>";
-									
-									echo "</textarea>";
-								  echo "</div>";
-										
-										echo "<script>
-													$(document).ready(function(){
-														var htmlString = $(\"#HTML-list\").html();
-														$(\"#html_export\").html(htmlString);
-													});
+							}
+						else
+							{
+								if($sql_select_content_1_row['IS_TOPIC'] == 1)
+									{
+										if($sql_select_row['EXPORT_TITLE_TOPICS'] == 0)
+											{
+												$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+												$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
+												$stringarray_2 = array();
+												$descr2 = $data_type_open;
+												while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
+													{	
+														if($sql_select_row['EXPORT_URL_LINKS'] == 0)
+															{
+																$fund_url = "";
+															}
+														else
+															{
+																$fund_url = $sql_select_content_2_row['URL'];
+															}
+														$pos = "http";
+														if(empty($fund_url))
+															{
+																$descr2 .= $sql_select_content_2_row['DESCR']."<br>";
+															}
+														else if (strpos($fund_url, $pos) === false)
+															{
+																$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a><br>";
+															}
+														else
+															{
+																$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a><br>";
+															}																	
+													} 
+												$descr2 .= $data_type_close;
+												
+												array_push($stringarray_2, $descr2);
+												
+												$descr = implode($sep,$stringarray_2);
+												if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+													{
+														$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+													}
+													
+												array_push($stringarray, $descr);
+											}
+										else
+											{
+												$descr = $data_type_open;
+												$descr .= $sql_select_content_1_row['DESCR'];
+												if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+													{
+														$descr .= "<br><span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+													}
+												$sql_select_content_2 = "SELECT * FROM ".DB_PREFIX."links WHERE ID_TOPIC = ".$sql_select_content_1_row['ID_TOPIC'];
+												$sql_select_content_2_result = mysqli_query($con, $sql_select_content_2);
+												$stringarray_2 = array();
+												$descr .= $list_type_open;
+													while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
+														{	
+															$descr2 = $data_type_open;
+															if($sql_select_row['EXPORT_URL_LINKS'] == 0)
+																{
+																	$fund_url = "";
+																}
+															else
+																{
+																	$fund_url = $sql_select_content_2_row['URL'];
+																}																	
+															$pos = "http";
+															if(empty($fund_url))
+																{
+																	$descr2 .= $sql_select_content_2_row['DESCR'];
+																}
+															else if (strpos($fund_url, $pos) === false)
+																{
+																	$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																}
+															else
+																{
+																	$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																}
+															$descr2 .= $data_type_close;
+															array_push($stringarray_2, $descr2);	
+														} 
+												$descr .= implode($sep,$stringarray_2);
+												$descr .= $close_type_close;
+												$descr .= $data_type_close;
+												array_push($stringarray, $descr);
+												
+											}
+									}
+								else
+									{
+										if($sql_select_row['EXPORT_URL_LINKS'] == 0)
+											{
+												$fund_url = "";
+											}
+										else
+											{
+												$fund_url = $sql_select_content_1_row['URL'];
+											}				
+										$pos = "http";
+										if(empty($fund_url))
+											{
+												$descr = $data_type_open.$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
+											}
+										else if (strpos($fund_url, $pos) === false)
+											{
+												$descr = $data_type_open."<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
+											}
+										else
+											{
+												$descr = $data_type_open."<a href='".$fund_url."' target='_blank' >".$sql_select_content_1_row['DESCR']."</a>".$data_type_close;
+											}
+										if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
+											{
+												$descr .= "<span style='font-size:80%'>".$sql_select_content_1_row['INFO']."</span>";
+											}
+										array_push($stringarray, $descr);	
 
-											
-										</script>";
+									}
 
-							echo "</div>";			
+							}
+					}
+				echo implode($sep,$stringarray);
+				echo "";
+				echo implode($stringarray_notice);
+				echo $close_type_close;
+				echo $cat_title_close;
+			}
+		echo "</div>";
+		echo "<hr>";
+		echo "<div class='form-group'>";
+			echo "<label for='html_export'>HTML-Code:</label>";
+				echo "<textarea class='form-control' id='html_export' rows='3'>";
+				echo "</textarea>";
+		echo "</div>";
+
+		echo "<script>
+			$(document).ready(function(){
+				var htmlString = $(\"#HTML-list\").html();
+				$(\"#html_export\").html(htmlString);
+			});
+		</script>";
+
+	echo "</div>";			
 }
 //Modal: Eintrag bearbeiten
 
@@ -376,112 +371,113 @@ if(isset($_GET['edit_entry'])){
 	$type = $_POST['type'];
 	if($type === 'links')
 	{
-			$sql_get_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID = ".$edit_id ;
-			$sql_get_links_result = mysqli_query($con, $sql_get_links);
-			while ($sql_get_links_rows = mysqli_fetch_assoc($sql_get_links_result))
-				{
-								if ($sql_get_links_rows['DONE'] == 1)
-									{
-										$btn = "btn-success";
-										$done = "";
-									}
-								else
-									{
-										$btn = "btn-outline-success";
-										$done = "";								
-									}
-									echo "<div class='tile-body'>";
-										echo "<div class='row'>";
-											echo "<div class='col-12' >";
-												echo "<div style='overflow: hidden; text-overflow: ellipsis; -o-text-overflow: ellipsis; white-space: nowrap; margin-bottom: 10px;'>";
-													echo "<div class='form-group'>";
-													echo "<label>Titel</label>";
-													echo "<span style='display:block; margin-left: 5px'>";
-													echo "<i class='fas fa-pencil-alt fa-xs'></i> ";
-													echo "<a style='border: none; color:black; ' class='update lead' href='#' id='descr".$sql_get_links_rows['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung'>".$sql_get_links_rows['DESCR']."</a>";
-													echo "</span>";
-													echo "</div>";
-													echo "<div class='form-group'>";
-													echo "<label>URL</label>";
-													echo "<span style='display:block; margin-left: 5px'>";
-													echo "<i class='fas fa-pencil-alt fa-xs'></i> ";
-													echo "<a style='border: none; color:black; ' class='lead update' href='#' id='url".$sql_get_links_rows['ID']."' table='links' data-name='URL' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='URL'>".$sql_get_links_rows['URL']."</a>";
-													echo "</span>";
-													echo "</div>";
-												echo "</div>";
-											echo "</div>";
-											echo "<div class='col-12' style='margin-bottom: 10px;'>";
-												if($sql_get_links_rows['INFO'] == NULL || $sql_get_links_rows['INFO'] == '')
-													{
-														$has_info = "-outline-";
-													}
-													else
-													{
-														$has_info = "-";											
-													}
-
-												echo "<button class='btn btn".$has_info."notice btn-block' type='button'>";
-													echo "Notizen:";
-												echo "</button>";
-												echo "<div id='collapseExample".$sql_get_links_rows['ID']."'>";
-													echo "<div style='margin-top:10px'>";
-														echo "<textarea data-name='INFO' id='textarea_links".$sql_get_links_rows['ID']."' class='update_notizen' table='links' data-pk='".$sql_get_links_rows['ID']."' name='textarea_links".$sql_get_links_rows['ID']."'>";
-															echo $sql_get_links_rows['INFO'];
-														echo "</textarea>";
-													echo "</div>";
-													echo "<div style='margin-top:10px'>";	
-														echo "<button class='btn btn-outline-success btn-block' id='update_notizen_links".$sql_get_links_rows['ID']."' type='button' ><i class='fas fa-save'></i> Notizen Speichern</button>";
-														echo "<script>
-		$.fn.editable.defaults.mode = \"inline\";
-	$(\".update\").editable({
-		params: function(params)
-			{ 
-				var data = {};
-				data[\"pk\"] = params.pk;
-				data[\"name\"] = params.name;
-				data[\"value\"] = params.value;
-				data[\"table\"] = $(this).attr(\"table\");
-				return data;
-			},
-		type: \"POST\",
-		emptytext: \"Nichts hinterlegt\",			
-		success: function(data)
+		$sql_get_links = "SELECT * FROM ".DB_PREFIX."links WHERE ID = ".$edit_id ;
+		$sql_get_links_result = mysqli_query($con, $sql_get_links);
+		while ($sql_get_links_rows = mysqli_fetch_assoc($sql_get_links_result))
 			{
-				console.log(data);
+				if ($sql_get_links_rows['DONE'] == 1)
+					{
+						$btn = "btn-success";
+						$done = "";
+					}
+				else
+					{
+						$btn = "btn-outline-success";
+						$done = "";								
+					}
+				echo "<div class='tile-body'>";
+					echo "<div class='row'>";
+						echo "<div class='col-12' >";
+							echo "<div style='overflow: hidden; text-overflow: ellipsis; -o-text-overflow: ellipsis; white-space: nowrap; margin-bottom: 10px;'>";
+								echo "<div class='form-group'>";
+									echo "<label>Titel</label>";
+									echo "<span style='display:block; margin-left: 5px'>";
+										echo "<i class='fas fa-pencil-alt fa-xs'></i> ";
+										echo "<a style='border: none; color:black; ' class='update lead' href='#' id='descr".$sql_get_links_rows['ID']."' table='links' data-name='DESCR' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='Beschreibung'>".$sql_get_links_rows['DESCR']."</a>";
+									echo "</span>";
+								echo "</div>";
+								echo "<div class='form-group'>";
+									echo "<label>URL</label>";
+									echo "<span style='display:block; margin-left: 5px'>";
+										echo "<i class='fas fa-pencil-alt fa-xs'></i> ";
+										echo "<a style='border: none; color:black; ' class='lead update' href='#' id='url".$sql_get_links_rows['ID']."' table='links' data-name='URL' data-type='text' data-pk='".$sql_get_links_rows['ID']."' data-url='inc/update.php' beschr='URL'>".$sql_get_links_rows['URL']."</a>";
+									echo "</span>";
+								echo "</div>";
+							echo "</div>";
+						echo "</div>";
+						echo "<div class='col-12' style='margin-bottom: 10px;'>";
+							if($sql_get_links_rows['INFO'] == NULL || $sql_get_links_rows['INFO'] == '')
+								{
+									$has_info = "-outline-";
+								}
+								else
+								{
+									$has_info = "-";											
+								}
+							echo "<button class='btn btn".$has_info."notice btn-block' type='button'>";
+								echo "Notizen:";
+							echo "</button>";
+							echo "<div id='collapseExample".$sql_get_links_rows['ID']."'>";
+								echo "<div style='margin-top:10px'>";
+									echo "<textarea data-name='INFO' id='textarea_links".$sql_get_links_rows['ID']."' class='update_notizen' table='links' data-pk='".$sql_get_links_rows['ID']."' name='textarea_links".$sql_get_links_rows['ID']."'>";
+										echo $sql_get_links_rows['INFO'];
+									echo "</textarea>";
+								echo "</div>";
+								echo "<div style='margin-top:10px'>";	
+									echo "<button class='btn btn-outline-success btn-block' id='update_notizen_links".$sql_get_links_rows['ID']."' type='button' ><i class='fas fa-save'></i> Notizen Speichern</button>";
+									
+									echo "<script>
+										$.fn.editable.defaults.mode = \"inline\";
+										$(\".update\").editable({
+											params: function(params)
+												{ 
+													var data = {};
+													data[\"pk\"] = params.pk;
+													data[\"name\"] = params.name;
+													data[\"value\"] = params.value;
+													data[\"table\"] = $(this).attr(\"table\");
+													return data;
+												},
+											type: \"POST\",
+											emptytext: \"Nichts hinterlegt\",			
+											success: function(data)
+												{
+													console.log(data);
+												}
+										});
+										CKEDITOR.replace( 'textarea_links".$sql_get_links_rows['ID']."');
+										$('#update_notizen_links".$sql_get_links_rows['ID']."').on('click', function(e) {
+											var pk = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-pk\")
+											var name = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-name\")
+											var table = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"table\")
+											var value= CKEDITOR.instances['textarea_links".$sql_get_links_rows['ID']."'].getData();	
+											$.ajax({
+												url: 'inc/update.php',
+												type: 'POST',
+												data: {name:name, pk:pk, value:value, table:table},
+												success: function(data){
+													console.log(data);
+													$.gritter.add({
+														title: 'Bearbeiten ok!',
+														text: 'Die Änderungen wurden gespeichert!',
+														image: 'images/confirm.png',
+														time: '1000'
+													});		
+													console.log(data);
+												}
+											});
+										});
+									</script>";					
+								echo "</div>";
+							echo "</div>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
 			}
-	});
-															CKEDITOR.replace( 'textarea_links".$sql_get_links_rows['ID']."');
-															$('#update_notizen_links".$sql_get_links_rows['ID']."').on('click', function(e) {
-																var pk = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-pk\")
-																var name = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"data-name\")
-																var table = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"table\")
-																var value= CKEDITOR.instances['textarea_links".$sql_get_links_rows['ID']."'].getData();	
-																$.ajax({
-																		url: 'inc/update.php',
-																		type: 'POST',
-																		data: {name:name, pk:pk, value:value, table:table},
-																		success: function(data){
-																		console.log(data);
-																		$.gritter.add({
-																			title: 'Bearbeiten ok!',
-																			text: 'Die Änderungen wurden gespeichert!',
-																			image: 'images/confirm.png',
-																			time: '1000'
-																		});		
-																	console.log(data);
-																	}
-																});
-															});
-														</script>";					
-													echo "</div>";
-												echo "</div>";
-											echo "</div>";
-										echo "</div>";
-									echo "</div>";
-				}
 	}
 return;
 }
+
 //Modal: Episode bereinigen
 if(isset($_GET['clean_episode'])){
 	echo "<div class='row' id='select_unchecked' episode_id_current='".$_SESSION['cur_episode']."'>";
@@ -910,391 +906,5 @@ if(isset($_GET['change'])){
 		}
 return;
 }
-
-/* //Themen/Beiträge der Kategorie laden
-if(isset($_GET['cat_list'])){
-	if(empty($_SESSION['cur_episode']))
-		{
-			return;
-		}
-
-		echo "<script>
-			$(function () {
-				$('[data-toggle=\"popover\"]').popover({
-				trigger: 'focus'})
-			})
-		</script>";
-
-	$cat_id = $_POST['cat_id'];
-
-	echo "<div style='padding: 0px 10px 10px 10px;' class='content-list' id='cat_content".$cat_id."' category_ID='".$cat_id."'>";
-		echo "<div class='tile-body'>";
-		//Kollaborative Kategorie laden
-		if(getSettingCat('COLL', $cat_id) == 1)
-			{
-				global $con;
-				$sql_select = "SELECT ".DB_PREFIX."users.ID AS USER_ID, ".DB_PREFIX."users.USERNAME AS USERNAME, ".DB_PREFIX."users.NAME_SHOW AS NAME_SHOW, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links join ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE join ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER WHERE ".DB_PREFIX."links.ID_EPISODE = ".$_SESSION['cur_episode']." AND ".DB_PREFIX."links.ID_CATEGORY = '".$cat_id."' AND ".DB_PREFIX."links.ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.ID AS USER_ID, ".DB_PREFIX."users.USERNAME AS USERNAME, ".DB_PREFIX."users.NAME_SHOW AS NAME_SHOW, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."topics.INFO AS INFO, NULL AS URL, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics join ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE join ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER where ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = '".$cat_id."' ORDER BY `DESCR` ASC";
-				$sql_select_result = mysqli_query($con, $sql_select);
-				while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
-					{
-						if(empty(userinfos($sql_select_row['USER_ID'], 'NAME_SHOW')))
-							{
-								$name_show_row = userinfos($sql_select_row['USER_ID'], 'USERNAME');
-							}
-						else
-							{
-								$name_show_row = userinfos($sql_select_row['USER_ID'], 'NAME_SHOW');
-							}
-							
-						if ($sql_select_row['DONE'] == 1  && $sql_select_row['EPISODE_DONE'] == 0)
-							{
-								$btn = "btn-success";
-								$done = "";
-							}
-						else if ($sql_select_row['EPISODE_DONE'] == 1 && $sql_select_row['DONE'] == 1)
-							{
-								$btn = "btn-success";
-								$done ="disabled";		
-							}																
-						else if ($sql_select_row['EPISODE_DONE'] == 1 && $sql_select_row['DONE'] == 0)
-							{
-								$btn = "btn-outline-success";
-								$done ="disabled";		
-							}
-						else
-							{
-								$btn = "btn-outline-success";
-								$done ="";		
-							}
-
-						if($sql_select_row['ID_USER'] != $_SESSION['userid']	)
-							{
-								$edit = "disabled";
-							}
-						else
-							{
-								$edit = "";
-							}
-						
-						//Kollaborative Themen laden
-						if($sql_select_row['IS_TOPIC'] == 1)
-							{
-								echo "<div class='row'>";
-									echo "<div class='col-12'>";
-										echo "<div class='badge badge-primary'>";
-											echo $name_show_row;
-										echo "</div>";
-									echo "</div>";
-									echo "<div class='col-12'>";
-										echo "<div class='lead'>";
-											echo $sql_select_row['DESCR'];
-										echo "</div>";
-									echo "</div>";
-								echo "</div>";	
-								echo "<div class='form-row'>";
-									echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-										echo "<button onclick='location.href=(\"topics.php?topic=".$sql_select_row['ID']."\");' type='button' class='btn btn-tertiary btn-block' name='fund'>";
-											echo "<i class='fas fa-angle-double-right fa-fw'></i>";
-										echo "</button>";
-									echo "</div>";																	
-									echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-										echo "<button type='button'  ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_topics".$sql_select_row['ID']."' onclick='check_link(".$sql_select_row['ID'].", \"topics\")' data-name='DONE' data-checked='".$sql_select_row['DONE']."'>";
-											echo "<i class='far fa-check-circle'></i>";
-										echo "</button>";
-									echo "</div>";
-								echo "</div>";
-								echo "<hr>";	
-							}
-						//Kollaborative Beiträge laden
-						else
-							{
-								echo "<input type='text' hidden name='id_link' value='".$sql_select_row['ID']."' ><input type='text' hidden name='check_is' value='".$sql_select_row['DONE']."' >";
-								echo "<div class='row'>";
-									echo "<div class='col-12'>";
-										echo "<div class='badge badge-primary'>";
-											echo $name_show_row;
-										echo "</div>";
-									echo "</div>";
-									echo "<div class='col-12'>";
-										echo "<div class='lead' id='card_content".$sql_select_row['ID']."'>";
-											echo $sql_select_row['DESCR'];
-										echo "</div>";
-									echo "</div>";
-								echo "</div>";			
-								echo "<div class='form-row'>";
-								if($sql_select_row['URL'] == NULL || $sql_select_row['URL'] == '')
-									{
-										echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-											echo "<button disabled type='button' class='btn btn-warning btn-block'>";
-												echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-											echo "</button>";
-										echo "</div>";
-										echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-											echo "<button disabled type='button' class='btn btn-info btn-block'>";
-												echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-											echo "</button>";
-										echo "</div>";
-									}
-								else
-									{
-										echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-											$fund_url = $sql_select_row['URL'];
-											$pos = "http";
-											if (strpos($fund_url, $pos) === false)
-												{
-													$base = "http://".$fund_url;
-												}
-												else
-												{
-													$base = $fund_url;
-												}
-											echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block'>";
-												echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-											echo "</button>";
-										echo "</div>";
-										echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-											echo "<div data-clipboard-text='".$sql_select_row['URL']."' class='btn".$sql_select_row['ID']." btn btn-info btn-block clipboard'>";
-												echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-											echo "</div>";
-										echo "</div>";
-										
-										echo "<script>
-											var clip = new ClipboardJS('.btn".$sql_select_row['ID']."');
-										</script>";
-									}	
-
-									echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-										echo "<button type='button'  ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_links".$sql_select_row['ID']."' onclick='check_link(".$sql_select_row['ID'].",\"links\")' data-name='DONE' data-checked='".$sql_select_row['DONE']."'>";
-											echo "<i class='far fa-check-circle'></i>";
-										echo "</button>";
-									echo "</div>";
-								echo "</div>";
-
-								if($sql_select_row['INFO'] != NULL || $sql_select_row['INFO'] != '')
-									{
-										echo "<div class='form-row'>";
-											echo "<div class='col-12' style='margin-top: 10px; padding: 1px;'>";
-												echo "<button class='btn btn-outline-notice btn-block' type='button' data-container='body' data-html='true' data-toggle='popover' data-placement='top' data-content='".$sql_select_row['INFO']."'>";
-													echo "Notizen";
-												echo "</button>";
-											echo "</div>";
-										echo "</div>";
-									}
-								echo "<hr>";										
-							}		
-					}
-			}
-		//Nicht kollaborative Kategorien laden
-		else
-			{
-				echo "<div class='row'>";
-					$sql_select_users_cat = "SELECT * FROM ".DB_PREFIX."view_episode_users WHERE EPISODE_USERS_ID_EPISODE = ".$_SESSION['cur_episode'];
-					$sql_select_users_result = mysqli_query($con, $sql_select_users_cat);
-					while($sql_select_users_row = mysqli_fetch_assoc($sql_select_users_result))
-						{
-							if(getSettingCat('ALLOW_TOPICS', $cat_id) == 1)
-								{
-									$sql_number_users = "SELECT COUNT(*) FROM ".DB_PREFIX."topics WHERE ID_CATEGORY = ".$cat_id." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_USER = ".$sql_select_users_row['EPISODE_USERS_ID_USER'];
-									$res = mysqli_query($con, $sql_number_users);
-									$row = mysqli_fetch_row($res);
-								}							
-							else
-								{
-									$sql_number_users = "SELECT COUNT(*) FROM ".DB_PREFIX."links WHERE ID_CATEGORY = ".$cat_id." AND ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_USER = ".$sql_select_users_row['EPISODE_USERS_ID_USER']." AND ID_TOPIC IS NULL";
-									$res = mysqli_query($con, $sql_number_users);
-									$row = mysqli_fetch_row($res);
-								}
-
-							if(empty(userinfos($sql_select_users_row['EPISODE_USERS_ID_USER'], 'NAME_SHOW')))
-								{
-									$name_show_row = userinfos($sql_select_users_row['EPISODE_USERS_ID_USER'], 'USERNAME');
-								}
-							else
-								{
-									$name_show_row = userinfos($sql_select_users_row['EPISODE_USERS_ID_USER'], 'NAME_SHOW');
-								}
-
-							echo "<div class='col-md-6 col-sm-12'>";
-								echo "<button class='btn btn-outline-secondary btn-block collapse-content' data-toggle='collapse' data-target='#user".$sql_select_users_row['EPISODE_USERS_ID_USER']."cat".$cat_id."' type='button'>".$name_show_row."<span style='margin-left: 3px; vertical-align: middle' class='badge badge-secondary'>".$row[0]."</span></button><br>";
-									echo "<div class='collapse content' id='user".$sql_select_users_row['EPISODE_USERS_ID_USER']."cat".$cat_id."'>";
-									$sql_select = "SELECT ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links join ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ".DB_PREFIX."links.ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_USER = ".$sql_select_users_row['EPISODE_USERS_ID_USER']." AND ".DB_PREFIX."links.ID_CATEGORY = '".$cat_id."' AND ".DB_PREFIX."links.ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, NULL AS URL, ".DB_PREFIX."topics.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics join ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE where ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_USER = ".$sql_select_users_row['EPISODE_USERS_ID_USER']." AND ID_CATEGORY = '".$cat_id."' ORDER BY DESCR ASC";
-									$sql_select_result = mysqli_query($con, $sql_select);
-									while ($sql_select_row = mysqli_fetch_assoc($sql_select_result))
-										{
-											if ($sql_select_row['DONE'] == 1  && $sql_select_row['EPISODE_DONE'] == 0)
-												{
-													$btn = "btn-success";
-													$done = "";
-												}
-											else if ($sql_select_row['EPISODE_DONE'] == 1 && $sql_select_row['DONE'] == 1)
-												{
-													$btn = "btn-success";
-													$done ="disabled";		
-												}																
-											else if ($sql_select_row['EPISODE_DONE'] == 1 && $sql_select_row['DONE'] == 0)
-												{
-													$btn = "btn-outline-success";
-													$done ="disabled";		
-												}
-											else
-												{
-													$btn = "btn-outline-success";
-													$done ="";		
-												}
-
-											if($sql_select_row['ID_USER'] != $_SESSION['userid']	)
-												{
-													$edit = "disabled";
-												}
-											else
-												{
-													$edit = "";
-												}
-
-											if((getSettingCat('VISIBLE', $cat_id) == 0) && ($sql_select_row['ID_USER'] != $_SESSION['userid']) && ($sql_select_row['DONE'] != 1))
-												{
-													echo "Gesperrt<hr>";
-												}
-											else
-												{	
-													//Nicht kollaborative Themen laden											
-													if($sql_select_row['IS_TOPIC'] == 1)
-														{
-															echo "<div class='lead'>";
-																echo $sql_select_row['DESCR'];
-															echo "</div>";
-															echo "<div class='form-row'>";
-																echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-																	echo "<button onclick='location.href=(\"topics.php?topic=".$sql_select_row['ID']."\");' type='button' class='btn btn-tertiary btn-block' name='fund'>";
-																		echo "<i class='fas fa-angle-double-right fa-fw'></i>";
-																	echo "</button>";
-																echo "</div>";																	
-															echo "<div class='col-md-6 col-sm-12' style='padding: 1px;'>";
-																echo "<button type='button'  ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_topics".$sql_select_row['ID']."' onclick='check_link(".$sql_select_row['ID'].", \"topics\")' data-name='DONE' data-checked='".$sql_select_row['DONE']."'>";
-																	echo "<i class='far fa-check-circle'></i>";
-																echo "</button>";
-															echo "</div>";
-															echo "</div>";
-															echo "<hr>";	
-														}
-													//Nicht kollaborative Beiträge laden
-													else
-														{
-															echo "<input type='text' hidden name='id_link' value='".$sql_select_row['ID']."' ><input type='text' hidden name='check_is' value='".$sql_select_row['DONE']."' >";
-																echo "<div class='lead' id='card_content".$sql_select_row['ID']."'>";
-																	echo $sql_select_row['DESCR'];
-																echo "</div>";
-																echo "<div class='form-row'>";
-																if($sql_select_row['URL'] == NULL || $sql_select_row['URL'] == '')
-																	{
-																		echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-																			echo "<button disabled type='button' class='btn btn-warning btn-block'>";
-																				echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-																			echo "</button>";
-																		echo "</div>";
-																		echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-																			echo "<button disabled class='btn btn-info btn-block'>";
-																				echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-																			echo "</button>";
-																		echo "</div>";
-																	}
-																else
-																	{
-																		$fund_url = $sql_select_row['URL'];
-																		$pos = "http";
-																		if (strpos($fund_url, $pos) === false)
-																			{
-																				$base = "http://".$fund_url;
-																			}
-																		else
-																			{
-																				$base = $fund_url;
-																			}
-
-																		echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-																			echo "<button onclick='window.open(\"".$base."\");' type='button' class='btn btn-warning btn-block'>";
-																				echo "<i class='fas fa-external-link-alt fa-fw'></i>";
-																			echo "</button>";
-																		echo "</div>";
-																		echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-																			echo "<div data-clipboard-text='".$sql_select_row['URL']."' class='btn".$sql_select_row['ID']." btn btn-info btn-block clipboard'>";
-																				echo "<i style='color:black' class='far fa-copy fa-fw'></i>";
-																			echo "</div>";
-																		echo "</div>";
-																		echo "<script>
-																			var clip = new ClipboardJS('.btn".$sql_select_row['ID']."');
-																		</script>";
-																	}	
-
-															echo "<div class='col-md-4 col-sm-12' style='padding: 1px;'>";
-																echo "<button type='button'  ".$edit." ".$done." class='btn ".$btn." btn-block check_link' id='check_links".$sql_select_row['ID']."' onclick='check_link(".$sql_select_row['ID'].", \"links\")' data-name='DONE' data-checked='".$sql_select_row['DONE']."'>";
-																	echo "<i class='far fa-check-circle'></i>";
-																echo "</button>";
-															echo "</div>";
-														echo "</div>";
-														
-														if($sql_select_row['INFO'] != NULL || $sql_select_row['INFO'] != '')
-															{
-																echo "<div class='form-row'>";
-																	echo "<div class='col-12' style='margin-top: 10px; padding: 1px;'>";
-																		echo "<button class='btn btn-outline-notice btn-block' type='button' data-container='body' data-html='true' data-toggle='popover' data-placement='top' data-content='".$sql_select_row['INFO']."'>";
-																			echo "Notizen";
-																		echo "</button>";
-																	echo "</div>";
-																echo "</div>";
-															}
-														echo "<hr>";
-														}										
-												}
-
-										}
-								echo "</div>";
-							echo "</div>";
-						}
-				echo "</div>";
-			}
-		echo "</div>";	
-	echo "</div>";	
-
-	echo "<script>
-		$(\".collapse\").on('show.bs.collapse', function (){
-			var content_id = $(this).attr('id');
-			Cookies.set(content_id, 'content', { expires: 7 });
-		});	
-			
-		$(\".collapse\").on('hide.bs.collapse', function (){
-			var content_id_remove = $(this).attr('id');
-			Cookies.remove(content_id_remove);
-		});								
-
-		var content=Cookies.get(); //get all cookies
-		for (var panel in content){ //<-- panel is the name of the cookie
-			if ($(\"#\"+panel).hasClass(\"content\")) // check if this is a panel
-				{
-					$(\"#\"+panel).show();
-					$(\"#\"+panel).removeAttr('style');
-					$(\"#\"+panel).addClass('show');
-				}  
-		}	
-		
-		$(\"#close\").click(function(){
-			$(\"#edit\").hide(\"slow\");
-			$(\"#category_list\").show(\"slow\");
-			Cookies.remove('category');
-			Cookies.remove(panel);
-		});
-		
-		$(\".clipboard\").on('click', function(){
-			$.gritter.add({
-				title: 'Link kopiert',
-				text: 'Der Link wurde in die Zwischenablage kopiert!',
-				image: '../images/confirm.png',
-				time: '1000'
-			});		
-		});		
-	</script>";
-	echo "<hr>";	
-	return;
-} */
 
 ?>

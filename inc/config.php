@@ -63,12 +63,10 @@ function userinfos($user_id, $row){
 	return $user_info_row[0];
 }
 
-//Episode/Podcast am Benutzer speichern
-function last_podcast()
-{
+//Podcast am Benutzer speichern
+function last_podcast(){
 	if(userinfos($_SESSION['userid'], 'SAVE_PODCAST') == 1)
-	{
-
+		{
 			if(getPermission($_SESSION['userid']) < 2)
 				{	global $con;
 					if(empty(userinfos($_SESSION['userid'], 'LAST_PODCAST')))
@@ -92,16 +90,14 @@ function last_podcast()
 			else
 				{
 						$_SESSION['podcast'] = userinfos($_SESSION['userid'], 'LAST_PODCAST');						
-				}
-				
-	}
+				}	
+		}
 }
-//Episode/Podcast am Benutzer speichern
-function last_episode()
-{
-	if(userinfos($_SESSION['userid'], 'SAVE_EPISODE') == 1)
-	{
 
+//Episode am Benutzer speichern
+function last_episode(){
+	if(userinfos($_SESSION['userid'], 'SAVE_EPISODE') == 1)
+		{
 			if(getPermission($_SESSION['userid']) < 2)
 				{	global $con;
 					if(empty(userinfos($_SESSION['userid'], 'LAST_EPISODE')))
@@ -120,14 +116,12 @@ function last_episode()
 						mysqli_query($con, $sql_update_user);
 						return;	
 					}
-					
 				}
 			else
 				{
 						$_SESSION['cur_episode'] = userinfos($_SESSION['userid'], 'LAST_EPISODE');						
 				}
-				
-	}
+		}
 }
 
 //Prüfen, ob Benutzer der Episode zugewiesen ist
