@@ -1,21 +1,10 @@
-/**
- * Jquery Custom Scripts for the frontend
- *
- * PHP Version 7.0
- *
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/.
- *
- * @category  podflow!
- *
- * @author    Michael Böhmländer <info@podflow.de>
- * @copyright 2018 Michael Böhmländer
- * @license   http://www.mozilla.org/MPL/2.0/ Mozilla Public License Version 2.0
- *
- * @link      http://www.podflow.de
- * @since     2018-09-01
- */
+/*********************************************************************
+    Michael Böhmländer <info@podflow.de>
+    Copyright (c)  2019 podflow!
+    http://www.podflow.de
+    Released under the GNU General Public License WITHOUT ANY WARRANTY.
+    See license.txt for details.
+**********************************************************************/
 
  //CKEditor initialisieren
 	function enableEditing(editbox) {

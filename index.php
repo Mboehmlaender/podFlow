@@ -1,3 +1,11 @@
+/*********************************************************************
+    Michael Böhmländer <info@podflow.de>
+    Copyright (c)  2019 podflow!
+    http://www.podflow.de
+    Released under the GNU General Public License WITHOUT ANY WARRANTY.
+    See license.txt for details.
+**********************************************************************/
+
 <?php
 	require('config/dbconnect.php');
 	include('inc/functions.php');
