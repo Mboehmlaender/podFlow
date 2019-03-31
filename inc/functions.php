@@ -1,11 +1,3 @@
-/*********************************************************************
-    Michael Böhmländer <info@podflow.de>
-    Copyright (c)  2019 podflow!
-    http://www.podflow.de
-    Released under the GNU General Public License WITHOUT ANY WARRANTY.
-    See license.txt for details.
-**********************************************************************/
-
 <?php
 include('inc/config.php');
 $now = date("Y-m-d G:i:s");
@@ -563,36 +555,36 @@ function export(){
 					echo "<p class='lead'>Diese Episode ist noch nicht abgeschlossen!</p>";
 					return;
 				}
-			echo "<div class='row'>";
-				echo "<div class='col-12'>";
-					echo "<div id='export_result'>";
-					echo "</div>";
-				echo "</div>";					
-			echo "</div>";		
-			echo "<hr>";
 			echo "<h3>Shownotes sortieren</h3>";
 				echo "<div class='form-check'>";
 					echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios1' value='REIHENF' checked>";
 					echo "<label class='form-check-label' for='exampleRadios1'>";
-						echo "Nach der Reihenfolge in der Timeline";
+						echo "Sortierung der Timeline";
 					echo "</label>";
 				echo "</div>";
 			echo "<div class='form-check'>";
 				echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios2' value='DONE_TS'>";
 				echo "<label class='form-check-label' for='exampleRadios2'>";
-					echo "Nach Zeitpunk des Abhakens";
+					echo "Zeitpunkt des Abhakens";
 				echo "</label>";
 			echo "</div>";
 			echo "<div class='form-check export_check'>";
 				echo "<input class='form-check-input export_check' type='radio' name='exampleRadios' id='exampleRadios3' value='DESCR'>";
 				echo "<label class='form-check-label' for='exampleRadios3'>";
-					echo "Alphabetisch nach Titel (A-Z)";
+					echo "Alphabetisch (A-Z)";
 				echo "</label>";
 			echo "</div>";	
 			echo "<div style='margin-top: 10px'>";
 				echo "<button type='button' id='export_list' class='btn btn-outline-primary btn-block' export_episode_id='".$_SESSION['cur_episode']."'><i class='fas fa-upload fa-fw'></i> Liste exportieren</button>";
 				echo "<button type='button' id='clean_episode' class='btn btn-outline-tertiary btn-block clean_episode' change_value='".$_SESSION['cur_episode']."'><i class='fas fa-broom fa-fw'></i> Episode bereinigen</button>";		
 			echo "</div>";							
+			echo "<hr>";
+			echo "<div class='row'>";
+				echo "<div class='col-12'>";
+					echo "<div id='export_result'>";
+					echo "</div>";
+				echo "</div>";					
+			echo "</div>";		
 		}
 }
 
