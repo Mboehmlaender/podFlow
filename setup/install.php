@@ -255,7 +255,6 @@
 
 										if(php_version.substr(0, 1) < 7 || mysqli_ext != 1 || write != 1)
 										{
-											console.log(sub)
 										$("#step3").attr('disabled', true);
 										}
 										$("#step3").on("click", function(){
