@@ -116,18 +116,20 @@
 										url: 'check_db.php?check_version=1',
 										type: 'POST',
 										data: {},
+										beforeSend: function() { $('#result_db_operation').html('<i class=\"fas fa-spinner fa-pulse\"></i> Prüfe Version...'); $("#submit").prop('disabled', true);},
+										complete: function() { $('#result_db_operation').remove();},
 												success: function(data)
 													{
 														var server = data;
 														var version = $("#submit").attr('version');
 																if(version >= server)
 																			{
-																				$("#content").remove();
-																				$("#result_db_operation").html("<p class='lead' style='color:green'>Deine Version ist aktuell!</p>");
+																				$("#content").html("<p class='lead' style='color:green'>Deine Version ist aktuell!</p>");
 																				$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='../login.php'\">Zum Login</button>");
 																			}
 																			else
 																			{
+																				$("#submit").prop('disabled', false);
 																				$("#content").show("slow");
 																			} 
 													}
