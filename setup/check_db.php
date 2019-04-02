@@ -19,6 +19,21 @@ if(isset($_GET['delete_not_used_cat']))
 
 	}
 	
+if(isset($_GET['check_version']))
+{
+	require('../config/dbconnect.php');
+	$content=file_get_contents("https://podflow.de/api/data/read.php");
+	$data=json_decode($content, true);
+	foreach($data[0] as $test)
+	{
+		$out = $test;
+	}
+	$split = preg_split("/[\s.]+/",$out);
+	$data_part =$split;
+	$split_string = $data_part[0].".".$data_part[1].".".$data_part[2].".";
+	echo $split_string;
+	return;
+}
 
 if(isset($_GET['update_to_101'])){
 	require('../config/dbconnect.php');

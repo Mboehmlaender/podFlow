@@ -112,17 +112,26 @@
 							</div>
 							  <script>
  								$( document ).ready(function() {
-									var version = $("#submit").attr('version');
-											if(version >= '1.2.0.')
-														{
-															$("#content").remove();
-															$("#result_db_operation").html("<p class='lead' style='color:green'>Deine Version ist aktuell!</p>");
-															$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='../login.php'\">Zum Login</button>");
-														}
-														else
-														{
-															$("#content").show("slow");
-														} 
+									$.ajax({
+										url: 'check_db.php?check_version=1',
+										type: 'POST',
+										data: {},
+												success: function(data)
+													{
+														var server = data;
+														var version = $("#submit").attr('version');
+																if(version >= server)
+																			{
+																				$("#content").remove();
+																				$("#result_db_operation").html("<p class='lead' style='color:green'>Deine Version ist aktuell!</p>");
+																				$("#update_button").empty().append("<button class='btn btn-primary' type='button' onclick=\"window.location.href='../login.php'\">Zum Login</button>");
+																			}
+																			else
+																			{
+																				$("#content").show("slow");
+																			} 
+													}
+									});
 								}); 
 								
 								$("#submit").on("click", function(){									
