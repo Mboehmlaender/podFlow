@@ -1,40 +1,20 @@
-# Changelog
+#Changelog 
 All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0] - 2018-09-17
+## [1.2.0] - 2019-04-02
+### Added
+- Frontend/Profil: Neue Optionen in der Benutzerverwaltung
+- Frontend/Sonstiges Frontend: Neue Einträge in der Navigationsleiste
+- Sonstiges/Datenbank: Neue Tabelle "export_options"
 ### Changed
-
-- Neues Feld "ID_PODCAST" in Tabelle "categories"
- 
-- "categories" um "EXPORT_CAT" erweitert
-- "categories" um "EXPORT_TITLE_CAT" erweitert
-- "categories" um "EXPORT_TITLE_TOPICS" erweitert
-- "categories" um "EXPORT_URL_LINKS" erweitert
-- "categories" um "EXPORT_NOTICE" erweitert
-- "categories" um "ID_EXPORT_OPTION" erweitert
-- In "categories" "COLL" entfernt
-
-- In "view_episode_categories" "COLL" entfernt
-- In "view_episode_categories" "CATEGORIES_ALLOW_TOPICS" entfernt
-
-
-- "view_episode_categories" um "CATEGORIES_ID_PODCAST" erweitert
-- "view_episode_categories" um "EXPORT_CAT" erweitert
-- "view_episode_categories" um "ID_EXPORT_OPTION" erweitert
-- "view_episode_categories" um "EXPORT_TITLE_CAT" erweitert
-- "view_episode_categories" um "EXPORT_URL_LINKS" erweitert
-
-- In "view_links" "CATEGORIES_ALLOW_TOPICS" entfernt
-
-- In "view_topics" "CATEGORIES_ALLOW_TOPICS" entfernt
-
-- Neue Tabelle "export_options" angelegt
-
-- In "INI" "COLL" Einträge entfernt
-- In "INI" "ALLOW_TOPICS" Einträge entfernt
+- Frontend/Beiträge: Timelinedarstellung für alle Beiträge 
+- Frontend/Export: Neue Funktionen für den Export verfügbar
+- Frontend/Eigene Beiträge: Neue Funktion der eigenen Einträge
+- Backend/Kategorien: Podcast-Bezug der Kategorien
+- Backend/Kategorien: Neue Einstellungen für den Export der Kategorien
+- Sonstiges/Datenbank: Tabellenstruktur
 
 ## [1.0.1] - 2018-12-13
 ### Fixed

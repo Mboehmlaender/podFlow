@@ -464,7 +464,7 @@ function own_entries($userid){
 			$(\"option\", this).not(\":selected\").attr('disabled', false);
 			$(\"option\", this).not(\":selected\").attr('selected', false);
 			$(this).closest(\"li\").attr('id_episode_list', episode_new);
-			if(episode_current !== episode_new && $(\"#set_episode\").attr('id_episode') !== 'all')
+			if( ( episode_current !== episode_new) && ( $(\"#set_episode\").children('option:selected').attr('id_episode') !== 'all') )
 				{
 					$(this).closest(\"li\").removeClass('active_content');
 					$(this).closest(\"li\").hide(\"fast\");

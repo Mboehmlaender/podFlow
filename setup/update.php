@@ -1,11 +1,3 @@
-/*********************************************************************
-    Michael Böhmländer <info@podflow.de>
-    Copyright (c)  2019 podflow!
-    http://www.podflow.de
-    Released under the GNU General Public License WITHOUT ANY WARRANTY.
-    See license.txt for details.
-**********************************************************************/
-
 	<!DOCTYPE html>
 	<html lang="de">
 	<head>
@@ -119,17 +111,9 @@
 								</div>
 							</div>
 							  <script>
-/* 								$( document ).ready(function() {
+ 								$( document ).ready(function() {
 									var version = $("#submit").attr('version');
- 									$.ajax({
-										url: 'check_db.php?check_version=1',
-										type: 'POST',
-										data: {},
-										beforeSend: function() { $('#result_db_operation').html('<i class=\"fas fa-spinner fa-pulse\"></i> Prüfe Version...'); $("#submit").prop('disabled', true);},
-												success: function(data)
-													{
-
- 														if(data == version)
+											if(version >= '1.2.0.')
 														{
 															$("#content").remove();
 															$("#result_db_operation").html("<p class='lead' style='color:green'>Deine Version ist aktuell!</p>");
@@ -139,9 +123,7 @@
 														{
 															$("#content").show("slow");
 														} 
-													},
-										}); 
-								}); */
+								}); 
 								
 								$("#submit").on("click", function(){									
 								var version = $(this).attr('version');
