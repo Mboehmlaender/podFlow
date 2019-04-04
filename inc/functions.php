@@ -286,14 +286,15 @@ function own_entries($userid){
 					echo "<div class='col-12 col-md-6'>";
 						echo "<div class='form-group'>";
 							echo "<select class='form-control' id='set_podcast'>";
-								if(getPermission($_SESSION['userid']) !== 1)
+								/* if(getPermission($_SESSION['userid']) !== 1)
 								{
 									$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
 								}
 								else
 								{
 									$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast ORDER BY ID";
-								}
+								} */
+								$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
 								$sql_select_podcast_result = mysqli_query($con, $sql_select_podcast);
 								echo "<option id_podcast='all' selected>Alle Podcasts</option>";
 								while($sql_select_podcast_row = mysqli_fetch_assoc($sql_select_podcast_result))
@@ -306,14 +307,15 @@ function own_entries($userid){
 					echo "<div class='col-12 col-md-6'>";
 						echo "<div class='form-group'>";
 							echo "<select class='form-control' id='set_episode'>";
-								if(getPermission($_SESSION['userid']) == 1)
+/* 								if(getPermission($_SESSION['userid']) == 1)
 								{
 									$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
 								}
 								else
 								{
 									$sql_select_episodes = "SELECT ID, ID_PODCAST, TITEL, DATE FROM ".DB_PREFIX."episoden";
-								}
+								} */
+								$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
 								$sql_select_episodes_result = mysqli_query($con, $sql_select_episodes);
 								echo "<option class='episode_menu_all' id_episode='all' id_podcast_menu='all' selected>Alle Episoden</option>";
 								while($sql_select_episodes_row = mysqli_fetch_assoc($sql_select_episodes_result))
@@ -325,15 +327,6 @@ function own_entries($userid){
 					echo "</div>";
 				echo "</div>";
 				echo "<hr>";
-			/* 	echo "<div class='row'>";
-					echo "<div class='col-6 lead' style='font-weight: bold'>";
-						echo "Beitrag";
-					echo "</div>";
-					echo "<div class='col-6 lead' style='font-weight: bold'>";
-						echo "Episode";
-					echo "</div>";
-				echo "</div>";
-				echo "<hr>"; */
 				echo "<ul class='topic_links'>";
 					$sql_own_entries = "SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."links.ID, ".DB_PREFIX."links.ID_PODCAST, ".DB_PREFIX."links.ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, ".DB_PREFIX."links.REIHENF, 0 AS IS_TOPIC, ".DB_PREFIX."links.DONE FROM ".DB_PREFIX."links join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."links.ID_PODCAST WHERE (".DB_PREFIX."links.DONE IS NULL OR ".DB_PREFIX."links.DONE = '') AND ".DB_PREFIX."links.ID_USER = ".$userid." AND (".DB_PREFIX."links.ID_TOPIC IS NULL OR ".DB_PREFIX."links.ID_TOPIC = '') UNION ALL SELECT ".DB_PREFIX."podcast.SHORT, ".DB_PREFIX."topics.ID, ".DB_PREFIX."topics.ID_PODCAST, ".DB_PREFIX."topics.ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, ".DB_PREFIX."topics.REIHENF, 1 AS IS_TOPIC, ".DB_PREFIX."topics.DONE FROM ".DB_PREFIX."topics join ".DB_PREFIX."podcast ON ".DB_PREFIX."podcast.ID = ".DB_PREFIX."topics.ID_PODCAST WHERE (".DB_PREFIX."topics.DONE IS NULL OR ".DB_PREFIX."topics.DONE = '') AND ".DB_PREFIX."topics.ID_USER = ".$userid." ORDER BY ID_PODCAST, ID_EPISODE, REIHENF";
 					$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
@@ -365,14 +358,15 @@ function own_entries($userid){
 											else
 												{	
 													echo "<select table='".$table."' id_entry='".$sql_own_entries_row['ID']."' class='form-control change_episode'>";
-														if(getPermission($_SESSION['userid']) !== 1)
+/* 														if(getPermission($_SESSION['userid']) !== 1)
 															{
 																$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
 															}
 														else
 															{
 																$sql_select_episodes2 = "SELECT ID, TITEL, DATE, DONE FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
-															}
+															} */
+														$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
 														$sql_select_episodes_result2 = mysqli_query($con, $sql_select_episodes2);
 														while($sql_select_episodes_row2 = mysqli_fetch_assoc($sql_select_episodes_result2))
 														{
