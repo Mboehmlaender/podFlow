@@ -1,3 +1,5 @@
+
+<?php
 /*********************************************************************
     Michael Böhmländer <info@podflow.de>
     Copyright (c)  2019 podflow!
@@ -5,8 +7,6 @@
     Released under the GNU General Public License WITHOUT ANY WARRANTY.
     See license.txt for details.
 **********************************************************************/
-
-<?php
 
 //Einstellungen aus der INI-Tabelle lesen
 function getSetting($keyword, $setting){

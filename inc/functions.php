@@ -356,7 +356,7 @@ function own_entries($userid){
 									echo "<div class='col-md-6 col-12' style='margin-top:auto; margin-bottom:auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
 										echo "<div class='".$icon."'>".$icon_symbol."</div>".$sql_own_entries_row['DESCR'];
 										echo "</div>";
-										echo "<div class='col-md-6 col-12' style='margin-top:5px; margin-bottom:5px'>";
+										echo "<div class='col-md-3 col-12' style='margin-top:5px; margin-bottom:5px'>";
 											echo "<div style='margin-top:auto; margin-bottm:auto;'>";
 											if($sql_own_entries_row['DONE'] === '1')
 												{
@@ -389,12 +389,15 @@ function own_entries($userid){
 																{
 																	echo "selected disabled";
 																}
-															echo " id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
+															echo " id_category= '".$sql_own_entries_row['ID_CATEGORY']."' id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
 														}
 													echo "</select>";
 												}
-										echo "</div>";		
+										echo "</div>";	
 									echo "</div>";
+										echo "<div class='col-md-3 col-12 change_category' style='margin-top:5px; margin-bottom:5px'>";
+										
+										echo "</div>";
 								echo "</div>";
 							echo "</li>";
 						}
@@ -408,6 +411,27 @@ function own_entries($userid){
 	echo "</div>";
 	
 	echo "<script>
+	$(\".change_episode\").each(function(){
+		var episode = $(this).children('option:selected').attr('id_episode');
+		var category = $(this).children('option:selected').attr('id_category');
+			$.ajax({
+				url: \"inc/check.php?get_categories_unchecked=1\",
+				type: \"POST\",
+				context: this,
+				data: {	\"episode\":episode, 
+				\"category\":category, 
+					},								
+				success: function(data)
+					{
+						console.log(data);
+						$(this).closest('.lead').find('.change_category').html(data);
+					},
+				});
+	});
+	
+	
+	
+	
 	pageSize = 15;
 	pageCountAll =  $(\".active_content\").length / pageSize;
 

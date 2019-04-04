@@ -1,11 +1,3 @@
-/*********************************************************************
-    Michael Böhmländer <info@podflow.de>
-    Copyright (c)  2019 podflow!
-    http://www.podflow.de
-    Released under the GNU General Public License WITHOUT ANY WARRANTY.
-    See license.txt for details.
-**********************************************************************/
-
 <?php 
 include('config.php');
 include('../config/dbconnect.php');
@@ -17,6 +9,38 @@ if(!isset($_SESSION['userid']))
 
 
 if(isset($_POST)){
+	
+	if(isset($_GET['get_categories_unchecked'])){
+		
+		$episode = $_POST['episode'];
+		$category = $_POST['category'];
+			echo "<div style='margin-top:auto; margin-bottm:auto;'>";
+						echo "<select table='' id_entry='' class='form-control change_category'>";
+							if(getPermission($_SESSION['userid']) !== 1)
+								{
+/* 									$sql_select_category = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
+ */								
+									$sql_select_category = "SELECT c.ID, c.DESCR FROM ".DB_PREFIX."episode_categories e JOIN ".DB_PREFIX."categories c on c.ID = e.ID_CATEGORY WHERE e.ID_EPISODE = '".$episode."'";
+								}
+							else
+								{
+									$sql_select_category = "SELECT c.ID, c.DESCR FROM ".DB_PREFIX."episode_categories e JOIN ".DB_PREFIX."categories c on c.ID = e.ID_CATEGORY WHERE e.ID_EPISODE = '".$episode."'";
+								}
+							echo $sql_select_category;
+							$sql_select_category_result = mysqli_query($con, $sql_select_category);
+							while($sql_select_category_row = mysqli_fetch_assoc($sql_select_category_result))
+							{
+								echo "<option ";
+								if($sql_select_category_row['ID'] == $category)
+								{
+									echo "selected";
+								}
+								echo " id_episode='".$sql_select_category_row['ID']."'>".$sql_select_category_row['DESCR']."</option>";
+							}
+						echo "</select>";
+			echo "</div>";	
+	};
+
 
 	//Kategeorien/Benutzer einer Episode hinzufügen 
 	if(isset($_GET['add_episode_category'])){
