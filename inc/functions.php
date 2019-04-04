@@ -1,4 +1,5 @@
 <?php
+
 include('inc/config.php');
 $now = date("Y-m-d G:i:s");
 $today = date("Y-m-d");
@@ -284,45 +285,13 @@ function own_entries($userid){
 			echo "<div class='tile'>";
 				echo "<div class='row'>";
 					echo "<div class='col-12 col-md-6'>";
-						echo "<div class='form-group'>";
-							echo "<select class='form-control' id='set_podcast'>";
-								/* if(getPermission($_SESSION['userid']) !== 1)
-								{
-									$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
-								}
-								else
-								{
-									$sql_select_podcast = "SELECT ID, SHORT FROM ".DB_PREFIX."podcast ORDER BY ID";
-								} */
-								$sql_select_podcast = "SELECT ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_PODCAST AS ID, ".DB_PREFIX."view_podcasts_users.PODCAST_SHORT AS PODCAST_SHORT FROM ".DB_PREFIX."view_podcasts_users WHERE ".DB_PREFIX."view_podcasts_users.PODCASTS_USERS_ID_USER = ".$userid." ORDER BY PODCASTS_USERS_ID_PODCAST";
-								$sql_select_podcast_result = mysqli_query($con, $sql_select_podcast);
-								echo "<option id_podcast='all' selected>Alle Podcasts</option>";
-								while($sql_select_podcast_row = mysqli_fetch_assoc($sql_select_podcast_result))
-									{
-										echo "<option id_podcast='".$sql_select_podcast_row['ID']."'>".$sql_select_podcast_row['PODCAST_SHORT']."</option>";
-									}
-							echo "</select>";
+						echo "<div class='form-group' id='podcast_filter'>";
+							
 						echo "</div>";
 					echo "</div>";
 					echo "<div class='col-12 col-md-6'>";
-						echo "<div class='form-group'>";
-							echo "<select class='form-control' id='set_episode'>";
-/* 								if(getPermission($_SESSION['userid']) == 1)
-								{
-									$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
-								}
-								else
-								{
-									$sql_select_episodes = "SELECT ID, ID_PODCAST, TITEL, DATE FROM ".DB_PREFIX."episoden";
-								} */
-								$sql_select_episodes = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.ID_PODCAST, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid;
-								$sql_select_episodes_result = mysqli_query($con, $sql_select_episodes);
-								echo "<option class='episode_menu_all' id_episode='all' id_podcast_menu='all' selected>Alle Episoden</option>";
-								while($sql_select_episodes_row = mysqli_fetch_assoc($sql_select_episodes_result))
-									{
-										echo "<option class='episode_menu' id_episode='".$sql_select_episodes_row['ID']."' id_podcast_menu='".$sql_select_episodes_row['ID_PODCAST']."'>".$sql_select_episodes_row['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row['DATE']))."</option>";
-									}
-							echo "</select>";
+						echo "<div class='form-group' id='episode_filter'>";
+
 						echo "</div>";
 					echo "</div>";
 				echo "</div>";
@@ -405,6 +374,9 @@ function own_entries($userid){
 	echo "</div>";
 	
 	echo "<script>
+	
+	
+	
 	$(\".change_episode\").each(function(){
 		var episode = $(this).children('option:selected').attr('id_episode');
 		var category = $(this).children('option:selected').attr('id_category');
@@ -417,13 +389,53 @@ function own_entries($userid){
 					},								
 				success: function(data)
 					{
-						console.log(data);
 						$(this).closest('.lead').find('.change_category').html(data);
 					},
 				});
 	});
 	
+	var podcast_list = [];
+	$(\".active_content\").each(function(){
+		var podcast = $(this).attr('id_podcast_list');
+		podcast_list.push(podcast)
+	});
 	
+	var podcast_list = podcast_list.toString();
+	
+		$.ajax({
+				url: \"inc/check.php?filter_podcast=1\",
+				type: \"POST\",
+				context: this,
+				data: {	\"podcast_list\":podcast_list, 
+					},								
+				success: function(data)
+					{
+						console.log(data);
+						$(\"#podcast_filter\").html(data);
+					},
+				});
+				
+				
+	var episode_list = [];
+	$(\".active_content\").each(function(){
+		var episodes = $(this).attr('id_episode_list');
+		episode_list.push(episodes)
+	});
+	
+	var episode_list = episode_list.toString();
+	
+		$.ajax({
+				url: \"inc/check.php?filter_episode=1\",
+				type: \"POST\",
+				context: this,
+				data: {	\"episode_list\":episode_list, 
+					},								
+				success: function(data)
+					{
+						console.log(data);
+						$(\"#episode_filter\").html(data);
+					},
+				});
 	
 	
 	pageSize = 15;
@@ -491,66 +503,9 @@ function own_entries($userid){
 					}
 		});
 		
-		$(\"#set_podcast\").on('change', function(){
-			$(\"#pagin\").empty();
-			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
-			$('#set_episode option:first').prop('selected', true);		
-			if($(\"option:selected\", this).attr('id_podcast') == 'all')
-			{
-				$(\".episodes\").addClass('active_content');
-				$(\"[id_podcast_menu]\").show();
-				$(\".episode_menu_all\").attr('id_podcast_menu', 'all');
-				$('.episodes').show(\"fast\");		
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			
-			else
-			{
-				$(\".episodes\").removeClass('active_content');
-				
-				$('.episode_menu').not(\"[id_podcast_menu='\"+id_podcast+\"']\").hide();
-				$(\"[id_podcast_menu='\"+id_podcast+\"']\").show();
-				$(\".episode_menu_all\").attr('id_podcast_menu', id_podcast);				
 
-				$('.episodes').not(\"[id_podcast_list='\"+id_podcast+\"']\").hide(\"fast\");
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
-				
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").addClass('active_content');
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			 paginate(pageCount);
-
-		});
 		
-		$(\"#set_episode\").on('change', function(){
-			$(\"#pagin\").empty();
-			var id_podcast = $(\"option:selected\", this).attr('id_podcast_menu');
-			var id_episode = $(\"option:selected\", this).attr('id_episode');
-			if((id_episode === 'all') && (id_podcast ==='all'))
-			{
-				$(\".episodes\").addClass('active_content');
-				$(\"[id_podcast_list]\").show(\"fast\");
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			else if((id_episode === 'all') && (id_podcast !=='all'))
-			{
-				$(\".episodes\").removeClass('active_content');
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").addClass('active_content');
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			else
-			{
-				$(\".episodes\").removeClass('active_content');
-				$('.episodes').not(\"[id_episode_list='\"+id_episode+\"']\").hide(\"fast\");
-				$(\"[id_episode_list='\"+id_episode+\"']\").show(\"fast\");
-				$(\"[id_episode_list='\"+id_episode+\"']\").addClass('active_content');
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			
-			paginate(pageCount);
 
-		});
 	</script>";	
 }
 
