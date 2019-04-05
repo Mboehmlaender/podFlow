@@ -65,36 +65,8 @@ if(isset($_POST)){
 		echo "</select>";	
 
 		echo "<script>
-		$(\"#set_podcast\").on('change', function(){
-			$(\"#pagin\").empty();
-			var id_podcast = $(\"option:selected\", this).attr('id_podcast');
-			$('#set_episode option:first').prop('selected', true);		
-			if($(\"option:selected\", this).attr('id_podcast') == 'all')
-			{
-				$(\".episodes\").addClass('active_content');
-				$(\"[id_podcast_menu]\").show();
-				$(\".episode_menu_all\").attr('id_podcast_menu', 'all');
-				$('.episodes').show(\"fast\");		
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			
-			else
-			{
-				$(\".episodes\").removeClass('active_content');
-				
-				$('.episode_menu').not(\"[id_podcast_menu='\"+id_podcast+\"']\").hide();
-				$(\"[id_podcast_menu='\"+id_podcast+\"']\").show();
-				$(\".episode_menu_all\").attr('id_podcast_menu', id_podcast);				
-
-				$('.episodes').not(\"[id_podcast_list='\"+id_podcast+\"']\").hide(\"fast\");
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
-				
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").addClass('active_content');
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			 paginate(pageCount);
-
-		});		
+		$(\"#set_podcast\").on('change', filter_podcast);
+	
 		</script>";
 		
 	}
@@ -122,35 +94,8 @@ if(isset($_GET['filter_episode']))
 							echo "</select>";
 
 		echo "<script>
-		$(\"#set_episode\").on('change', function(){
-			$(\"#pagin\").empty();
-			var id_podcast = $(\"option:selected\", this).attr('id_podcast_menu');
-			var id_episode = $(\"option:selected\", this).attr('id_episode');
-			if((id_episode === 'all') && (id_podcast ==='all'))
-			{
-				$(\".episodes\").addClass('active_content');
-				$(\"[id_podcast_list]\").show(\"fast\");
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			else if((id_episode === 'all') && (id_podcast !=='all'))
-			{
-				$(\".episodes\").removeClass('active_content');
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").show(\"fast\");
-				$(\"[id_podcast_list='\"+id_podcast+\"']\").addClass('active_content');
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			else
-			{
-				$(\".episodes\").removeClass('active_content');
-				$('.episodes').not(\"[id_episode_list='\"+id_episode+\"']\").hide(\"fast\");
-				$(\"[id_episode_list='\"+id_episode+\"']\").show(\"fast\");
-				$(\"[id_episode_list='\"+id_episode+\"']\").addClass('active_content');
-				var pageCount =  $(\".active_content\").length / pageSize;
-			}
-			
-			paginate(pageCount);
-
-		});
+		$(\"#set_episode\").on('change', filter_episode);
+	
 		</script>";
 		
 	}
