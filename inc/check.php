@@ -15,8 +15,12 @@ if(isset($_POST)){
 		
 		$episode = $_POST['episode'];
 		$category = $_POST['category'];
+		$table = $_POST['table'];
+		$id_entry = $_POST['id_entry'];
+
 			echo "<div style='margin-top:auto; margin-bottm:auto;'>";
-						echo "<select table='' id_entry='' class='form-control change_category'>";
+						echo "<select cat_origin='".$category."' table='".$table."' id_entry='".$id_entry."' class='form-control change_category'>";
+						echo "<option selected disabled>Kategorie wählen</option>";
 							if(getPermission($_SESSION['userid']) !== 1)
 								{
 /* 									$sql_select_category = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
@@ -27,7 +31,6 @@ if(isset($_POST)){
 								{
 									$sql_select_category = "SELECT c.ID, c.DESCR FROM ".DB_PREFIX."episode_categories e JOIN ".DB_PREFIX."categories c on c.ID = e.ID_CATEGORY WHERE e.ID_EPISODE = '".$episode."'";
 								}
-							echo $sql_select_category;
 							$sql_select_category_result = mysqli_query($con, $sql_select_category);
 							while($sql_select_category_row = mysqli_fetch_assoc($sql_select_category_result))
 							{
@@ -36,10 +39,22 @@ if(isset($_POST)){
 								{
 									echo "selected";
 								}
-								echo " id_episode='".$sql_select_category_row['ID']."'>".$sql_select_category_row['DESCR']."</option>";
+								echo " id_category='".$sql_select_category_row['ID']."' id_entry='".$sql_select_category_row['ID']."'>".$sql_select_category_row['DESCR']."</option>";
 							}
 						echo "</select>";
 			echo "</div>";	
+			echo "<script>
+			$(\".change_category\").each(function(){
+				var category = $(this).children('option:selected').attr('id_category');
+				var cat_origin = $(this).attr('cat_origin');
+
+				if(category == cat_origin)
+				{
+					$(this).children('option:disabled').removeAttr('selected')
+				}
+			});
+				
+			</script>";
 	};
 	
 	if(isset($_GET['filter_podcast']))

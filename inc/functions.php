@@ -326,7 +326,7 @@ function own_entries($userid){
 												}
 											else
 												{	
-													echo "<select table='".$table."' id_entry='".$sql_own_entries_row['ID']."' class='form-control change_episode'>";
+													echo "<select id_category= '".$sql_own_entries_row['ID_CATEGORY']."' table='".$table."' id_entry='".$sql_own_entries_row['ID']."' class='form-control change_episode'>";
 /* 														if(getPermission($_SESSION['userid']) !== 1)
 															{
 																$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
@@ -352,13 +352,13 @@ function own_entries($userid){
 																{
 																	echo "selected disabled";
 																}
-															echo " id_category= '".$sql_own_entries_row['ID_CATEGORY']."' id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
+															echo " id_entry='".$sql_own_entries_row ['ID']."' id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
 														}
 													echo "</select>";
 												}
 										echo "</div>";	
 									echo "</div>";
-										echo "<div class='col-md-3 col-12 change_category' style='margin-top:5px; margin-bottom:5px'>";
+										echo "<div  class='col-md-3 col-12' id='change_category' style='margin-top:5px; margin-bottom:5px'>";
 										
 										echo "</div>";
 								echo "</div>";
@@ -374,138 +374,17 @@ function own_entries($userid){
 	echo "</div>";
 	
 	echo "<script>
-	
-	
-	
-	$(\".change_episode\").each(function(){
-		var episode = $(this).children('option:selected').attr('id_episode');
-		var category = $(this).children('option:selected').attr('id_category');
-			$.ajax({
-				url: \"inc/check.php?get_categories_unchecked=1\",
-				type: \"POST\",
-				context: this,
-				data: {	\"episode\":episode, 
-				\"category\":category, 
-					},								
-				success: function(data)
-					{
-						$(this).closest('.lead').find('.change_category').html(data);
-					},
-				});
-	});
-	
-	var podcast_list = [];
-	$(\".active_content\").each(function(){
-		var podcast = $(this).attr('id_podcast_list');
-		podcast_list.push(podcast)
-	});
-	
-	var podcast_list = podcast_list.toString();
-	
-		$.ajax({
-				url: \"inc/check.php?filter_podcast=1\",
-				type: \"POST\",
-				context: this,
-				data: {	\"podcast_list\":podcast_list, 
-					},								
-				success: function(data)
-					{
-						console.log(data);
-						$(\"#podcast_filter\").html(data);
-					},
-				});
-				
-				
-	var episode_list = [];
-	$(\".active_content\").each(function(){
-		var episodes = $(this).attr('id_episode_list');
-		episode_list.push(episodes)
-	});
-	
-	var episode_list = episode_list.toString();
-	
-		$.ajax({
-				url: \"inc/check.php?filter_episode=1\",
-				type: \"POST\",
-				context: this,
-				data: {	\"episode_list\":episode_list, 
-					},								
-				success: function(data)
-					{
-						console.log(data);
-						$(\"#episode_filter\").html(data);
-					},
-				});
-	
-	
-	pageSize = 15;
-	pageCountAll =  $(\".active_content\").length / pageSize;
 
-	function paginate(count){
-		for(var i = 0 ; i<count;i++){
-		   $(\"#pagin\").append('<li class=\"page-item\"><div class=\"page-link\" >'+(i+1)+'</div></li></nav> ');
-		}
-		$(\"#pagin li\").first().find(\"a\").addClass(\"current\")
-		showPage = function(page) {
-			$(\".active_content\").hide();
-			$(\".active_content\").each(function(n) {
-				if (n >= pageSize * (page - 1) && n < pageSize * page)
-					$(this).show();
-			});        
-		}
-		
-		showPage(1);
 
-		$(\"#pagin li div\").click(function() {
-			$(\"#pagin li div\").removeClass(\"current\");
-			$(this).addClass(\"current\");
-			showPage(parseInt($(this).text())) 
-		});
-	}		
-	paginate(pageCountAll);
-		$(\".change_episode\").on('change', function(){
-			
-			var id_entry = $(this).attr('id_entry');
-			var episode_current = $(\"option:disabled\", this).attr('id_episode');
-			var episode_new = $(\"option:selected\", this).attr('id_episode');
-			var table = $(this).attr('table');
-			$.ajax({
-				url: \"inc/update.php?set_episode_new=1\",
-				type: \"POST\",
-				data: {	\"id_entry\":id_entry, 
-						\"table\":table, 
-						\"episode_new\":episode_new,
-					},								
-				success: function(data)
-					{
-						console.log(data);
-						$.gritter.add({
-							title: \"OK!\",
-							text: \"Beitrag wurde verschoben\",
-							image: \"images/confirm.png\",
-							time: \"1000\"
-						});		
-					},
-				}); 
-				
-			$(\"option:selected\", this).attr('disabled', true);
-			$(\"option:selected\", this).attr('selected', true);
-			$(\"option\", this).not(\":selected\").attr('disabled', false);
-			$(\"option\", this).not(\":selected\").attr('selected', false);
-			$(this).closest(\"li\").attr('id_episode_list', episode_new);
-			if( ( episode_current !== episode_new) && ( $(\"#set_episode\").children('option:selected').attr('id_episode') !== 'all') )
-				{
-					$(this).closest(\"li\").removeClass('active_content');
-					$(this).closest(\"li\").hide(\"fast\");
-					$(\"#pagin\").empty();
-					var pageCount =  $(\".active_content\").length / pageSize;
-					paginate(pageCount)
-					}
-		});
-		
+    $( document ).ready(function() {
 
-		
+	podcast_list_change();	
+	episode_list_change	();
+	get_unchecked_categories()
 
+
+
+	});	
 	</script>";	
 }
 

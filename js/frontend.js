@@ -16,6 +16,52 @@
 				CKEDITOR.instances[editbox].destroy();
 		}
 
+		
+function podcast_list_change(){
+	var podcast_list = [];
+	$(".active_content").each(function(){
+		var podcast = $(this).attr('id_podcast_list');
+		podcast_list.push(podcast)
+	});
+	
+	var podcast_list = podcast_list.toString();
+		$.ajax({
+				url: "inc/check.php?filter_podcast=1",
+				type: "POST",
+				context: this,
+				data: {	"podcast_list":podcast_list, 
+					},								
+				success: function(data)
+					{
+						console.log(data);
+						$("#podcast_filter").html(data);
+					},
+});
+};
+
+function episode_list_change(){
+	var episode_list = [];
+	$(".active_content").each(function(){
+		var episodes = $(this).attr('id_episode_list');
+		episode_list.push(episodes)
+	});
+	
+	var episode_list = episode_list.toString();
+	
+		$.ajax({
+				url: "inc/check.php?filter_episode=1",
+				type: "POST",
+				context: this,
+				data: {	"episode_list":episode_list, 
+					},								
+				success: function(data)
+					{
+						console.log(data);
+						$("#episode_filter").html(data);
+					},
+				});
+};
+
 function save_note(id, type){
 	var editbox = type+"_notice_edit_"+id;
 	var name = "INFO";
@@ -54,7 +100,122 @@ function save_note(id, type){
 	});
 	
 }
+	function get_unchecked_categories(){
+		$(".change_episode").each(function(){
 
+		var episode = $(this).children('option:selected').attr('id_episode');
+		var category = $(this).attr('id_category');
+		var table = $(this).attr('table');
+		var id_entry = $(this).attr('id_entry');
+
+			$.ajax({
+				url: "inc/check.php?get_categories_unchecked=1",
+				type: "POST",
+				context: this,
+				data: {	"episode":episode, 
+				"category":category, 
+				"table":table,
+				"id_entry":id_entry
+					},								
+				success: function(data)
+					{
+						$(this).closest('.lead').find('#change_category').empty();
+						$(this).closest('.lead').find('#change_category').append(data);
+					},
+				});
+			});
+	}
+
+	$("#change_category").on("change", ".change_category", function(){
+		var episode = $(this).children('option:selected').attr('id_episode');
+		var category = $(this).children('option:selected').attr('id_category');
+		var table = $(this).attr('table');
+		var id_entry = $(this).attr('id_entry');
+			$.ajax({
+				url: "inc/update.php?up_cat=1",
+				type: "POST",
+				context: this,
+				data: {	"episode":episode, 
+				"category":category, 
+				"table":table,
+				"id_entry":id_entry
+					},								
+				success: function(data)
+					{
+						console.log(data);
+					},
+				});
+	});
+	
+
+pageSize = 15;
+	pageCountAll =  $(".active_content").length / pageSize;
+
+	function paginate(count){
+		for(var i = 0 ; i<count;i++){
+		   $("#pagin").append('<li class="page-item"><div class="page-link" >'+(i+1)+'</div></li></nav> ');
+		}
+		$("#pagin li").first().find("a").addClass("current")
+		showPage = function(page) {
+			$(".active_content").hide();
+			$(".active_content").each(function(n) {
+				if (n >= pageSize * (page - 1) && n < pageSize * page)
+					$(this).show();
+			});        
+		}
+		
+		showPage(1);
+
+		$("#pagin li div").click(function() {
+			$("#pagin li div").removeClass("current");
+			$(this).addClass("current");
+			showPage(parseInt($(this).text())) 
+		});
+	}		
+	paginate(pageCountAll);
+	
+		$(".change_episode").on('change', function(){
+			
+			var id_entry = $(this).attr('id_entry');
+			var episode_current = $("option:disabled", this).attr('id_episode');
+			var episode_new = $("option:selected", this).attr('id_episode');
+			var table = $(this).attr('table');
+			$.ajax({
+				url: "inc/update.php?set_episode_new=1",
+				type: "POST",
+				data: {	"id_entry":id_entry, 
+						"table":table, 
+						"episode_new":episode_new,
+					},								
+				success: function(data)
+					{
+						episode_list_change();						
+						console.log(data);
+						$.gritter.add({
+							title: "OK!",
+							text: "Beitrag wurde verschoben",
+							image: "images/confirm.png",
+							time: "1000"
+						});	
+					},
+				}); 
+			get_unchecked_categories()
+			$("option:selected", this).attr('disabled', true);
+			$("option:selected", this).attr('selected', true);
+			$("option", this).not(":selected").attr('disabled', false);
+			$("option", this).not(":selected").attr('selected', false);
+			$(this).closest("li").attr('id_episode_list', episode_new);
+			if( ( episode_current !== episode_new) && ( $("#set_episode").children('option:selected').attr('id_episode') !== 'all') )
+				{
+					$(this).closest("li").removeClass('active_content');
+					$(this).closest("li").hide("fast");
+					$("#pagin").empty();
+					var pageCount =  $(".active_content").length / pageSize;
+					paginate(pageCount)
+					}
+		});
+		
+		
 function filter_podcast(){
 			$("#pagin").empty();
 			var id_podcast = $("option:selected", this).attr('id_podcast');

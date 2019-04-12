@@ -136,24 +136,22 @@ if(isset($_POST)){
 		{
 			$update = "UPDATE ".DB_PREFIX."links SET ID_EPISODE = '$episode_new' WHERE ID='$id_entry' ;";
 		}
-		mysqli_multi_query($con, $update);
-		echo $update;
+		mysqli_query($con, $update);
 		return;
  		}			
 	
 	
-/* 	//Kategorien der Themen/Beuiträge ändern
+ 	//Kategorien der Themen/Beuiträge ändern
  	if(isset($_GET['up_cat'])){
-		$id = mysqli_real_escape_string($con,$_POST['pk']);
-		$row = mysqli_real_escape_string($con,$_POST['row']);
-		$table = mysqli_real_escape_string($con,$_POST['table']);
-		$value = mysqli_real_escape_string($con,$_POST['value']);
-	
-		$sql_update_category = "UPDATE ".DB_PREFIX.$table." SET ".$row." = '".$value."' WHERE ID = ".$id;
+		$category = mysqli_real_escape_string($con,$_POST['category']);
+		$table = mysqli_real_escape_string($con, $_POST['table']);
+		$id_entry = mysqli_real_escape_string($con, $_POST['id_entry']);
+
+		$sql_update_category = "UPDATE ".DB_PREFIX.$table." SET ID_CATEGORY = '".$category."' WHERE ID = ".$id_entry;
 		$sql_update_category_result = mysqli_query($con, $sql_update_category);
 		echo $sql_update_category;
 		return;
-	}  */
+	}  
 
 	//Episode abschließen
 	if(isset($_GET['close_episode'])){
