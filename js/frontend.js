@@ -16,7 +16,7 @@
 				CKEDITOR.instances[editbox].destroy();
 		}
 
-		
+//Eigene Beiträge: Filter der Podcasts laden	
 function podcast_list_change(){
 	var podcast_list = [];
 	$(".active_content").each(function(){
@@ -39,6 +39,7 @@ function podcast_list_change(){
 });
 };
 
+//Eigene Beiträge: Filter der Episoden laden
 function episode_list_change(){
 	var episode_list = [];
 	$(".active_content").each(function(){
@@ -62,6 +63,7 @@ function episode_list_change(){
 				});
 };
 
+//Notizen speichern
 function save_note(id, type){
 	var editbox = type+"_notice_edit_"+id;
 	var name = "INFO";
@@ -100,182 +102,187 @@ function save_note(id, type){
 	});
 	
 }
-	function get_unchecked_categories(){
-		$(".change_episode").each(function(){
 
-		var episode = $(this).children('option:selected').attr('id_episode');
-		var category = $(this).attr('id_category');
-		var table = $(this).attr('table');
-		var id_entry = $(this).attr('id_entry');
+//Eigene Beiträge: Auswahl der Kategorien laden
+function get_unchecked_categories(){
+	$(".change_episode").each(function(){
 
-			$.ajax({
-				url: "inc/check.php?get_categories_unchecked=1",
-				type: "POST",
-				context: this,
-				data: {	"episode":episode, 
-				"category":category, 
-				"table":table,
-				"id_entry":id_entry
-					},								
-				success: function(data)
-					{
-						$(this).closest('.lead').find('#change_category').empty();
-						$(this).closest('.lead').find('#change_category').append(data);
-					},
-				});
+	var episode = $(this).children('option:selected').attr('id_episode');
+	var category = $(this).attr('id_category');
+	var table = $(this).attr('table');
+	var id_entry = $(this).attr('id_entry');
+
+		$.ajax({
+			url: "inc/check.php?get_categories_unchecked=1",
+			type: "POST",
+			context: this,
+			data: {	"episode":episode, 
+			"category":category, 
+			"table":table,
+			"id_entry":id_entry
+				},								
+			success: function(data)
+				{
+					$(this).closest('.lead').find('#change_category').empty();
+					$(this).closest('.lead').find('#change_category').append(data);
+				},
 			});
-	}
+		});
+}
 
-	$("#change_category").on("change", ".change_category", function(){
-		var episode = $(this).children('option:selected').attr('id_episode');
-		var category = $(this).children('option:selected').attr('id_category');
-		var table = $(this).attr('table');
-		var id_entry = $(this).attr('id_entry');
-			$.ajax({
-				url: "inc/update.php?up_cat=1",
-				type: "POST",
-				context: this,
-				data: {	"episode":episode, 
-				"category":category, 
-				"table":table,
-				"id_entry":id_entry
-					},								
-				success: function(data)
-					{
-						console.log(data);
-					},
-				});
+//Eigene Beiträge: Kategorie ändern laden
+$("#change_category").on("change", ".change_category", function(){
+	var episode = $(this).children('option:selected').attr('id_episode');
+	var category = $(this).children('option:selected').attr('id_category');
+	var table = $(this).attr('table');
+	var id_entry = $(this).attr('id_entry');
+		$.ajax({
+			url: "inc/update.php?up_cat=1",
+			type: "POST",
+			context: this,
+			data: {	"episode":episode, 
+			"category":category, 
+			"table":table,
+			"id_entry":id_entry
+				},								
+			success: function(data)
+				{
+					console.log(data);
+				},
+			});
 	});
 	
-
+//Eigene Beiträge: Pagination
 pageSize = 15;
-	pageCountAll =  $(".active_content").length / pageSize;
+pageCountAll =  $(".active_content").length / pageSize;
 
-	function paginate(count){
-		for(var i = 0 ; i<count;i++){
-		   $("#pagin").append('<li class="page-item"><div class="page-link" >'+(i+1)+'</div></li></nav> ');
-		}
-		$("#pagin li").first().find("a").addClass("current")
-		showPage = function(page) {
-			$(".active_content").hide();
-			$(".active_content").each(function(n) {
-				if (n >= pageSize * (page - 1) && n < pageSize * page)
-					$(this).show();
-			});        
-		}
-		
-		showPage(1);
-
-		$("#pagin li div").click(function() {
-			$("#pagin li div").removeClass("current");
-			$(this).addClass("current");
-			showPage(parseInt($(this).text())) 
-		});
-	}		
-	paginate(pageCountAll);
-	
-		$(".change_episode").on('change', function(){
-			
-			var id_entry = $(this).attr('id_entry');
-			var episode_current = $("option:disabled", this).attr('id_episode');
-			var episode_new = $("option:selected", this).attr('id_episode');
-			var table = $(this).attr('table');
-			$.ajax({
-				url: "inc/update.php?set_episode_new=1",
-				type: "POST",
-				data: {	"id_entry":id_entry, 
-						"table":table, 
-						"episode_new":episode_new,
-					},								
-				success: function(data)
-					{
-						episode_list_change();						
-						console.log(data);
-						$.gritter.add({
-							title: "OK!",
-							text: "Beitrag wurde verschoben",
-							image: "images/confirm.png",
-							time: "1000"
-						});	
-					},
-				}); 
-			get_unchecked_categories()
-			$("option:selected", this).attr('disabled', true);
-			$("option:selected", this).attr('selected', true);
-			$("option", this).not(":selected").attr('disabled', false);
-			$("option", this).not(":selected").attr('selected', false);
-			$(this).closest("li").attr('id_episode_list', episode_new);
-			if( ( episode_current !== episode_new) && ( $("#set_episode").children('option:selected').attr('id_episode') !== 'all') )
-				{
-					$(this).closest("li").removeClass('active_content');
-					$(this).closest("li").hide("fast");
-					$("#pagin").empty();
-					var pageCount =  $(".active_content").length / pageSize;
-					paginate(pageCount)
-					}
-		});
-		
-		
-function filter_podcast(){
-			$("#pagin").empty();
-			var id_podcast = $("option:selected", this).attr('id_podcast');
-			$('#set_episode option:first').prop('selected', true);		
-			if($("option:selected", this).attr('id_podcast') == 'all')
-			{
-				$(".episodes").addClass('active_content');
-				$("[id_podcast_menu]").show();
-				$(".episode_menu_all").attr('id_podcast_menu', 'all');
-				$('.episodes').show("fast");		
-				var pageCount =  $(".active_content").length / pageSize;
-			}
-			
-			else
-			{
-				$(".episodes").removeClass('active_content');
-				
-				$('.episode_menu').not("[id_podcast_menu='"+id_podcast+"']").hide();
-				$("[id_podcast_menu='"+id_podcast+"']").show();
-				$(".episode_menu_all").attr('id_podcast_menu', id_podcast);				
-
-				$('.episodes').not("[id_podcast_list='"+id_podcast+"']").hide("fast");
-				$("[id_podcast_list='"+id_podcast+"']").show("fast");
-				
-				$("[id_podcast_list='"+id_podcast+"']").addClass('active_content');
-				var pageCount =  $(".active_content").length / pageSize;
-			}
-			 paginate(pageCount);	
+function paginate(count){
+for(var i = 0 ; i<count;i++){
+	$("#pagin").append('<li class="page-item"><div class="page-link" >'+(i+1)+'</div></li></nav> ');
+}
+$("#pagin li").first().find("a").addClass("current")
+showPage = function(page) {
+	$(".active_content").hide();
+	$(".active_content").each(function(n) {
+		if (n >= pageSize * (page - 1) && n < pageSize * page)
+			$(this).show();
+	});        
 }
 
+showPage(1);
+
+$("#pagin li div").click(function() {
+	$("#pagin li div").removeClass("current");
+	$(this).addClass("current");
+	showPage(parseInt($(this).text())) 
+});
+}		
+paginate(pageCountAll);
+
+$(".change_episode").on('change', function(){
+	
+	var id_entry = $(this).attr('id_entry');
+	var episode_current = $("option:disabled", this).attr('id_episode');
+	var episode_new = $("option:selected", this).attr('id_episode');
+	var table = $(this).attr('table');
+	$.ajax({
+		url: "inc/update.php?set_episode_new=1",
+		type: "POST",
+		data: {	"id_entry":id_entry, 
+				"table":table, 
+				"episode_new":episode_new,
+			},								
+		success: function(data)
+			{
+				episode_list_change();						
+				console.log(data);
+				$.gritter.add({
+					title: "OK!",
+					text: "Beitrag wurde verschoben",
+					image: "images/confirm.png",
+					time: "1000"
+				});	
+			},
+		}); 
+	get_unchecked_categories()
+	$("option:selected", this).attr('disabled', true);
+	$("option:selected", this).attr('selected', true);
+	$("option", this).not(":selected").attr('disabled', false);
+	$("option", this).not(":selected").attr('selected', false);
+	$(this).closest("li").attr('id_episode_list', episode_new);
+	if( ( episode_current !== episode_new) && ( $("#set_episode").children('option:selected').attr('id_episode') !== 'all') )
+		{
+			$(this).closest("li").removeClass('active_content');
+			$(this).closest("li").hide("fast");
+			$("#pagin").empty();
+			var pageCount =  $(".active_content").length / pageSize;
+			paginate(pageCount)
+			}
+});
+		
+
+//Eigene Beiträge: Auf Podcast filtern
+function filter_podcast(){
+	$("#pagin").empty();
+	var id_podcast = $("option:selected", this).attr('id_podcast');
+	$('#set_episode option:first').prop('selected', true);		
+	if($("option:selected", this).attr('id_podcast') == 'all')
+	{
+		$(".episodes").addClass('active_content');
+		$("[id_podcast_menu]").show();
+		$(".episode_menu_all").attr('id_podcast_menu', 'all');
+		$('.episodes').show("fast");		
+		var pageCount =  $(".active_content").length / pageSize;
+	}
+	
+	else
+	{
+		$(".episodes").removeClass('active_content');
+		
+		$('.episode_menu').not("[id_podcast_menu='"+id_podcast+"']").hide();
+		$("[id_podcast_menu='"+id_podcast+"']").show();
+		$(".episode_menu_all").attr('id_podcast_menu', id_podcast);				
+
+		$('.episodes').not("[id_podcast_list='"+id_podcast+"']").hide("fast");
+		$("[id_podcast_list='"+id_podcast+"']").show("fast");
+		
+		$("[id_podcast_list='"+id_podcast+"']").addClass('active_content');
+		var pageCount =  $(".active_content").length / pageSize;
+	}
+		paginate(pageCount);	
+}
+
+//Eigene Beiträge: Auf Episode filtern
 function filter_episode(){
 $("#pagin").empty();
-			var id_podcast = $("option:selected", this).attr('id_podcast_menu');
-			var id_episode = $("option:selected", this).attr('id_episode');
-			if((id_episode === 'all') && (id_podcast ==='all'))
-			{
-				$(".episodes").addClass('active_content');
-				$("[id_podcast_list]").show("fast");
-				var pageCount =  $(".active_content").length / pageSize;
-			}
-			else if((id_episode === 'all') && (id_podcast !=='all'))
-			{
-				$(".episodes").removeClass('active_content');
-				$("[id_podcast_list='"+id_podcast+"']").show("fast");
-				$("[id_podcast_list='"+id_podcast+"']").addClass('active_content');
-				var pageCount =  $(".active_content").length / pageSize;
-			}
-			else
-			{
-				$(".episodes").removeClass('active_content');
-				$('.episodes').not("[id_episode_list='"+id_episode+"']").hide("fast");
-				$("[id_episode_list='"+id_episode+"']").show("fast");
-				$("[id_episode_list='"+id_episode+"']").addClass('active_content');
-				var pageCount =  $(".active_content").length / pageSize;
-			}
-			
-			paginate(pageCount);
+	var id_podcast = $("option:selected", this).attr('id_podcast_menu');
+	var id_episode = $("option:selected", this).attr('id_episode');
+	if((id_episode === 'all') && (id_podcast ==='all'))
+	{
+		$(".episodes").addClass('active_content');
+		$("[id_podcast_list]").show("fast");
+		var pageCount =  $(".active_content").length / pageSize;
+	}
+	else if((id_episode === 'all') && (id_podcast !=='all'))
+	{
+		$(".episodes").removeClass('active_content');
+		$("[id_podcast_list='"+id_podcast+"']").show("fast");
+		$("[id_podcast_list='"+id_podcast+"']").addClass('active_content');
+		var pageCount =  $(".active_content").length / pageSize;
+	}
+	else
+	{
+		$(".episodes").removeClass('active_content');
+		$('.episodes').not("[id_episode_list='"+id_episode+"']").hide("fast");
+		$("[id_episode_list='"+id_episode+"']").show("fast");
+		$("[id_episode_list='"+id_episode+"']").addClass('active_content');
+		var pageCount =  $(".active_content").length / pageSize;
+	}
+	
+	paginate(pageCount);
 }
 	
-//Kanbanreihenfolge speichern
+//Timelinereihenfolge speichern
 
 function save_order_kanban(id_cat){
 	var sortable_data = $("#"+id_cat).sortable("serialize"); 
@@ -363,6 +370,90 @@ function copy_link(){
 }
 	
 $(document).ready(function(){
+
+	//Timeline: Sortable
+	$( ".kanban_sortable" ).sortable({ 
+		handle: '.timeline-handle',
+		receive: function( event, ui){
+			var cat_id_receiver = event.target.getAttribute('cat_id');
+			var cat_id_current = ui.item.attr("cat");
+			
+			var old_anzahl = $("#cat_" + cat_id_receiver + "_number_user").text();
+			var old_anzahl_old = $("#cat_" + cat_id_current + "_number_user").text();							
+			
+			var old_anzahl_gesamt = $("#cat_" + cat_id_receiver + "_number_all").text();
+			var old_anzahl_old_gesamt = $("#cat_" + cat_id_current + "_number_all").text();
+			
+			var new_anzahl_receiver = parseInt(old_anzahl)+1;
+			var new_anzahl_current = parseInt(old_anzahl_old)-1;							
+			
+			var new_anzahl_receiver_gesamt = parseInt(old_anzahl_gesamt)+1;
+			var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
+			
+			var pk = ui.item.attr("data-pk");
+			var table = ui.item.attr("table");
+			$.ajax({
+				url: "inc/update.php?set_category_sortable=1",
+				type: "POST",
+				data: {	"cat_id":cat_id_receiver, 
+						"table":table, 
+						"pk":pk 
+					},								
+				success: function(data)
+					{
+						console.log(data);
+						$("#cat_" + cat_id_receiver + "_number_user").text(new_anzahl_receiver);
+						$("#cat_" + cat_id_current + "_number_user").text(new_anzahl_current);										
+						
+						$("#cat_" + cat_id_receiver + "_number_all").text(new_anzahl_receiver_gesamt);
+						$("#cat_" + cat_id_current + "_number_all").text(new_anzahl_current_gesamt);
+						ui.item.attr("cat", cat_id_receiver)
+
+					},
+				}); 
+			},
+		update: function( event, ui){
+			var id = $(this).attr('id');
+					save_order_kanban(id);
+			},						
+		});	
+
+	//Notizen ein/ausblenden 
+	$(".toggle_notice").on("click", function(){
+		var type = $(this).attr("type");
+		var id_entry = $(this).attr("id_entry");
+		$("#" + type + "_notice_" + id_entry).toggle("fast");			
+		
+		if ($(this).hasClass('show'))
+		{
+		$(this).removeClass('fas');
+		$(this).addClass('far');
+			$(this).removeClass("show");
+		}
+		else
+		{
+		$(this).removeClass('far');
+		$(this).addClass('fas');
+			$(this).addClass("show");
+		}
+	});
+
+	//Action-Schaltflächen auf/zuklappen
+	$(".toggle_entry_buttons").on("click", function(){
+		var type = $(this).attr("type");
+		var entry_id = $(this).attr("entry_id");
+			if($("#entry_buttons_" + type + entry_id).css('display') == 'none')
+			{
+				var angle = 90;
+			}
+			else
+			{
+				var angle = 0;
+			}
+			$(this).attr('angle', angle);	
+			$(this).css({'transform': 'rotate(' + angle + 'deg)'});	
+			$("#entry_buttons_" + type + entry_id).toggle("slow");
+	});
 
 	// Beitrag bearbeiten
 															

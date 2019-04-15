@@ -327,15 +327,7 @@ function own_entries($userid){
 											else
 												{	
 													echo "<select id_category= '".$sql_own_entries_row['ID_CATEGORY']."' table='".$table."' id_entry='".$sql_own_entries_row['ID']."' class='form-control change_episode'>";
-/* 														if(getPermission($_SESSION['userid']) !== 1)
-															{
-																$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
-															}
-														else
-															{
-																$sql_select_episodes2 = "SELECT ID, TITEL, DATE, DONE FROM ".DB_PREFIX."episoden WHERE ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
-															} */
-														$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
+														$sql_select_episodes2 = "SELECT ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE AS ID, ".DB_PREFIX."episoden.TITEL, ".DB_PREFIX."episoden.NUMMER AS NUMBER, ".DB_PREFIX."episoden.DATE, ".DB_PREFIX."episoden.DONE FROM ".DB_PREFIX."view_episode_users JOIN ".DB_PREFIX."episoden ON ".DB_PREFIX."episoden.ID = ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_EPISODE WHERE ".DB_PREFIX."view_episode_users.EPISODE_USERS_ID_USER = ".$userid." AND ID_PODCAST = '".$sql_own_entries_row['ID_PODCAST']."' ORDER BY DATE";
 														$sql_select_episodes_result2 = mysqli_query($con, $sql_select_episodes2);
 														while($sql_select_episodes_row2 = mysqli_fetch_assoc($sql_select_episodes_result2))
 														{
@@ -352,7 +344,7 @@ function own_entries($userid){
 																{
 																	echo "selected disabled";
 																}
-															echo " id_entry='".$sql_own_entries_row ['ID']."' id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." - ".$sql_select_episodes_row2['TITEL']." vom ".date('d.m.Y', strtotime($sql_select_episodes_row2['DATE'])).$done."</option>";
+															echo " id_entry='".$sql_own_entries_row ['ID']."' id_episode='".$sql_select_episodes_row2['ID']."'>".$sql_own_entries_row['SHORT']." | ".str_pad($sql_select_episodes_row2['NUMBER'],3,'0', STR_PAD_LEFT)." ".$sql_select_episodes_row2['TITEL']." ".$done."</option>";
 														}
 													echo "</select>";
 												}
@@ -810,90 +802,6 @@ function kanban(){
 			echo "</div>";
 		}
 	echo "</div>";
-	echo "<script>
-			$(document).ready(function(){
-			$(\".toggle_notice\").on(\"click\", function(){
-				var type = $(this).attr(\"type\");
-				var id_entry = $(this).attr(\"id_entry\");
-				$(\"#\" + type + \"_notice_\" + id_entry).toggle(\"fast\");			
-				
-				if ($(this).hasClass('show'))
-				{
-				$(this).removeClass('fas');
-				$(this).addClass('far');
-					$(this).removeClass(\"show\");
-				}
-				else
-				{
-				$(this).removeClass('far');
-				$(this).addClass('fas');
-					$(this).addClass(\"show\");
-				}
-			});
-			
-			$(\".toggle_entry_buttons\").on(\"click\", function(){
-				var type = $(this).attr(\"type\");
-				var entry_id = $(this).attr(\"entry_id\");
-					if($(\"#entry_buttons_\" + type + entry_id).css('display') == 'none')
-					{
-						var angle = 90;
-					}
-					else
-					{
-						var angle = 0;
-					}
-					$(this).attr('angle', angle);	
-					$(this).css({'transform': 'rotate(' + angle + 'deg)'});	
-					$(\"#entry_buttons_\" + type + entry_id).toggle(\"slow\");
-			});
-						
-			$( \".kanban_sortable\" ).sortable({ 
-				handle: '.timeline-handle',
-				receive: function( event, ui){
-					var cat_id_receiver = event.target.getAttribute('cat_id');
-					var cat_id_current = ui.item.attr(\"cat\");
-					
-					var old_anzahl = $(\"#cat_\" + cat_id_receiver + \"_number_user\").text();
-					var old_anzahl_old = $(\"#cat_\" + cat_id_current + \"_number_user\").text();							
-					
-					var old_anzahl_gesamt = $(\"#cat_\" + cat_id_receiver + \"_number_all\").text();
-					var old_anzahl_old_gesamt = $(\"#cat_\" + cat_id_current + \"_number_all\").text();
-					
-					var new_anzahl_receiver = parseInt(old_anzahl)+1;
-					var new_anzahl_current = parseInt(old_anzahl_old)-1;							
-					
-					var new_anzahl_receiver_gesamt = parseInt(old_anzahl_gesamt)+1;
-					var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
-					
-					var pk = ui.item.attr(\"data-pk\");
-					var table = ui.item.attr(\"table\");
-					$.ajax({
-						url: \"inc/update.php?set_category_sortable=1\",
-						type: \"POST\",
-						data: {	\"cat_id\":cat_id_receiver, 
-								\"table\":table, 
-								\"pk\":pk 
-							},								
-						success: function(data)
-							{
-								console.log(data);
-								$(\"#cat_\" + cat_id_receiver + \"_number_user\").text(new_anzahl_receiver);
-								$(\"#cat_\" + cat_id_current + \"_number_user\").text(new_anzahl_current);										
-								
-								$(\"#cat_\" + cat_id_receiver + \"_number_all\").text(new_anzahl_receiver_gesamt);
-								$(\"#cat_\" + cat_id_current + \"_number_all\").text(new_anzahl_current_gesamt);
-								ui.item.attr(\"cat\", cat_id_receiver)
-
-							},
-						}); 
-					},
-				update: function( event, ui){
-					var id = $(this).attr('id');
-							save_order_kanban(id);
-					},						
-				});					
-		  });		
-	</script>";	
 }
 
 //Episode abschließen
