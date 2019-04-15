@@ -16,6 +16,30 @@
 				CKEDITOR.instances[editbox].destroy();
 		}
 
+
+function check_sortable(){
+	$(".timeline").each(function(){
+		if( ($(this).attr('max_entries') > 0) && ($(this).attr('max_entries') <= $(this).children("li").length) )
+		{
+			$(this).removeClass('kanban_sortable')
+		}
+		else{		
+	$(this).addClass("timeline_move");
+	if($(this).not('.kanban_sortable'))
+	{
+		$(this).addClass('kanban_sortable');
+	}
+
+	$("#edit_cat_link").addClass("edit_mode");
+	$("#edit_cat_link").removeClass("fa-users");
+	$("#edit_cat_link").addClass("fa-user");
+	$( ".kanban_sortable" ).sortable({ 
+		connectWith: '.kanban_sortable',				
+		});
+	}
+});
+
+};
 //Eigene Beiträge: Filter der Podcasts laden	
 function podcast_list_change(){
 	var podcast_list = [];
@@ -415,6 +439,7 @@ $(document).ready(function(){
 		update: function( event, ui){
 			var id = $(this).attr('id');
 					save_order_kanban(id);
+					check_sortable()
 			},						
 		});	
 
@@ -656,13 +681,8 @@ $(document).ready(function(){
 		$("[own='0']").toggle("slow"); 
 			$(".cat_number_all").hide();
 			$(".cat_number_user").show();
-			$("#edit_cat_link").removeClass("fa-users");
-			$("#edit_cat_link").addClass("edit_mode");
-			$("#edit_cat_link").addClass("fa-user");
-			$( ".kanban_sortable" ).sortable({ 
-				connectWith: '.kanban_sortable',				
-				});
-			$(".timeline").addClass("timeline_move");
+			
+			check_sortable();
 
 	}
 	
@@ -690,15 +710,8 @@ $(document).ready(function(){
 				text: "Kategorienübergreifendes Verschieben möglich!",
 				image: "images/confirm.png",
 				time: "2000"
-			});				
-			$(".timeline").addClass("timeline_move");
-
-			$(this).addClass("edit_mode");
-			$(this).removeClass("fa-users");
-			$(this).addClass("fa-user");
-			$( ".kanban_sortable" ).sortable({ 
-				connectWith: '.kanban_sortable',				
-				});
+			});		
+			check_sortable()
 		}
 			
 	});

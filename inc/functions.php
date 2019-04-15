@@ -465,6 +465,7 @@ function kanban(){
 			
 			if ($sql_categories_list_rows['MAX_ENTRIES'] >= 1)
 				{
+					$max_entries_check = $sql_categories_list_rows['MAX_ENTRIES'];
 					if ($sql_categories_list_rows['MAX_ENTRIES'] == 1)
 						{
 							$entries = "Eintrag";
@@ -477,6 +478,7 @@ function kanban(){
 				}
 			else 
 				{
+					$max_entries_check = 0;
 					$max_entries = "";
 				}
  				$number_user = getnumber($sql_categories_list_rows['ID_CATEGORY'], $_SESSION['cur_episode'], ' AND ID_USER = ', $_SESSION['userid']);
@@ -495,7 +497,7 @@ function kanban(){
 				echo "</div>";
 			echo "<hr class='seperator'>";		
 			echo "<div class='collapse collapse-outer' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' id='collapse_category_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-top: 15px;'>";
-				echo "<ul class='timeline kanban_sortable' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-bottom: 0px'>";
+				echo "<ul class='timeline kanban_sortable' max_entries='".$max_entries_check."' cat_id='".$sql_categories_list_rows['ID_CATEGORY']."' id='cat_".$sql_categories_list_rows['ID_CATEGORY']."' style='margin-bottom: 0px'>";
 				global $con;
 				$sql_kanban_entries = "SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."links.ID AS ID, ".DB_PREFIX."links.URL AS URL, ".DB_PREFIX."links.ID_USER AS ID_USER, ".DB_PREFIX."links.ID_EPISODE, ".DB_PREFIX."links.ID_CATEGORY, ".DB_PREFIX."links.DESCR, NULL AS IS_TOPIC, ".DB_PREFIX."links.REIHENF, ".DB_PREFIX."links.DONE, ".DB_PREFIX."links.DONE_TS, ".DB_PREFIX."links.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."links JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."links.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."links.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." AND ID_TOPIC IS NULL UNION ALL SELECT ".DB_PREFIX."users.USERNAME, ".DB_PREFIX."users.NAME_SHOW, ".DB_PREFIX."topics.ID AS ID, NULL AS URL, ".DB_PREFIX."topics.ID_USER AS ID_USER, ".DB_PREFIX."topics.ID_EPISODE, ".DB_PREFIX."topics.ID_CATEGORY, ".DB_PREFIX."topics.DESCR, 1 AS IS_TOPIC, ".DB_PREFIX."topics.REIHENF, ".DB_PREFIX."topics.DONE, ".DB_PREFIX."topics.DONE_TS, ".DB_PREFIX."topics.INFO AS INFO, ".DB_PREFIX."episoden.DONE AS EPISODE_DONE from ".DB_PREFIX."topics JOIN ".DB_PREFIX."users on ".DB_PREFIX."users.ID = ".DB_PREFIX."topics.ID_USER JOIN ".DB_PREFIX."episoden on ".DB_PREFIX."episoden.ID = ".DB_PREFIX."topics.ID_EPISODE WHERE ID_EPISODE = ".$_SESSION['cur_episode']." AND ID_CATEGORY = ".$sql_categories_list_rows['ID_CATEGORY']." ORDER BY REIHENF, ID ASC";
 				$sql_kanban_entries_result = mysqli_query($con, $sql_kanban_entries);
@@ -791,7 +793,7 @@ function kanban(){
 							}
 						else
 						{
-							echo "<ul class='timeline' style='margin-bottom: 20px'>";
+							echo "<ul class='timeline no_change' style='margin-bottom: 20px'>";
 								echo "<li>";
 										echo "<div class='timeline-badge success add_entry_category' change_value='".$_SESSION['cur_episode']."' max_entries='".$sql_categories_list_rows['MAX_ENTRIES']."' id_cat='".$sql_categories_list_rows['ID_CATEGORY']."' style='cursor:pointer; margin-top: -16px;'><i class='fas fa-plus fa-fw'></i></div>";
 								echo "</li>"; 
