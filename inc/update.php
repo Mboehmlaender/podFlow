@@ -130,12 +130,13 @@ if(isset($_POST)){
 		if($table == 'topics')
 		{
 			$update = "UPDATE ".DB_PREFIX."topics SET ID_EPISODE = '$episode_new' WHERE ID='$id_entry' ;";
+			$update .= "UPDATE ".DB_PREFIX."links SET ID_EPISODE = '$episode_new' WHERE ID_TOPIC='$id_entry' ";
 		}
 		else
 		{
 			$update = "UPDATE ".DB_PREFIX."links SET ID_EPISODE = '$episode_new' WHERE ID='$id_entry' ;";
 		}
-		mysqli_query($con, $update);
+		mysqli_multi_query($con, $update);
 		return;
  		}			
 	
