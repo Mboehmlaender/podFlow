@@ -15,19 +15,19 @@
 	function disableEditing(editbox) {
 				CKEDITOR.instances[editbox].destroy();
 		}
-
-
 function check_sortable(){
 	$(".timeline").each(function(){
-		if( ($(this).attr('max_entries') > 0) && ($(this).attr('max_entries') <= $(this).children("li").length) )
+		if( (($(this).attr('max_entries') > 0) && ($(this).attr('max_entries') <= $(this).children("li").length)) || ($(this).hasClass('no_change')) )
 		{
 			$(this).removeClass('kanban_sortable')
+			$(this).removeClass("timeline_move");
 		}
 		else{		
-	$(this).addClass("timeline_move");
 	if($(this).not('.kanban_sortable'))
 	{
 		$(this).addClass('kanban_sortable');
+		$(this).addClass("timeline_move");
+
 	}
 
 	$("#edit_cat_link").addClass("edit_mode");
@@ -62,6 +62,8 @@ function podcast_list_change(){
 					},
 });
 };
+
+
 
 //Eigene Beiträge: Filter der Episoden laden
 function episode_list_change(){
@@ -130,7 +132,6 @@ function save_note(id, type){
 //Eigene Beiträge: Auswahl der Kategorien laden
 function get_unchecked_categories(){
 	$(".change_episode").each(function(){
-
 	var episode = $(this).children('option:selected').attr('id_episode');
 	var category = $(this).attr('id_category');
 	var table = $(this).attr('table');
@@ -147,35 +148,21 @@ function get_unchecked_categories(){
 				},								
 			success: function(data)
 				{
-					$(this).closest('.lead').find('#change_category').empty();
-					$(this).closest('.lead').find('#change_category').append(data);
+					$(this).closest('.lead').find('.change_div').empty();
+					$(this).closest('.lead').find('.change_div').append(data);
+					var category = $(this).children('option:selected').attr('id_category');
+					var cat_origin = $(this).attr('cat_origin');
+	
+					if(category == cat_origin)
+					{
+						$(this).find('[noselect]').removeAttr('selected')
+					}					
 				},
 			});
 		});
 }
 
-//Eigene Beiträge: Kategorie ändern laden
-$("#change_category").on("change", ".change_category", function(){
-	var episode = $(this).children('option:selected').attr('id_episode');
-	var category = $(this).children('option:selected').attr('id_category');
-	var table = $(this).attr('table');
-	var id_entry = $(this).attr('id_entry');
-		$.ajax({
-			url: "inc/update.php?up_cat=1",
-			type: "POST",
-			context: this,
-			data: {	"episode":episode, 
-			"category":category, 
-			"table":table,
-			"id_entry":id_entry
-				},								
-			success: function(data)
-				{
-					console.log(data);
-				},
-			});
-	});
-	
+
 //Eigene Beiträge: Pagination
 pageSize = 15;
 pageCountAll =  $(".active_content").length / pageSize;
@@ -394,6 +381,29 @@ function copy_link(){
 }
 	
 $(document).ready(function(){
+
+
+//Eigene Beiträge: Kategorie ändern laden
+$(".change_div").on("change", ".change_category", function(){
+	var episode = $(this).children('option:selected').attr('id_episode');
+	var category = $(this).children('option:selected').attr('id_category');
+	var table = $(this).attr('table');
+	var id_entry = $(this).attr('id_entry');
+		$.ajax({
+			url: "inc/update.php?up_cat=1",
+			type: "POST",
+			context: this,
+			data: {	"episode":episode, 
+			"category":category, 
+			"table":table,
+			"id_entry":id_entry
+				},								
+			success: function(data)
+				{
+					location.reload();
+				},
+			});	
+		});
 
 	//Timeline: Sortable
 	$( ".kanban_sortable" ).sortable({ 
@@ -723,23 +733,43 @@ $(document).ready(function(){
 		var pk = $(this).attr("data-pk");
 		var table = $(this).attr("table");
 		var option = $(this).attr("option");
-		var cat_id = $(this).attr("cat");
+		if(typeof option != 'undefined')
+		{
+			var cat_id = $(this).attr("cat");
 
-		var old_anzahl_old = $("#cat_" + cat_id + "_number_user").text();							
-		var old_anzahl_old_gesamt = $("#cat_" + cat_id + "_number_all").text();
-
-		var new_anzahl_current = parseInt(old_anzahl_old)-1;			
-		var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
+			var old_anzahl_old = $("#cat_" + cat_id + "_number_user").text();							
+			var old_anzahl_old_gesamt = $("#cat_" + cat_id + "_number_all").text();
+	
+			var new_anzahl_current = parseInt(old_anzahl_old)-1;			
+			var new_anzahl_current_gesamt = parseInt(old_anzahl_old_gesamt)-1;
+		}
+		
 		
 		if(table == 'topics')
 			{
 				var content = 'Das Thema und alle enthaltenen Beiträge werden gelöscht!';
-				function remove(delete_id) {$("#item-t"+pk).remove()};
+				if(typeof option != 'undefined')
+				{
+					function remove(delete_id) {$("#item-t"+pk).remove()};
+				}
+				else
+				{
+					function remove(delete_id) {$("#topics_"+pk).remove()};
+				}
+
 			}
 		else
 			{
 				var content = 'Der Beitrag wird gelöscht!';
-				function remove(delete_id) {$("#item-l"+pk).remove()};
+				if(typeof option != 'undefined')
+				{
+					function remove(delete_id) {$("#item-l"+pk).remove()};
+				}
+				else
+				{
+					function remove(delete_id) {$("#links_"+pk).remove()};
+				}
+
 			}
 		$.confirm({
 			title: 'Wirklich löschen?',
@@ -752,16 +782,24 @@ $(document).ready(function(){
 				keys: ['enter'],
 				action: function(){
 					jQuery.ajax({
-						url: "inc/delete.php?del_"+option+"=1",
+						url: "inc/delete.php?del_"+table+"=1",
 						data: {	"pk":pk,
 								"table":table
 							},
 						type: "POST",
 						success:function(data){
-							console.log(data);
-							remove(pk);
-							$("#cat_" + cat_id + "_number_user").text(new_anzahl_current);										
-							$("#cat_" + cat_id + "_number_all").text(new_anzahl_current_gesamt);
+							console.log();
+							if(typeof option != 'undefined')
+							{
+								remove(pk);
+								$("#cat_" + cat_id + "_number_user").text(new_anzahl_current);										
+								$("#cat_" + cat_id + "_number_all").text(new_anzahl_current_gesamt);	
+							}
+							else
+							{
+								remove();
+							}
+							
 							},
 						error:function ()
 							{

@@ -301,24 +301,25 @@ function own_entries($userid){
 					$sql_own_entries_result = mysqli_query($con, $sql_own_entries);
 					while($sql_own_entries_row = mysqli_fetch_assoc($sql_own_entries_result))
 						{
-							echo "<li class='topic_links_item episodes active_content' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
+							if($sql_own_entries_row['IS_TOPIC'] == 1)
+							{
+								$icon = "topic_icon";
+								$icon_symbol = "<i class='fas fa-bars fa-fw'></i>";
+								$table = "topics";
+							}
+						else
+							{
+								$icon = "link_icon";
+								$icon_symbol = "<i class='fas fa-link fa-fw'></i>";
+								$table = "links";
+							}
+
+							echo "<li class='topic_links_item episodes active_content' id='".$table."_".$sql_own_entries_row['ID']."' id_podcast_list='".$sql_own_entries_row['ID_PODCAST']."' id_episode_list='".$sql_own_entries_row['ID_EPISODE']."'>";
 								echo "<div class='row lead'>";
-								if($sql_own_entries_row['IS_TOPIC'] == 1)
-									{
-										$icon = "topic_icon";
-										$icon_symbol = "<i class='fas fa-bars fa-fw'></i>";
-										$table = "topics";
-									}
-								else
-									{
-										$icon = "link_icon";
-										$icon_symbol = "<i class='fas fa-link fa-fw'></i>";
-										$table = "links";
-									}
-									echo "<div class='col-md-6 col-12' style='margin-top:auto; margin-bottom:auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
+									echo "<div class='col-xl-5 col-12' style='margin-top:auto; margin-bottom:auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
 										echo "<div class='".$icon."'>".$icon_symbol."</div>".$sql_own_entries_row['DESCR'];
 										echo "</div>";
-										echo "<div class='col-md-3 col-12' style='margin-top:5px; margin-bottom:5px'>";
+										echo "<div class='col-xl-3 col-md-6 col-12' style='margin-top:5px; margin-bottom:5px'>";
 											echo "<div style='margin-top:auto; margin-bottm:auto;'>";
 											if($sql_own_entries_row['DONE'] === '1')
 												{
@@ -350,8 +351,11 @@ function own_entries($userid){
 												}
 										echo "</div>";	
 									echo "</div>";
-										echo "<div  class='col-md-3 col-12' id='change_category' style='margin-top:5px; margin-bottom:5px'>";
+										echo "<div  class='col-xl-3 col-md-6  col-12 change_div' style='margin-top:5px; margin-bottom:5px'>";
 										
+										echo "</div>";
+										echo "<div class='col-xl-1 col-12' style='margin-top:5px; margin-bottom:5px'>";
+												echo "<div class='btn btn-outline-danger btn-block delete_entry' table='".$table."' data-pk='".$sql_own_entries_row ['ID']."'><i class='far fa-times-circle fa-fw'></i></div>";
 										echo "</div>";
 								echo "</div>";
 							echo "</li>";
@@ -373,8 +377,6 @@ function own_entries($userid){
 	podcast_list_change();	
 	episode_list_change	();
 	get_unchecked_categories()
-
-
 
 	});	
 	</script>";	
