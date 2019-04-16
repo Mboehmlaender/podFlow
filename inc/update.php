@@ -146,9 +146,17 @@ if(isset($_POST)){
 		$category = mysqli_real_escape_string($con,$_POST['category']);
 		$table = mysqli_real_escape_string($con, $_POST['table']);
 		$id_entry = mysqli_real_escape_string($con, $_POST['id_entry']);
+		if($table == 'topics')
+		{
+			$sql_update_category = "UPDATE ".DB_PREFIX."topics SET ID_CATEGORY = '".$category."' WHERE ID = ".$id_entry.";";
+			$sql_update_category .= "UPDATE ".DB_PREFIX."links SET ID_CATEGORY = '".$category."' WHERE ID_TOPIC = ".$id_entry;
 
-		$sql_update_category = "UPDATE ".DB_PREFIX.$table." SET ID_CATEGORY = '".$category."' WHERE ID = ".$id_entry;
-		$sql_update_category_result = mysqli_query($con, $sql_update_category);
+		}
+		else
+		{
+			$sql_update_category = "UPDATE ".DB_PREFIX."links SET ID_CATEGORY = '".$category."' WHERE ID = ".$id_entry;
+		}
+		$sql_update_category_result = mysqli_multi_query($con, $sql_update_category);
 		echo $sql_update_category;
 		return;
 	}  
