@@ -117,7 +117,7 @@
 										type: 'POST',
 										data: {},
 										beforeSend: function() { $('#result_db_operation').html('<i class=\"fas fa-spinner fa-pulse\"></i> Prüfe Version...'); $("#submit").prop('disabled', true);},
-										complete: function() { $('#result_db_operation').remove();},
+										complete: function() { $('#result_db_operation').empty();},
 												success: function(data)
 													{
 														var server = data;
