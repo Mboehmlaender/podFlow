@@ -572,16 +572,16 @@ $(".change_div").on("change", ".change_category", function(){
 				});
 				
 				$(".link_topic_"+edit_id).editable({
-					display: function(value) {
-						if($(this).attr("beschr")=="URL")
-							{
-								$(this).text($(this).attr("beschr"));
-							}
-						else
-							{
-								$(this).text(value);
-							}
-						} ,	
+					// display: function(value) {
+					// 	if($(this).attr("beschr")=="URL")
+					// 		{
+					// 			$(this).text($(this).attr("beschr"));
+					// 		}
+					// 	else
+					// 		{
+					// 			$(this).text(value);
+					// 		}
+					// 	} ,	
 					url: "inc/update.php",
 				type: "POST",
 				params: function(params)
@@ -650,16 +650,16 @@ $(".change_div").on("change", ".change_category", function(){
 				$("#links_url_"+edit_id).toggle("show");
 				
 				$(".edit_link_"+edit_id).editable({
-				display: function(value) {
-					if($(this).attr("beschr")=="URL")
-						{
-							$(this).text($(this).attr("beschr"));
-						}
-					else
-						{
-							$(this).text(value);
-						}
-					} ,	
+				// display: function(value) {
+				// 	if($(this).attr("beschr")=="URL")
+				// 		{
+				// 			$(this).text($(this).attr("beschr"));
+				// 		}
+				// 	else
+				// 		{
+				// 			$(this).text(value);
+				// 		}
+				// 	} ,	
 					url: "inc/update.php",
 				type: "POST",
 				params: function(params)
