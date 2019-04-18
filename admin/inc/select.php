@@ -27,8 +27,8 @@ if(isset($_GET['check_version']))
 				$res = mysqli_query($con, $sql);
 				$row = mysqli_fetch_row($res);
 				echo $row[3]." \"".$row[4]."\"</p>";
-	
-	if($split_string === $row[3])
+
+	if($split_string <= $row[3])
 		{
 			echo "<p style='color:green'>Deine Version ist aktuell</p>";
 		}
