@@ -37,7 +37,7 @@ function head(){
 		echo "<link rel='stylesheet' href='css/simplebar.css'>";
 		echo "<link rel='stylesheet' href='css/tooltipster.bundle.min.css'>";
 		echo "<link rel='stylesheet' href='css/tooltipster-sideTip-shadow.min.css'>";
-		echo "<link rel='stylesheet' href='css/custom.css'>";
+		echo "<link rel='stylesheet' href='css/custom.min.css'>";
 		echo "<link rel='stylesheet' href='css/jquery.gritter.css'>";
 		echo "<link rel='stylesheet' href='css/jquery-confirm.min.css'>";
 		echo "<script src='//cdn.ckeditor.com/4.11.1/basic/ckeditor.js'></script>";
@@ -927,7 +927,7 @@ function profil_edit(){
 
 //Footer
 function footer(){
-	echo "<script src='js/frontend.js'></script>";
+	echo "<script src='js/frontend.min.js'></script>";
 	echo "<div class='modal fade' id='change' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
 		echo "<div class='modal-dialog' role='document'>";
 			echo "<div class='modal-content'>";
