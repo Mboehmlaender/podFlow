@@ -1,6 +1,6 @@
 <?php
-	require('config/dbconnect.php');
 	include('inc/functions.php');
+	require('config/dbconnect.php');
 	session();
 ?>
 <?php
