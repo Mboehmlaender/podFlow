@@ -1,11 +1,3 @@
-/*********************************************************************
-    Michael Böhmländer <info@podflow.de>
-    Copyright (c)  2019 podflow!
-    http://www.podflow.de
-    Released under the GNU General Public License WITHOUT ANY WARRANTY.
-    See license.txt for details.
-**********************************************************************/
-
 //Zufallspasswort generieren
 function randString(){
 	var dataSet = $("#Password_add").attr("data-character-set").split(",");  
