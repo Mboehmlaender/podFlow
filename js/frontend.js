@@ -50,7 +50,7 @@ function podcast_list_change(){
 	
 	var podcast_list = podcast_list.toString();
 		$.ajax({
-				url: "inc/check.php?filter_podcast=1",
+				url: baseUrl+"/inc/check.php?filter_podcast=1",
 				type: "POST",
 				context: this,
 				data: {	"podcast_list":podcast_list, 
@@ -76,7 +76,7 @@ function episode_list_change(){
 	var episode_list = episode_list.toString();
 	
 		$.ajax({
-				url: "inc/check.php?filter_episode=1",
+				url: baseUrl+"/inc/check.php?filter_episode=1",
 				type: "POST",
 				context: this,
 				data: {	"episode_list":episode_list, 
@@ -104,13 +104,8 @@ function save_note(id, type){
 		
 		$("#notice_toggle_" + table + "_" + pk).show("fast");
 	}
-	$.ajax({
-		url: 'inc/update.php',
-		type: 'POST',
-		data: {name:name, pk:pk, value:value, table:table},
-		success: function(data){
-		$.ajax({
-			url: 'inc/update.php',
+			$.ajax({
+			url: baseUrl+"/inc/update.php",
 			type: 'POST',
 			data: {name:name, pk:pk, value:value, table:table},
 			success: function(data){
@@ -123,10 +118,6 @@ function save_note(id, type){
 			});		
 			}
 		});
-		console.log(data);
-		}
-	});
-	
 }
 
 //Eigene Beiträge: Auswahl der Kategorien laden
@@ -138,7 +129,7 @@ function get_unchecked_categories(){
 	var id_entry = $(this).attr('id_entry');
 
 		$.ajax({
-			url: "inc/check.php?get_categories_unchecked=1",
+			url: baseUrl+"/inc/check.php?get_categories_unchecked=1",
 			type: "POST",
 			context: this,
 			data: {	"episode":episode, 
@@ -197,7 +188,7 @@ $(".change_episode").on('change', function(){
 	var episode_new = $("option:selected", this).attr('id_episode');
 	var table = $(this).attr('table');
 	$.ajax({
-		url: "inc/update.php?set_episode_new=1",
+		url: baseUrl+"/inc/update.php?set_episode_new=1",
 		type: "POST",
 		data: {	"id_entry":id_entry, 
 				"table":table, 
@@ -299,7 +290,7 @@ function save_order_kanban(id_cat){
 	var sortable_data = $("#"+id_cat).sortable("serialize"); 
 	console.log(sortable_data);
 	$.ajax({
-		url: "inc/update.php?set_order=1",
+		url: baseUrl+"/inc/update.php?set_order=1",
 		type: "POST",
 		data: sortable_data,
 		success: function(data)
@@ -355,7 +346,7 @@ function check_link(id, table){
 	var pk = id;
 	var name = $("#check_"+table+id).attr("data-name");
 	$.ajax({
-		url: "inc/update.php?update_links=1",
+		url: baseUrl+"/inc/update.php?update_links=1",
 		type: "POST",
 		data: {	"name":name, 
 				"pk":pk, 
@@ -379,9 +370,13 @@ function copy_link(){
 		time: "1000"
 	});		
 }
-	
-$(document).ready(function(){
 
+function dirname(path) {
+    return path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');;
+}	
+
+$(document).ready(function(){
+var baseUrl = dirname(window.location.href);
 
 //Eigene Beiträge: Kategorie ändern laden
 $(".change_div").on("change", ".change_category", function(){
@@ -390,7 +385,7 @@ $(".change_div").on("change", ".change_category", function(){
 	var table = $(this).attr('table');
 	var id_entry = $(this).attr('id_entry');
 		$.ajax({
-			url: "inc/update.php?up_cat=1",
+			url: baseUrl+"/inc/update.php?up_cat=1",
 			type: "POST",
 			context: this,
 			data: {	"episode":episode, 
@@ -427,7 +422,7 @@ $(".change_div").on("change", ".change_category", function(){
 			var pk = ui.item.attr("data-pk");
 			var table = ui.item.attr("table");
 			$.ajax({
-				url: "inc/update.php?set_category_sortable=1",
+				url: baseUrl+"/inc/update.php?set_category_sortable=1",
 				type: "POST",
 				data: {	"cat_id":cat_id_receiver, 
 						"table":table, 
@@ -582,7 +577,7 @@ $(".change_div").on("change", ".change_category", function(){
 					// 			$(this).text(value);
 					// 		}
 					// 	} ,	
-					url: "inc/update.php",
+					url: baseUrl+"/inc/update.php",
 				type: "POST",
 				params: function(params)
 					{ 
@@ -660,7 +655,7 @@ $(".change_div").on("change", ".change_category", function(){
 				// 			$(this).text(value);
 				// 		}
 				// 	} ,	
-					url: "inc/update.php",
+					url: baseUrl+"/inc/update.php",
 				type: "POST",
 				params: function(params)
 					{ 
@@ -787,7 +782,7 @@ $(".change_div").on("change", ".change_category", function(){
 				keys: ['enter'],
 				action: function(){
 					jQuery.ajax({
-						url: "inc/delete.php?del_"+table+"=1",
+						url: baseUrl+"/inc/delete.php?del_"+table+"=1",
 						data: {	"pk":pk,
 								"table":table
 							},
@@ -928,7 +923,7 @@ $(".change_div").on("change", ".change_category", function(){
 		var order_by = $('.export_check:checked').val();
 		var id_episode = $(this).attr("export_episode_id");
 		$.ajax({
-			url: "inc/select.php?export_list=1",
+			url: baseUrl+"/inc/select.php?export_list=1",
 			type: "POST",
 			data: {	"id_episode":id_episode,
 					"order_by":order_by,
@@ -944,7 +939,7 @@ $(".change_div").on("change", ".change_category", function(){
 	//Anzeigenamen prüfen
 	$("#Username_Show").on("change input keyup blur", function(){
 		$.ajax({
-			url: "inc/check.php?check_edit_user_short=1",
+			url: baseUrl+"/inc/check.php?check_edit_user_short=1",
 			type: "POST",
 			data: {	"name_show_edit":$("#Username_Show").val(),
 					"name_show_cur":$("#Username_Show").attr("name_show_cur")
@@ -994,7 +989,7 @@ $(".change_div").on("change", ".change_category", function(){
 				return;
 			}
 		$.ajax({
-			url: "inc/update.php?edit_user=1",
+			url: baseUrl+"/inc/update.php?edit_user=1",
 			type: "POST",
 			data: {	"user_id":user_id, 
 					"name_show":name_show, 
@@ -1075,7 +1070,7 @@ $(".change_div").on("change", ".change_category", function(){
 		var change_value = $(this).attr("change_value");
 
 		$.ajax({
-			url: "inc/select.php?change=1",
+			url: baseUrl+"/inc/select.php?change=1",
 			type: "POST",
 			data: {"change_value":change_value},
 			success: function(data)
@@ -1093,7 +1088,7 @@ $(".change_div").on("change", ".change_category", function(){
 		var change_value = $(this).attr("change_value");
 
 		$.ajax({
-			url: "inc/select.php?add_entry=1",
+			url: baseUrl+"/inc/select.php?add_entry=1",
 			type: "POST",
 			data: {"change_value":change_value},
 			success: function(data)
@@ -1113,7 +1108,7 @@ $(".change_div").on("change", ".change_category", function(){
 		var max_entries = $(this).attr("max_entries");
 
 		$.ajax({
-			url: "inc/check.php?select_category=1",
+			url: baseUrl+"/inc/check.php?select_category=1",
 			type: "POST",
 			data: {"cat_id":cat_id, "change_value":change_value, "max_entries":max_entries},
 			success: function(data)
@@ -1131,7 +1126,7 @@ $(".change_div").on("change", ".change_category", function(){
 		var change_value = $(this).attr("change_value");
 
 		$.ajax({
-			url: "inc/select.php?clean_episode=1",
+			url: baseUrl+"/inc/select.php?clean_episode=1",
 			type: "POST",
 			data: {"change_value":change_value},
 			success: function(data)
@@ -1205,7 +1200,7 @@ $(".change_div").on("change", ".change_category", function(){
 							keys: ["enter"],
 							action: function(){
 							jQuery.ajax({
-								url: "inc/update.php?open_episode=1",
+								url: baseUrl+"/inc/update.php?open_episode=1",
 								data: {"episode_open":episode_open},
 								type: "POST",
 								success:function(data)

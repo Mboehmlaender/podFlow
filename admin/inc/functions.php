@@ -117,10 +117,11 @@ function select_podcast(){
 					return;
 				}
 			echo "<script>
+			var baseUrl = dirname(window.location.href);					
 					$(document).ready(function(){
 						$(\"#change\").modal('show');
 						$.ajax({
-							url: 'inc/select.php?change=1',
+							url: baseUrl+'/inc/select.php?change=1',
 							type: 'POST',
 							data: {},
 							success: function(data)

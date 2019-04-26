@@ -428,6 +428,7 @@ if(isset($_GET['edit_entry'])){
 									echo "<button class='btn btn-outline-success btn-block' id='update_notizen_links".$sql_get_links_rows['ID']."' type='button' ><i class='fas fa-save'></i> Notizen Speichern</button>";
 									
 									echo "<script>
+										var baseUrl = dirname(window.location.href);					
 										$.fn.editable.defaults.mode = \"inline\";
 										$(\".update\").editable({
 											params: function(params)
@@ -453,7 +454,7 @@ if(isset($_GET['edit_entry'])){
 											var table = $(\"#textarea_links".$sql_get_links_rows['ID']."\").attr(\"table\")
 											var value= CKEDITOR.instances['textarea_links".$sql_get_links_rows['ID']."'].getData();	
 											$.ajax({
-												url: 'inc/update.php',
+												url: baseUrl+'/inc/update.php',
 												type: 'POST',
 												data: {name:name, pk:pk, value:value, table:table},
 												success: function(data){
@@ -497,9 +498,11 @@ if(isset($_GET['clean_episode'])){
 	echo "</div>"; 
 
 	echo "<script>
+	var baseUrl = dirname(window.location.href);					
+
 		$(\".move_links\").on('click', function(){
 			$.ajax({
-				url: 'inc/select.php?move_links=1',
+				url: baseUrl+'/inc/select.php?move_links=1',
 				type: 'POST',
 				data: {},
 				success: function(data)
@@ -525,7 +528,7 @@ if(isset($_GET['clean_episode'])){
 							action: function()
 								{
 									jQuery.ajax({
-										url: \"inc/delete.php?delete_unchecked_content=1\",
+										url: baseUrl+\"/inc/delete.php?delete_unchecked_content=1\",
 										data: {	episode_id_current:episode_id_current
 											},
 										type: \"POST\",
@@ -583,6 +586,8 @@ if(isset($_GET['move_links'])){
 	echo "</div>";
 	
 	echo "<script>
+	var baseUrl = dirname(window.location.href);					
+
 		$(\"#move_links_select\").on('change', function(){
 			
 			var id_next = $(\"#move_links_select option:selected\").val();
@@ -595,7 +600,7 @@ if(isset($_GET['move_links'])){
 			else
 				{
 					jQuery.ajax({
-						url: \"inc/check.php?check_categories_next=1\",
+						url: baseUrl+\"/inc/check.php?check_categories_next=1\",
 						data: {	id_next:id_next,
 								episode_id_current:episode_id_current
 							},
@@ -630,7 +635,7 @@ if(isset($_GET['move_links'])){
 							action: function()
 								{
 									jQuery.ajax({
-										url: \"inc/update.php?move_unchecked_content=1\",
+										url: baseUrl+\"/inc/update.php?move_unchecked_content=1\",
 										data: {	episode_id_new:episode_id_new,
 												episode_id_current:episode_id_current
 											},
@@ -687,13 +692,14 @@ if(isset($_GET['add_entry'])){
 				echo "</select>";
 
 				echo "<script>
+				var baseUrl = dirname(window.location.href);					
 					$(\"#modal1\").on('change', function(){
 						$(\"#select_depend_2\").load(\" #select_depend_2 > *\");
 						var pocast = $(this).attr('podcast');
 						var max_entries = $('#option:selected', this).attr('max_entries');
 						var value = $('#option:selected', this).attr('cat_id');
 						jQuery.ajax({
-							url: \"inc/check.php?select_category=1\",
+							url: baseUrl+\"/inc/check.php?select_category=1\",
 							data: {	\"cat_id\":value,
 									\"max_entries\":max_entries
 								},
@@ -773,10 +779,11 @@ if(isset($_GET['change'])){
 					echo "</div>";
 					
 					echo "<script>
+					var baseUrl = dirname(window.location.href);					
 						$(\"#podcast".$change_podcast_row['ID']."\").click(function(){
 							var podcast = $(this).attr(\"data-pk\");
 							$.ajax({
-								url: \"inc/update.php?set_session_podcast=1\",
+								url: baseUrl+\"/inc/update.php?set_session_podcast=1\",
 								type: \"POST\",
 								data: {	\"podcast\":podcast,
 									},
@@ -887,10 +894,11 @@ if(isset($_GET['change'])){
 						echo "</div>";
 					echo "</div>";
 					echo "<script>
+					var baseUrl = dirname(window.location.href);					
 					$(\"#episode".$change_episode_row['EPISODE_USERS_ID_EPISODE']."\").click(function(){
 						var episode = $(this).attr(\"data-pk\");
 						$.ajax({
-							url: \"inc/update.php?set_session_episode=1\",
+							url: baseUrl+\"/inc/update.php?set_session_episode=1\",
 							type: \"POST\",
 							data: {	\"episode\":episode,
 								},

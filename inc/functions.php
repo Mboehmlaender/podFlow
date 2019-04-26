@@ -977,7 +977,7 @@ function profil_edit(){
 
 //Footer
 function footer(){
-	echo "<script src='js/frontend.min.js'></script>";
+	echo "<script src='js/frontend.js'></script>";
 	echo "<div class='modal fade' id='change' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
 		echo "<div class='modal-dialog' role='document'>";
 			echo "<div class='modal-content'>";

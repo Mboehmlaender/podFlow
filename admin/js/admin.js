@@ -54,7 +54,7 @@ function delete_user(user_id){
 						keys: ["enter"],
 						action: function(){
 							$.ajax({
-								url: "inc/delete.php?delete_user=1",
+								url: baseUrl+"/inc/delete.php?delete_user=1",
 								type: "POST",
 								data: {"user_id":user_id} ,
 								success: function(data)
@@ -81,7 +81,7 @@ function delete_user(user_id){
 	$("#cat_list").sortable();
 	var sortable_data = $("#cat_list").sortable("serialize"); 
 	$.ajax({
-		url: "inc/update.php?set_cat_order=1",
+		url: baseUrl+"/inc/update.php?set_cat_order=1",
 		type: "POST",
 		data: sortable_data,
 		success: function(data)
@@ -110,7 +110,7 @@ function delete_template(template_id){
 						keys: ["enter"],
 						action: function(){
 							$.ajax({
-								url: "inc/delete.php?delete_template=1",
+								url: baseUrl+"/inc/delete.php?delete_template=1",
 								type: "POST",
 								data: {"template_id":template_id} ,
 								success: function(data)
@@ -152,7 +152,7 @@ function delete_podcast(podcast_id, session_podcast){
 						keys: ["enter"],
 						action: function(){
 						$.ajax({
-							url: "inc/delete.php?delete_podcast=1",
+							url: baseUrl+"/inc/delete.php?delete_podcast=1",
 							type: "POST",
 							data: {"podcast_id":podcast_id} ,
 							success: function(data)
@@ -184,7 +184,7 @@ function edituser(user_id){
 	var pk = user_id;
 	var table = "users";
 	jQuery.ajax({
-		url: "inc/select.php?edit_user=1",
+		url: baseUrl+"/inc/select.php?edit_user=1",
 		data: {	"pk":pk,
 				"table":table
 			},
@@ -206,7 +206,7 @@ function edit_template(template_id,podcast_id){
 	var podcast_id = podcast_id;
 	var table = "episode_templates";
 	jQuery.ajax({
-		url: "inc/select.php?edit_template=1",
+		url: baseUrl+"/inc/select.php?edit_template=1",
 		data: {	"pk":pk,
 				"table":table,
 				"podcast_id":podcast_id
@@ -228,7 +228,7 @@ function edit_episode(episode_id){
 	var pk = episode_id;
 	var table = "episoden";
 	jQuery.ajax({
-		url: "inc/select.php?edit_episode=1",
+		url: baseUrl+"/inc/select.php?edit_episode=1",
 		data: {"pk":pk,
 				"table":table
 			},
@@ -261,7 +261,7 @@ function delete_episode(episode_id){
 						keys: ["enter"],
 						action: function(){
 							$.ajax({
-								url: "inc/delete.php?delete_episode=1",
+								url: baseUrl+"/inc/delete.php?delete_episode=1",
 								type: "POST",
 								data: {"episode_id":episode_id} ,
 								success: function(data)
@@ -304,7 +304,7 @@ function delete_category(cat_id){
 						keys: ["enter"],
 						action: function(){
 							jQuery.ajax({
-								url: "inc/delete.php?del_category=1",
+								url: baseUrl+"/inc/delete.php?del_category=1",
 								data: {"cat_id":cat_id},
 								type: "POST",
 								success:function(data)
@@ -333,7 +333,7 @@ function edit_episode_cat(cat_id){
 	if($("#cat"+cat_id).prop("checked")) 
 		{
 			$.ajax({
-				url: "inc/check.php?add=1",
+				url: baseUrl+"/inc/check.php?add=1",
 				type: "POST",
 				data: {	"id":cat_id,
 						"episode":episode,
@@ -350,7 +350,7 @@ function edit_episode_cat(cat_id){
 	else
 		{
 			$.ajax({
-				url: "inc/check.php?remove=1",
+				url: baseUrl+"/inc/check.php?remove=1",
 				type: "POST",
 				data: {	"id":cat_id,
 						"episode":episode,
@@ -372,7 +372,7 @@ function edit_episode_user(user_id){
 	if($("#user"+user_id).prop("checked")) 
 		{
 			$.ajax({
-				url: "inc/check.php?add=1",
+				url: baseUrl+"/inc/check.php?add=1",
 				type: "POST",
 				data: {	"id":user_id,
 						"episode":episode,
@@ -389,7 +389,7 @@ function edit_episode_user(user_id){
 	else
 		{
 			$.ajax({
-				url: "inc/check.php?remove=1",
+				url: baseUrl+"/inc/check.php?remove=1",
 				type: "POST",
 				data: {	"id":user_id,
 						"episode":episode,
@@ -411,7 +411,7 @@ function edit_podcast_user(user_id){
 	if($("#user"+user_id).prop("checked")) 
 		{
 			$.ajax({
-				url: "inc/check.php?add=1",
+				url: baseUrl+"/inc/check.php?add=1",
 				type: "POST",
 				data: {	"id":user_id,
 						"episode":podcast,
@@ -428,7 +428,7 @@ function edit_podcast_user(user_id){
 	else
 		{
 			$.ajax({
-				url: "inc/check.php?remove=1",
+				url: baseUrl+"/inc/check.php?remove=1",
 				type: "POST",
 				data: {	"id":user_id,
 						"episode":podcast,
@@ -445,8 +445,14 @@ function edit_podcast_user(user_id){
 
 }
 
+function dirname(path) {
+	return path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');;
+}	
+
 $(document).ready(function(){
 	
+	var baseUrl = dirname(window.location.href);
+
 /* $('#new_episode').on('hidden.bs.modal', function () {
   $('#nummer_add_neu').val('');
 }); */
@@ -466,7 +472,7 @@ $(document).ready(function(){
 	$(".change").on("click", function(){
 		$("#change").modal("show");
 		$.ajax({
-			url: "inc/select.php?change=1",
+			url: baseUrl+"/inc/select.php?change=1",
 			type: "POST",
 			data: {},
 			success: function(data)
@@ -480,7 +486,7 @@ $(document).ready(function(){
 	//Version prüfen
 	$(".check_version").on("click", function(){
 		$.ajax({
-			url: "inc/select.php?check_version=1",
+			url: baseUrl+"/inc/select.php?check_version=1",
 			type: "POST",
 			data: {},
 			success: function(data)
@@ -506,7 +512,7 @@ $(document).ready(function(){
 	var UserSearch = $(this).val();
 	var value = $(this).attr('check');
 	jQuery.ajax({
-		url: "inc/search.php?search_user=1",
+		url: baseUrl+"/inc/search.php?search_user=1",
 		data: {	"UserSearch":UserSearch,
 				"value":value,
 			},
@@ -540,7 +546,7 @@ $(document).ready(function(){
 				return;
 			}
 		jQuery.ajax({
-			url: "inc/update.php?podcast_update=1",
+			url: baseUrl+"/inc/update.php?podcast_update=1",
 			data: {	"podcast_desc":podcast_desc,
 					"podcast_short":podcast_short,
 					"Podcast":Podcast,
@@ -623,7 +629,7 @@ $(document).ready(function(){
 			}
 
 		$.ajax({
-			url: 'inc/update.php?up_cat=1',
+			url: baseUrl+"/inc/update.php?up_cat=1",
 			type: 'POST',
 			data: {row:row, pk:pk, value:value, table:table },
 			success: function(data)
@@ -711,7 +717,7 @@ $(document).ready(function(){
 				return;
 			}
 		jQuery.ajax({
-			url: "inc/insert.php?add_cat=1",
+			url: baseUrl+"/inc/insert.php?add_cat=1",
 			data: {	"cat_name":cat_name_new,
 				"cat_visible":cat_visible_new,
 				"cat_topics":cat_topics_new,
@@ -761,7 +767,7 @@ $(document).ready(function(){
 					}
 
 				$.ajax({
-					url: "inc/insert.php?add_episode=1",
+					url: baseUrl+"/inc/insert.php?add_episode=1",
 					type: "POST",
 					data: {	"podcast":podcast,
 							"date":$("#date_new").val(),
@@ -803,7 +809,7 @@ $(document).ready(function(){
 
 	$("#add_new_template").click(function(){
 		$.ajax({
-			url: "inc/insert.php?add_template=1",
+			url: baseUrl+"/inc/insert.php?add_template=1",
 			type: "POST",
 			data: {	"title":$("#title_template_new").val(),
 					"podcast":$("#podcast_template_new option:selected").val(),
@@ -841,7 +847,7 @@ $(document).ready(function(){
 		var User_add_mail = $("#User_add_mail").val();
 		var Password_add = $("#Password_add").val();
 		jQuery.ajax({
-			url: "inc/insert.php?add_user=1",
+			url: baseUrl+"/inc/insert.php?add_user=1",
 			data: {
 			"User_add":User_add,
 			"User_add_mail":User_add_mail,
@@ -895,7 +901,7 @@ $(document).ready(function(){
 		else
 			{
 				$.ajax({
-				url: "inc/insert.php?add_podcast=1",
+				url: baseUrl+"/inc/insert.php?add_podcast=1",
 				type: "POST",
 				data: {	"descr":$("#descr").val(),
 						"short":$("#short").val()
@@ -911,7 +917,7 @@ $(document).ready(function(){
 	//Benutzernamen prüfen
 	$("#User_add").on("change input keyup blur", function(){
 		$.ajax({
-			url: "inc/check.php?check_new_user=1",
+			url: baseUrl+"/inc/check.php?check_new_user=1",
 			type: "POST",
 			data: {"username":$("#User_add").val()},
 			success: function(data)
@@ -925,7 +931,7 @@ $(document).ready(function(){
 	//Neuen Podcast-Kurzbezeichner prüfen
 	$("#short").on("change input keyup blur", function(){
 		$.ajax({
-			url: "inc/check.php?check_podcast_short=1",
+			url: baseUrl+"/inc/check.php?check_podcast_short=1",
 			type: "POST",
 			data: {"short":$("#short").val()},
 			success: function(data)
@@ -939,7 +945,7 @@ $(document).ready(function(){
 	//Podcast-Kurzbezeichner prüfen
 	$("#short_edit").on('change input keyup blur', function(){
 		$.ajax({
-			url: "inc/check.php?check_edit_podcast_short=1",
+			url: baseUrl+"/inc/check.php?check_edit_podcast_short=1",
 			type: "POST",
 			data: {	"short_edit":$("#short_edit").val(),
 					"short_cur":$("#short_edit").attr('short_cur')
@@ -955,7 +961,7 @@ $(document).ready(function(){
 	//Nummer der neuen Episode prüfen
 	$("#nummer_add_neu").on('change input keyup blur', function(){
 		$.ajax({
-			url: "inc/check.php?check_new_episode=1",
+			url: baseUrl+"/inc/check.php?check_new_episode=1",
 			type: "POST",
 			data: {	"podcast":$("#nummer_add_neu").attr('podcast'),
 					"nummer":$("#nummer_add_neu").val()

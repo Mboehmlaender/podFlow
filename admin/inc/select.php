@@ -70,10 +70,11 @@ if(isset($_GET['change'])){
 					echo "</div>";
 				echo "</div>";
 				echo "<script>
+						var baseUrl = dirname(window.location.href);					
 						$(\"#podcast".$change_podcast_row['ID']."\").click(function(){
 							var podcast = $(this).attr(\"data-pk\");
 							$.ajax({
-								url: \"inc/update.php?set_session_podcast=1\",
+								url: baseUrl+\"/inc/update.php?set_session_podcast=1\",
 								type: \"POST\",
 								data: {\"podcast\":podcast},
 								success: function(data)
@@ -179,13 +180,14 @@ if(isset($_GET['edit_user'])){
 					echo "<br><small><span style='color: red'>* <span style='color:black'>Pflichtfeld</span></span></small>";
 
 					echo "<script>
+							var baseUrl = dirname(window.location.href);					
 							$(function (){
 								$('[data-toggle=\"tooltip\"]').tooltip()
 							});
 
 							$(\"#username_edit\").on('change input keyup blur', function(){
 							$.ajax({
-								url: \"inc/check.php?check_edit_user_short=1\",
+								url: baseUrl+\"/inc/check.php?check_edit_user_short=1\",
 								type: \"POST\",
 								data: {	\"username_edit\":$(\"#username_edit\").val(),
 										\"username_cur\":$(\"#username_edit\").attr('username_cur')
@@ -212,7 +214,7 @@ if(isset($_GET['edit_user'])){
 										return;
 									}
 								$.ajax({
-									url: \"inc/update.php?edit_user=1\",
+									url: baseUrl+\"/inc/update.php?edit_user=1\",
 									type: \"POST\",
 									data: {	\"user_id\":user_id,
 											\"username\":$(\"#username_edit\").val(),
@@ -403,6 +405,7 @@ if(isset($_GET['edit_template'])){
 							echo "<br><small><span style='color: red'>* <span style='color:black'>Pflichtfeld</span></span></small>";
 
 							echo "<script>
+							var baseUrl = dirname(window.location.href);					
 
 							$(function (){
 								$('[data-toggle=\"tooltip\"]').tooltip()
@@ -444,7 +447,7 @@ if(isset($_GET['edit_template'])){
 										return;
 									}
 								$.ajax({
-									url: \"inc/update.php?template_update=1\",
+									url: baseUrl+\"/inc/update.php?template_update=1\",
 									type: \"POST\",
 									data: {	\"template\":template,
 											\"title\":$(\"#title\").val(),
@@ -772,6 +775,7 @@ if(isset($_GET['edit_episode'])){
 							echo "<button type='button' style='margin: 3px;' onclick='delete_episode(\"".$id."\")' class='btn btn-outline-danger'><i class='far fa-times-circle fa-fw'></i> Episode löschen</button>";
 							echo "<br><small><span style='color: red'>* <span style='color:black'>Pflichtfeld</span></span></small>";
 							echo "<script>
+							var baseUrl = dirname(window.location.href);					
 
 							$(function (){
 								$('[data-toggle=\"tooltip\"]').tooltip()
@@ -780,7 +784,7 @@ if(isset($_GET['edit_episode'])){
 
 							$(\"#nummer\").on('change keyup input', function(){
 								$.ajax({
-									url: \"inc/check.php?check_episode=1\",
+									url: baseUrl+\"/inc/check.php?check_episode=1\",
 									type: \"POST\",
 									data: {	\"podcast\":$(\"#nummer\").attr('cur_podcast'),
 											\"nummer_change\":$(\"#nummer\").val(),
@@ -808,7 +812,7 @@ if(isset($_GET['edit_episode'])){
 										return;
 									}
 								$.ajax({
-									url: \"inc/update.php?episode_update=1\",
+									url: baseUrl+\"/inc/update.php?episode_update=1\",
 									type: \"POST\",
 									data: {	\"episode\":episode,
 											\"date\":$(\"#date\").val(),

@@ -136,7 +136,7 @@ if(isset($_GET['filter_episode']))
 		echo "<hr>";
 		echo "<div style='color: red; font-weight: bold; margin: 10px 0px'>Folgende Kategorien sind noch nicht in der Zielepisode angelegt:</div>";
 				echo "<script>
-					
+					var baseUrl = dirname(window.location.href);					
 					if($(\".create_category\").length !== 0)
 					{
 						$(\"#warning\").show();
@@ -157,7 +157,7 @@ if(isset($_GET['filter_episode']))
 						var cat_id = $(this).attr('cat_id');
 						var next_episode = $(this).attr('next_episode');
 									jQuery.ajax({
-										url: \"inc/check.php?add_episode_category=1\",
+										url: baseUrl+\"/inc/check.php?add_episode_category=1\",
 										data: {	cat_id:cat_id,
 												next_episode:next_episode
 											},
@@ -287,11 +287,12 @@ if(isset($_GET['filter_episode']))
 							$(\".savebtn\").attr('disabled', true);
 						}
 					$(\"#select_depend_menu\").on('change', function(){
+						var baseUrl = dirname(window.location.href);
 						var select_depend_value = $('option:selected', this).attr('value_option');
 						var max_entries = $('option:selected', this).attr('max_entries');
 						var sel_cat_id = $('option:selected', this).attr('sel_cat_id');
 						jQuery.ajax({
-							url: \"inc/check.php?select_topic=1\",
+							url: baseUrl+\"/inc/check.php?select_topic=1\",
 							data: {	\"select_depend_value\":select_depend_value,
 									\"max_entries\":max_entries,
 									\"sel_cat_id\":sel_cat_id
@@ -379,6 +380,7 @@ if(isset($_GET['filter_episode']))
 					echo "<input type='text' class='form-control' name='topic_new_link_url' id='topic_new_link_url'>";
 				echo "</div>";
 				echo "<script>
+				var baseUrl = dirname(window.location.href);
 					var button = \"<button type='button' id='topic_new_send' name='topic_new_send' class='btn btn-outline-secondary savebtn'>Speichern</button>\";
 
 					$(\"#button_footer\").html(button);
@@ -400,7 +402,7 @@ if(isset($_GET['filter_episode']))
 						}
 				
 					jQuery.ajax({
-						url: \"../inc/insert.php?add_topic=1\",
+						url: baseUrl+\"/inc/insert.php?add_topic=1\",
 						data: {	\"descr\":descr,
 								\"category\":category,
 								\"link_descr\":link_descr,
@@ -439,6 +441,7 @@ if(isset($_GET['filter_episode']))
 					echo "<input type='text' class='form-control' id='link_url'>";
 				echo "</div>";
 				echo "<script>
+					var baseUrl = dirname(window.location.href);
 					var button = \"<button type='button' id='absenden_link_new' name='absenden_link_new' class='btn btn-outline-secondary savebtn'>Speichern</button>\";
 
 					$(\"#button_footer\").html(button);
@@ -460,7 +463,7 @@ if(isset($_GET['filter_episode']))
 						}
 						
 					jQuery.ajax({
-						url: \"../inc/insert.php?add_link=1\",
+						url: baseUrl+\"/inc/insert.php?add_link=1\",
 						data: { \"descr\":descr,
 								\"category\":category,
 								\"url\":url
@@ -490,6 +493,7 @@ if(isset($_GET['filter_episode']))
 					echo "<input type='text' class='form-control' id='link_topics_url'>";
 				echo "</div>";
 				echo "<script>
+					var baseUrl = dirname(window.location.href);
 					var button = \"<button type='button' id='topic_new_link_send' name='topic_new_link_send' class='btn btn-outline-secondary savebtn'>Speichern</button>\";
 					
 					$(\"#button_footer\").html(button);
@@ -511,7 +515,7 @@ if(isset($_GET['filter_episode']))
 						}
 					
 					jQuery.ajax({
-						url: \"../inc/insert.php?add_topiclink=1\",
+						url: baseUrl+\"/inc/insert.php?add_topiclink=1\",
 						data: {	\"category\":category,
 								\"topic\":topic,
 								\"descr\":descr,
