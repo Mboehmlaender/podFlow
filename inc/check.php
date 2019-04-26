@@ -24,10 +24,10 @@ if(isset($_POST)){
 							$sql_select_category = "
 
 							SELECT 
-							 ( SELECT COUNT(ID) AS c FROM pf_links WHERE ID_CATEGORY = 6 AND ID_EPISODE = 9 AND ID_TOPIC IS NULL
+							 ( SELECT COUNT(ID) AS c FROM ".DB_PREFIX."links WHERE ID_CATEGORY = 6 AND ID_EPISODE = 9 AND ID_TOPIC IS NULL
 							) 
 							+
-							( SELECT COUNT(ID) AS c FROM pf_topics WHERE ID_CATEGORY = 6 AND ID_EPISODE = 9 
+							( SELECT COUNT(ID) AS c FROM ".DB_PREFIX."topics WHERE ID_CATEGORY = 6 AND ID_EPISODE = 9 
 							) AS SUM,
 							c.ID, 
 							c.MAX_ENTRIES, 
