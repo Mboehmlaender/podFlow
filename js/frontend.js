@@ -34,6 +34,8 @@ function check_sortable(){
 };
 //Eigene Beiträge: Filter der Podcasts laden	
 function podcast_list_change(){
+	var baseUrl = dirname(window.location.href);
+
 	var podcast_list = [];
 	$(".active_content").each(function(){
 		var podcast = $(this).attr('id_podcast_list');
@@ -59,6 +61,7 @@ function podcast_list_change(){
 
 //Eigene Beiträge: Filter der Episoden laden
 function episode_list_change(){
+	var baseUrl = dirname(window.location.href);
 	var episode_list = [];
 	$(".active_content").each(function(){
 		var episodes = $(this).attr('id_episode_list');
@@ -83,6 +86,7 @@ function episode_list_change(){
 
 //Notizen speichern
 function save_note(id, type){
+	var baseUrl = dirname(window.location.href);
 	var editbox = type+"_notice_edit_"+id;
 	var name = "INFO";
 	var table = type;
@@ -114,6 +118,8 @@ function save_note(id, type){
 
 //Eigene Beiträge: Auswahl der Kategorien laden
 function get_unchecked_categories(){
+	var baseUrl = dirname(window.location.href);
+
 	$(".change_episode").each(function(){
 	var episode = $(this).children('option:selected').attr('id_episode');
 	var category = $(this).attr('id_category');
@@ -174,6 +180,8 @@ $("#pagin li div").click(function() {
 paginate(pageCountAll);
 
 $(".change_episode").on('change', function(){
+	var baseUrl = dirname(window.location.href);
+
 	
 	var id_entry = $(this).attr('id_entry');
 	var episode_current = $("option:disabled", this).attr('id_episode');
@@ -279,6 +287,8 @@ $("#pagin").empty();
 //Timelinereihenfolge speichern
 
 function save_order_kanban(id_cat){
+	var baseUrl = dirname(window.location.href);
+
 	var sortable_data = $("#"+id_cat).sortable("serialize"); 
 	console.log(sortable_data);
 	$.ajax({
@@ -294,6 +304,8 @@ function save_order_kanban(id_cat){
 
 //Links/Themen checken
 function check_link(id, table){
+	var baseUrl = dirname(window.location.href);
+
 	$("#check_"+id).blur();
 	var check_icon = "<i class='far fa-check-circle'></i>";
 	$("#entry_buttons_" + table + id).hide("fast");

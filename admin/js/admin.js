@@ -32,6 +32,8 @@ return text;
 
 //Benutzer löschen	
 function delete_user(user_id){
+		var baseUrl = dirname(window.location.href);
+
 	$.confirm({
 		boxWidth: "50%",
 		useBootstrap: false,	
@@ -70,6 +72,8 @@ function delete_user(user_id){
 
 //Reihenfolge der Kategorien setzen
  function sendOrderToServer() {
+	 	var baseUrl = dirname(window.location.href);
+
 	$("#cat_list").sortable();
 	var sortable_data = $("#cat_list").sortable("serialize"); 
 	$.ajax({
@@ -87,6 +91,8 @@ function delete_user(user_id){
 
 //Vorlage löschen	
 function delete_template(template_id){
+		var baseUrl = dirname(window.location.href);
+
 	$.confirm({
 		boxWidth: "50%",
 		useBootstrap: false,	
@@ -129,6 +135,8 @@ function delete_template(template_id){
 
 //Podcast löschen	
 function delete_podcast(podcast_id, session_podcast){
+		var baseUrl = dirname(window.location.href);
+
 	$.confirm({
 		title: "Podcast löschen?",
 		boxWidth: "50%",
@@ -173,6 +181,8 @@ function delete_podcast(podcast_id, session_podcast){
 
 //Benutzer bearbeiten
 function edituser(user_id){
+		var baseUrl = dirname(window.location.href);
+
 	var pk = user_id;
 	var table = "users";
 	jQuery.ajax({
@@ -194,6 +204,8 @@ function edituser(user_id){
 
 //Vorlage bearbeiten
 function edit_template(template_id,podcast_id){
+		var baseUrl = dirname(window.location.href);
+
 	var pk = template_id;
 	var podcast_id = podcast_id;
 	var table = "episode_templates";
@@ -217,6 +229,8 @@ function edit_template(template_id,podcast_id){
 
 //Episode bearbeiten
 function edit_episode(episode_id){
+		var baseUrl = dirname(window.location.href);
+
 	var pk = episode_id;
 	var table = "episoden";
 	jQuery.ajax({
@@ -238,6 +252,8 @@ function edit_episode(episode_id){
 
 //Episode löschen	
 function delete_episode(episode_id){
+		var baseUrl = dirname(window.location.href);
+
 	$.confirm({
 		title: "Episode löschen?",
 		boxWidth: "50%",
@@ -281,6 +297,8 @@ function delete_episode(episode_id){
 
 //Kategorien löschen
 function delete_category(cat_id){
+		var baseUrl = dirname(window.location.href);
+
 	$.confirm({
 		title: "Kategorie löschen?",
 		boxWidth: "50%",
@@ -321,6 +339,8 @@ function delete_category(cat_id){
 
 //Kategorien der Episode bearbeiten
 function edit_episode_cat(cat_id){
+		var baseUrl = dirname(window.location.href);
+
 	var episode = $("#cat"+cat_id).attr("episode");
 	if($("#cat"+cat_id).prop("checked")) 
 		{
@@ -360,6 +380,8 @@ function edit_episode_cat(cat_id){
 
 //Benutzer der Episode bearbeiten
 function edit_episode_user(user_id){
+		var baseUrl = dirname(window.location.href);
+
 	var episode = $("#user"+user_id).attr("episode");
 	if($("#user"+user_id).prop("checked")) 
 		{
@@ -399,6 +421,8 @@ function edit_episode_user(user_id){
 
 //Benutzer der Episode bearbeiten
 function edit_podcast_user(user_id){
+		var baseUrl = dirname(window.location.href);
+
 	var podcast = $("#user"+user_id).attr('podcast');
 	if($("#user"+user_id).prop("checked")) 
 		{
@@ -443,7 +467,9 @@ function dirname(path) {
 
 $(document).ready(function(){
 	
-	var baseUrl = dirname(window.location.href);
+		var baseUrl = dirname(window.location.href);
+
+
 
 /* $('#new_episode').on('hidden.bs.modal', function () {
   $('#nummer_add_neu').val('');

@@ -1079,7 +1079,7 @@ function categories_edit_list(){
 
 //Footer mit Change-Modal
 function footer(){
-	echo "<script src='js/admin.min.js'></script>";
+	echo "<script src='js/admin.js'></script>";
 	echo "<div class='modal fade' id='change' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' ";
 	if(empty($_SESSION['podcast']))
 		{
