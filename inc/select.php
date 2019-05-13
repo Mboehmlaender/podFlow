@@ -39,8 +39,8 @@ $order_by = $_POST['order_by'];
 					}
 				else if($sql_select_row['ID_EXPORT_OPTION'] == 1)
 					{
-						$list_type_open = "";
-						$close_type_close = "";
+						$list_type_open = "<ul style='list-style-type:none; padding-left: 0px'>";
+						$close_type_close = "</ul>";
 						$data_type_open = "";
 						$data_type_close = "";											
 						$sep = " - ";
@@ -56,11 +56,7 @@ $order_by = $_POST['order_by'];
 					
 				if($sql_select_row['EXPORT_TITLE_CAT'] == 1)
 					{
-						$cat_title_open = "<ul style='list-style-type:none; padding-left: 0px'>";
-						$cat_title_open .= $sql_select_row['DESCR'];
-						$cat_title_open .= "<li>";
-						$cat_title_close = "</li>";
-						$cat_title_close .= "</ul>";
+						$cat_title_open = $sql_select_row['DESCR'];
 					}
 				else
 					{
