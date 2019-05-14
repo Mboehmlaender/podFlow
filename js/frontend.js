@@ -1,3 +1,7 @@
+function dirname(path) {
+    return path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');
+}	
+
  //CKEditor initialisieren
 	function enableEditing(editbox) {
 				CKEDITOR.replace(editbox);
@@ -375,9 +379,6 @@ function copy_link(){
 	});		
 }
 
-function dirname(path) {
-    return path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');;
-}	
 
 $(document).ready(function(){
 var baseUrl = dirname(window.location.href);
