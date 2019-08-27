@@ -263,6 +263,7 @@ $order_by = $_POST['order_by'];
 											}
 										else
 											{
+
 												$descr = $data_type_open;
 												$descr .= $sql_select_content_1_row['DESCR'];
 												if(($sql_select_row['EXPORT_NOTICE'] == 1) && (!empty($sql_select_content_1_row['INFO'])))
@@ -275,7 +276,6 @@ $order_by = $_POST['order_by'];
 												$descr .= $list_type_open;
 													while ($sql_select_content_2_row = (mysqli_fetch_assoc($sql_select_content_2_result)))
 														{	
-															$descr2 = $data_type_open;
 															if($sql_select_row['EXPORT_URL_LINKS'] == 0)
 																{
 																	$fund_url = "";
@@ -291,13 +291,12 @@ $order_by = $_POST['order_by'];
 																}
 															else if (strpos($fund_url, $pos) === false)
 																{
-																	$descr2 .= "<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																	$descr2 .= $data_type_open."<a href='http://".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>".$data_type_close;
 																}
 															else
 																{
-																	$descr2 = "<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>";
+																	$descr2 = $data_type_open."<a href='".$fund_url."' target='_blank' >".$sql_select_content_2_row['DESCR']."</a>".$data_type_close;
 																}
-															$descr2 .= $data_type_close;
 															array_push($stringarray_2, $descr2);	
 														} 
 												$descr .= implode($sep,$stringarray_2);
