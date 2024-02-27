@@ -1,7 +1,6 @@
 ![podflow - Design your podcast!](https://podflow.de/wp-content/uploads/Banner_&_Logo/podflow_Logo_v2c-e1534852020681.png)
 
 [![Version](https://img.shields.io/badge/release-1.2.0-blue.svg)](https://podflow.de)
-[![Version](https://img.shields.io/badge/dev-2.0.0-red.svg)](https://podflow.de)
 
 # podflow - Design your podcast!
 
